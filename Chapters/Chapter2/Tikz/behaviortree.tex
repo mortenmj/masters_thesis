@@ -1,0 +1,21 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{positioning,automata}
+
+\begin{document}
+    \tikzstyle{composite} = [rectangle,draw,minimum size=2.5em]
+
+    \begin{tikzpicture}[node distance = 1.5cm, auto]
+        % Place nodes
+        \node[composite] (c_1)                      {$?$};
+        \node[composite] (c_2) [below left=of  c_1] {$\rightarrow$};
+        \node[state]     (t_1) [below left=of  c_2] {$t_1$};
+        \node[state]     (t_2) [below right=of c_2] {$t_2$};
+        \node[state]     (t_3) [below right=of c_1] {$t_3$};
+
+        % Draw edges
+        \path [->] (c_1) edge node [above] {} (c_2);
+        \path [->] (c_2) edge node [below] {} (t_1);
+        \path [->] (c_2) edge node [below] {} (t_2);
+        \path [->] (c_1) edge node [below] {} (t_3);
+    \end{tikzpicture}
+\end{document}

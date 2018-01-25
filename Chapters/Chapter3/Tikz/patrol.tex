@@ -1,0 +1,22 @@
+\documentclass[tikz]{standalone}
+\usepackage{amssymb}
+\usetikzlibrary{positioning,automata}
+
+\begin{document}
+    \tikzstyle{composite} = [rectangle,draw,minimum size=2.5em]
+    \tikzstyle{decorator} = [rectangle,draw,minimum size=2.5em]
+    \tikzstyle{action} = [rectangle,draw,minimum size=2.5em]
+
+    \begin{tikzpicture}[node distance = 0.5cm, auto]
+        % Place nodes
+        \node[composite] (c_1)                      {$\rightarrow$};
+        \node[decorator] (t_1) [below left=of  c_1] {$nav1$};
+        \node[action]    (t_2) [below =of  c_1] {$nav2$};
+        \node[action]    (t_3) [below right=of c_1] {$nav3$};
+
+        % Draw edges
+        \path [->] (c_1) edge node [below] {} (t_1);
+        \path [->] (c_1) edge node [below] {} (t_2);
+        \path [->] (c_1) edge node [below] {} (t_3);
+    \end{tikzpicture}
+\end{document}

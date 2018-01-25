@@ -1,0 +1,72 @@
+% Chapter Template
+\providecommand{\rootfolder}{../..} % Relative path to main.tex
+\documentclass[\rootfolder/main.tex]{subfiles}
+\begin{document}
+
+\chapter{Chapter Title Here} % Main chapter title
+
+\label{ch:foo} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
+
+\section{Behavior Tree}
+
+At the outset of this project, the existing solution, which used a state machine approach, was evaluated.
+SMACH, short for state machine, is a task-level state machine architecture for the Robot Operating System (ROS).
+There are some intrinsic issues with large state machines, in particular concerning maintainability and scalability.
+As the cyborg state machine grew in size and complexity, these became more apparent.
+
+As outlined in \cref{ch:matmet}, the events that govern transitions between states in a state machine are tightly coupled.
+Because of this, when adding or removing a state, it is necessary to update the transitions to every state that transitions to the state that is being added or removed.
+Furthermore, a state machine with many states can be difficult to grasp as it becomes cluttered.
+Reusability of behaviors can also be difficult, as the states are tightly coupled to their transitions.
+Finally, as outlined in the SMACH documentation, SMACH is poorly suited to unstructured tasks.
+As one goal of the NTNU Cyborg project is lifelike behavior, it was found that a decision making approach more suited to unstructured behavior was desirable.
+
+After evaluating several options, the behavior tree implementation that was decided on was one called \emph{behavior3}.
+\emph{behavior3} has an implementation in Python, \emph{behavior3py}, as well as Javascript, \emph{behavior3js}.
+In addition, the project includes an editor which produces JSON configuration files that describe a complete tree. 
+This configuration file can be parsed and run using \emph{behavior3py} or \emph{behavior3js}.
+
+As described in \cref{ch:matmet}, a behavior tree is built from standard composite nodes, as well as nodes that implement decorators and actions.
+To use the library, a ROS node was made, called \emph{cyborg\_bt}. 
+This node contains all the decorators and actions needed by the cyborg, and runs the tree produced with the \emph{behavior3} editor.
+Many of these nodes depend on services or topics exposed by other cyborg nodes.
+In this way, the behavior is made as reusable as possible.
+
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.49]{Figures/patrol}
+    \caption{Behavior tree that checks battery state, and charges if necessary, while patrolling.\label{fig:patrol}}
+\end{wrapfigure}
+
+An example of such a node, the action node MoveTo, which moves the cyborg to a named location, constrained by a minimum radius around the target, is included in the appendix.
+The node receives a request to go to a given location, retrieves the coordinates of this location from a local store of named locations and then monitors the progress of the cyborg as it moves along the path.
+It is important to not merely monitor the changing distance between the cyborg and the target location, as the cyborg may have to circumnavigate obstacles along the path which involve moving further away from the target.
+
+A simple demonstration of a working behavior tree is shown in \cref{fig:patrol}.
+This behavior tree causes the cyborg to move in a patrol pattern between several locations while it monitors the state of the cyborg's battery charge and recharges as needed.
+
+\section{Roslibpy}
+
+In order to expose the status of the robot in a convenient graphical interface, the choice was made to implement a web service that runs on the robot.
+This solution makes the interface easily accessible without requiring that the user installs software locally, and it allows for the robot to be monitored from anywhere in the world.
+As web services are inherently asynchronous, it was found that it was necessary to use a language with strong support for asynchronous programming.
+ROS nodes can be implemented in either C++ or Python, as seen in \cref{ch:matmet}.
+For implementing visualizations for a web service, Python was found to be a good choice.
+The service might have been implemented as a ROS node, were it not for the fact that ROS uses Python 2.7.
+Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
+
+The alternative was found to be to use a ROS service called \emph{rosbridge}, which provides a JSON API for interacting with ROS.
+Existing front-ends for \href{http://wiki.ros.org/rosbridge_suite}{\emph{rosbridge}} include \href{http://wiki.ros.org/roslibjs}{\emph{roslibjs}}.
+\emph{Roslibjs} uses WebSocket, a two-way TCP protocol, to provide access to publishing and subscribing to topics, calling services and more.
+
+For the visualization, it was a requirement that the visualizations shown in the browser be made interactive, so that the user could influence the state of the robot.
+Many visualization libraries exist for JavaScript, but while several showed impressive data visualization features none were found to offer the necessary interactivity.
+A choice was made to use \href{https://bokeh.pydata.org}{\emph{bokeh}}, a Python visualization library designed to create interactive presentations in the browser.
+In order to expose the necessary information to Python, roslibjs was ported to Python by the author.
+The new library was named roslibpy.
+
+\subsection{API}
+
+When designing the roslibpy API, a decision was made to stay reasonably close to roslibjs, but to design the library as a Python library first and foremost.
+There are significant differences in the approaches taken in JavaScript and Python, and it would do no good to attempt to implement the library as if it were written in JavaScript.
+
+\end{document}

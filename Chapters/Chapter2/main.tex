@@ -1,0 +1,41 @@
+% Chapter Template
+\providecommand{\rootfolder}{../..} % Relative path to main.tex
+\documentclass[\rootfolder/main.tex]{subfiles}
+\begin{document}
+
+\chapter{Material and Methods} % Main chapter title
+
+\label{ch:matmet} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+\section{Robot Operating System}
+
+\section{Decision Making}
+
+At the outset of the work on this thesis, the cyborg was running the decision making software outlined in \cite{Andersen2017}.
+
+While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
+This section will provide some background on these two approaches.
+
+\subsection{State Machines} \label{sec:statemachines}
+
+An overview of the use of state machines for AI in computer games is given in \cite{Millington2009}.
+In general, the concerns outlined here overlap with the concerns relevant in the sort of high-level decision making that is necessary in the Cyborg project.
+
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.49]{Figures/statemachine}
+    \caption{An example of a simple state machine.}
+\end{wrapfigure}
+
+Actions to be performed by the robot are associated with states in the state machine, and the robot will carry out that action for as long as it is in the particular state.
+States are connected by transitions, which lead from one state to another.
+Whenever the conditions for a transition are met, the system will perform that transition and execute the action associated with the new state.
+State machines typically have actions associated with entering and exiting a state.
+
+\subsection{Behavior Trees} \label{sec:behaviortrees}
+
+\begin{wrapfigure}{L}{0.5\columnwidth}
+    \pimage[0.49]{Figures/behaviortree}
+    \caption{An example of a simple behavior tree.}
+\end{wrapfigure}
+
+\end{document}

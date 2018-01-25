@@ -1,0 +1,41 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{shapes,arrows,positioning}
+
+\begin{document}
+    \pagestyle{empty}
+
+    \tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=4.5em, text badly centered, node distance=0.5cm, inner sep=0pt]
+    \tikzstyle{block}    = [rectangle, draw, fill=blue!20, text width=10em, text centered, rounded corners, minimum height=4em]
+    \tikzstyle{line}     = [draw, very thick, color=black!50, -latex']
+    \tikzstyle{cloud}    = [draw, ellipse,fill=red!20, node distance=0.5cm, minimum height=2em]
+    \tikzstyle{label}    = [node distance=0cm]
+        
+    \begin{tikzpicture}[node distance = 0.5cm, auto]
+        % Place nodes
+        \node [cloud] (start) {Start};
+        \node [block, below       = of start]   (find)    {Find consistent initial values};
+        \node [block, below       = of find]    (check)   {Check event conditions};
+        \node [decision, below    = of check]   (any)     {Any events?};
+        \node [block, below left  = of any]     (solve)   {Solve continuous DAE and advance time until event or end time};
+        \node [block, below right = of any]     (fire)    {Fire event and solve for consistent initial/restart values};
+        \node [decision, below    = of solve]   (endtime) {End time?};
+        \node [cloud, below       = of endtime] (end)     {End};
+
+        % Place labels
+        \node [label, left = of find]  {1.};
+        \node [label, left = of check] {2.};
+        \node [label, left = of fire]  {3.};
+        \node [label, left = of solve] {4.};
+
+        % Draw edges
+        \path [line] (start) -- (find);
+        \path [line] (find) -- coordinate[midway](m) (check);
+        \path [line] (check) -- (any);
+        \path [line] (any) -| node [near start] {no} (solve);
+        \path [line] (any) -| node [near start] {yes} (fire);
+        \path [line] (fire) -- ++(0,-1.5) -| ([xshift=0.5cm]fire.east) |- (m);
+        \path [line] (endtime.west) -| node [near start] {no} ([xshift=-0.5cm]solve.west) |- (m);
+        \path [line] (solve) -- (endtime);
+        \path [line] (endtime) -- node {yes} (end);
+    \end{tikzpicture}
+\end{document}
