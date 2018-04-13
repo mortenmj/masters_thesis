@@ -36,7 +36,7 @@ rnolistspacing, % If the document is onehalfspacing or doublespacing, uncomment 
 parskip, % Uncomment to add space between paragraphs
 %nohyperref, % Uncomment to not load the hyperref package
 headsepline, % Uncomment to get a line under the header
-%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
+chapterinoneline, % Uncomment to place the chapter title next to the number on one line
 %consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
 ]{MastersDoctoralThesis} % The class file specifying the document structure
 
@@ -125,7 +125,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{enumitem}
 
 \usepackage[chapter]{minted}
-\setminted{fontsize=\footnotesize, baselinestretch=1}
+\setminted{fontsize=\footnotesize, baselinestretch=1, frame=lines, framesep=2mm}
 
 \usepackage[inkscape=newer,inkscapelatex=false]{svg}
 
@@ -334,6 +334,7 @@ Abstract goes here...
 \subfile{Chapters/Chapter1/main}
 \subfile{Chapters/Chapter2/main}
 \subfile{Chapters/Chapter3/main}
+\subfile{Chapters/Chapter4/main}
 
 %----------------------------------------------------------------------------------------
 %    THESIS CONTENT - APPENDICES

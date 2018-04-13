@@ -3,11 +3,11 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Chapter Title Here} % Main chapter title
+\chapter{Implementation of the control system and monitoring application} % Main chapter title
 
 \label{ch:foo} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-\section{Behavior Tree}
+\section{Visualizing the behavior Tree}
 
 At the outset of this project, the existing solution, which used a state machine approach, was evaluated.
 SMACH, short for state machine, is a task-level state machine architecture for the Robot Operating System (ROS).
@@ -44,29 +44,68 @@ It is important to not merely monitor the changing distance between the cyborg a
 A simple demonstration of a working behavior tree is shown in \cref{fig:patrol}.
 This behavior tree causes the cyborg to move in a patrol pattern between several locations while it monitors the state of the cyborg's battery charge and recharges as needed.
 
-\section{Roslibpy}
+\section{Monitoring Application}
 
-In order to expose the status of the robot in a convenient graphical interface, the choice was made to implement a web service that runs on the robot.
-This solution makes the interface easily accessible without requiring that the user installs software locally, and it allows for the robot to be monitored from anywhere in the world.
-As web services are inherently asynchronous, it was found that it was necessary to use a language with strong support for asynchronous programming.
+The second main goal of this paper is to present the development of an application that allows the user to monitor the status of the cyborg.
+There are several libraries available that allow for visualization of the relevant data, and a choice must be made as to which direction the project should take.
+
+One approach that was evaluated, was to create a standalone monitoring application, or even a simple dashboard which could be presented in a web browser.
+Among the options that have been investigated are d3, which is a visualization library for Javascript, and Bokeh and Plotly which are written in Python.
+One of the desired features for the application was that the visualizations should be interactive, so that the user could influence the state of the robot.
+Both of these libraries enable rich visualizations in the browser, but both Bokeh and Plotly were found to offer a higher degree of interactability.
+As interaction is a desired feature in the monitoring application, a Python solution using either Bokeh or Plotly was investigated further.
+
 ROS nodes can be implemented in either C++ or Python, as seen in \cref{ch:matmet}.
 For implementing visualizations for a web service, Python was found to be a good choice.
-The service might have been implemented as a ROS node, were it not for the fact that ROS uses Python 2.7.
+The monitoring application might have been implemented as a ROS node, were it not for the fact that ROS uses Python 2.7.
 Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
+This presents a challenge, and two ways to overcome it have been identified.
 
-The alternative was found to be to use a ROS service called \emph{rosbridge}, which provides a JSON API for interacting with ROS.
+\section{Rosbridge}
+
+In order to access information from ROS in an outside application, the Robot Web Tools project has developed a protocol called \emph{rosbridge} \cite{Toris}. 
+The rosbridge protocol exports data from ROS using websocket, which is a two-way TCP protocol, and uses a simple JSON API for communication.
+By communicating with ROS over websocket an application, including a web application, can access information from the cyborg.
+This solution makes the interface easily accessible without requiring that the user installs software locally, and it allows for the cyborg to be monitored from any computer with a browser.
+
 Existing front-ends for \href{http://wiki.ros.org/rosbridge_suite}{\emph{rosbridge}} include \href{http://wiki.ros.org/roslibjs}{\emph{roslibjs}}.
-\emph{Roslibjs} uses WebSocket, a two-way TCP protocol, to provide access to publishing and subscribing to topics, calling services and more.
+As it was found that visualization should be done with Bokeh, it would been necessary to port roslibjs to Python.
 
-For the visualization, it was a requirement that the visualizations shown in the browser be made interactive, so that the user could influence the state of the robot.
-Many visualization libraries exist for JavaScript, but while several showed impressive data visualization features none were found to offer the necessary interactivity.
-A choice was made to use \href{https://bokeh.pydata.org}{\emph{bokeh}}, a Python visualization library designed to create interactive presentations in the browser.
-In order to expose the necessary information to Python, roslibjs was ported to Python by the author.
-The new library was named roslibpy.
+\section{ROS 2.0}
 
-\subsection{API}
+As an alternative to implementing a Python frontend for rosbridge, a new project intended to replace ROS was evaluated.
+ROS 2.0 intends to improve on some of the fundamental shortcomings of ROS, and in so doing it solves the aforementioned problems.
 
-When designing the roslibpy API, a decision was made to stay reasonably close to roslibjs, but to design the library as a Python library first and foremost.
-There are significant differences in the approaches taken in JavaScript and Python, and it would do no good to attempt to implement the library as if it were written in JavaScript.
+As outlined in \cite{Gerkey2017}, the development of ROS involved the from-scratch implementation of the publish-subscribe middleware system which has been described earlier.
+Since then, many new technologies have become available which provide features beyond the scope of the implementation used in ROS.
+Crucially for the purpose of this project, ROS 2.0 uses Python 3, which is a requirement for the visualizations that will be included in the monitoring application.
+
+The Cyborg project depends on ROS nodes developed by MobileRobots, the manufacturer of the Pioneer LX, and it is outside the scope of this project to port these to ROS 2.0
+However, as ROS 2.0 includes the ability to interoperate with ROS, the existing parts of the project could be left as they are.
+Unfortunately, while the core functionality of ROS 2.0 is stable, many important libraries are not yet ported.
+As a lot of the underlying functionality of our current software stack depends on nav\_core and move\_base, it is infeasible to move the project to ROS 2.0 for now.
+It is the view of the author that ROS 2.0 is the future of ROS, and that the Cyborg project should aim to target this platform as the ROS 2.0 ecosystem matures.
+
+\section{RQT}
+
+In the end, it was found that a bridge solution needlessly complicated the architecture of the control system software.
+Furthermore, using off-the-shelf solutions wherever possible minimizes the work needed to be done by the project, which allows the project to focus on more important tasks.
+
+An alternative approach to the above options, and the one decided on by the project, is to implement the required functionality as one or more plugins for RQT.
+RQT is a Qt-based framework for GUI development for ROS, and comes with a rich set of plugins out of the box.
+RQT provides much of the functionality the project requires, such as visualization of time series data, a rich logging interface and command input.
+Of the two main features lacking for a complete visualization suite for the cyborg, one will be implemented as an RQT plugin.
+
+A viewer plugin similar to smach viewer will be implemented, for visualizing our behavior tree.
+These two use cases are somewhat similar, and differ mainly in the layout of the nodes in the visualization.
+If we compare \cref{fig:fsm} and \cref{fig:bt}, we see that the visualizations are superficially similar, but that the two approaches logically use different layouts.
+The take-away from this is that there is significant overlap between the goals of smach viewer, made for visualizing state machines, and the visualizer we are creating.
+
+Inspired by the approach taken by the smach viewer, the behavior tree node should publish two pieces of information, as needed.
+First, a structure message will be available as a service response.
+New visualization clients will be expected to request this message when they start.
+Second, a status message will be published as required.
+This message contains information describing the currently active nodes in the tree.
+Taken together, this information allows a client to receive all information necessary to create a visual representation of the behavior tree as it executes.
 
 \end{document}
