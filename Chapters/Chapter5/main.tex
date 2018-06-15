@@ -1,0 +1,149 @@
+% Chapter Template
+\providecommand{\rootfolder}{../..} % Relative path to main.tex
+\documentclass[\rootfolder/main.tex]{subfiles}
+\begin{document}
+
+\chapter{Implementation of Object Detection Visualization} % Main chapter title
+
+\label{ch:object-detection} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
+
+This project continues the work done by EiT students working for the Cyborg project.
+Throughout the time spent on this thesis, the author has collaborated with and guided this group in their work.
+This has allowed the author to focus on proven ideas, unlike previous parts of this thesis where much effort was spent identifying promising solutions.
+While partially based on these ideas, the following work is done by the author.
+
+%----------------------------------------------------------------------------------------
+%	SECTION: GOALS
+%----------------------------------------------------------------------------------------
+
+\section{Goals}
+
+As described in \cref{ch:background}, the ros-zed-wrapper from StereoLabs exposes the left and right images of the Cyborg's stereo camera, as well as a depth map calculated from these images.
+Here, we intend to analyze the images from the stereo camera to detect objects in the images, and then calculate the distance to each object.
+The output from the system will be twofold.
+First, an image with bounding boxes drawn around each detected object, along with its class and distance also drawn on the image.
+Secondly, a list of detected objects, along with a header containing the time stamp of the prediction message, and a copy of the header from the input image.
+Each detected object will be represented by a structure containing its label, a polygon structure describing its bounding box, and its distance.
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter5/Listings/Prediction.msg}
+    \inputminted{python}{\rootfolder/Chapters/Chapter5/Listings/Predictions.msg}
+    \caption{Prediction and Predictions message formats\label{lst:prediction-msg}}
+\end{listing}
+
+%----------------------------------------------------------------------------------------
+%	SECTION: IMPLEMENTATION
+%----------------------------------------------------------------------------------------
+
+\section{Implementation}
+
+As described in \cref{ch:background}, there are many possible algorithms that perform object detection and image classification.
+Key to this project was using an approach that performed well using the limited available computational resources on the Cyborg.
+As described, the YOLO algorithm allows for object detection and classification using a single pass through the neural network.
+For this reason, this has been the approach used in this project.
+In the following, we will detail to separate implementations using this algorithm, written by the author.
+These implementations make use of a reference implementation of the YOLO algorithm, to meet the goals outlined above, but are subject to different considerations.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: C++ IMPLEMENTATION
+%----------------------------------------------------------------------------------------
+
+\subsection{C++ implementation}
+
+First, a C++ implementation was developed.
+There are two significant advantages to implementing the object detection node in C++.
+First, it is possible to run the detection algorithm as a nodelet in the same process as the ros-zed-wrapper.
+A nodelet is a variation on the concept of an ROS node, as described in \cref{ch:background}.
+Rather than running the zed-ros-wrapper node and the object detection node in separate processes, which would require transporting raw image data over TCP, these are run in the same process.
+This allows us to use the same publish/subscribe interface as in a normal node, but have message transport handled using shared memory.
+This change is handled seamlessly by the Nodelet class, which nodelets inherit from.
+The only caveat the developer must keep in mind is that messages cannot be modified, once published to a topic, as their memory is now shared with all nodelets subscribing to the topic.
+
+\begin{listing}
+    \inputminted{cpp}{\rootfolder/Chapters/Chapter5/Listings/object_detector_node.cpp}
+    \caption{Nodelet instantiation using a C++ node.\label{lst:detection-node-cpp}}
+\end{listing}
+
+\begin{listing}
+    \inputminted{xml}{\rootfolder/Chapters/Chapter5/Listings/ros_dnn.launch}
+    \caption{Nodelet instantiation using a launch file.\label{lst:detection-node-launch}}
+\end{listing}
+
+In order to make up the object detection node, there are two approaches to launching the component nodelets that make up the node.
+It is possible to implement a node in C++ in the usual manner, instantiate a nodelet Loader and use this to load each nodelet.
+This is shown in \cref{lst:detection-node-cpp}.
+The alternative approach is to load a nodelet manager, and each nodelet, using a launch file.
+This accomplishes the same result, but allows for changing the launch procedure without requiring a recompilation.
+The approach is shown in \cref{lst:detection-node-launch}.
+
+The second advantage to using C++ is that we are able to use the implementation of the YOLO algorithm created by the OpenCV project.
+As of recent versions of OpenCV, a wide range of object detection algorithms are available using the same programming interface.
+This provides a level of flexibility, and also allows for the Cyborg project to benefit from improvements done by the OpenCV project, simply by upgrading to new versions of OpenCV in the future.
+
+\begin{listing}
+    \inputminted{cpp}{\rootfolder/Chapters/Chapter5/Listings/ObjectDetectorNodelet}
+    \caption{ObjectDetectorNodelet class definition\label{lst:objectdetectornodelet}}
+\end{listing}
+
+The full implementation can be found in the attachments, but we will give a run-through of the steps taken.
+After the nodelet manager creates an instance of the class, the OnInit() function is run, which performs the steps normally found in the class constructor.
+In the case of the ObjectDetectorNodelet, shown in \cref{lst:objectdetectornodelet}, this function fetches parameters from the ROS parameter server, such as the names for the input and output topics as well as parameters required to load the neural network.
+This includes a config file describing layers of the network, a file with weights for the network as described in \cref{ch:background}, and so forth.
+
+\begin{figure}[ht]
+    \pimage{Figures/yolo}
+    \caption{Screenshot of OpenCV object detection, from opencv.org.\label{fig:opencv}}
+\end{figure}
+
+Once all the required parameters are retrieved, the class loads the neural network and subscribes to the image and depth map topics published by zed\_ros\_wrapper.
+The image and depth map topics are subscribed to using a SubscriberFilter, which ensures that we receive both images in the same callback function, so that we can easily process them together.
+This also ensures that the received image and depth map have matching time stamps, by using the ExactSyncPolicy from the message\_filters library.
+If the node is configured to run without subscribing to a depth map, this filtering step is not performed.
+Finally, once topic subscriptions are configured, the output topics created so that the node can publish the object detection results.
+We also set up dynamic reconfigure, so the user can change the classification threshold -- the minimum confidence required for a detected object to be published -- while the node is running.
+
+\begin{listing}
+    \inputminted{cpp}{\rootfolder/Chapters/Chapter5/Listings/Prediction}
+    \caption{Prediction class definition\label{lst:prediction}}
+\end{listing}
+
+On reception of an image, and optionally a depth map, the callback function \emph{camera\_cb()} is called.
+Here, we check if there are any subscribers listening to the output of the node, and abort if there are not.
+Then, the received image is converted to OpenCV format and fed through the neural network.
+The returned output from the network, for each detected object, includes the object class label, the label confidence and coordinates for a bounding box around the object.
+These are processed and a vector of Prediction objects, as shown in \cref{lst:prediction}, are created to represent each detected object in the image.
+If the depth map is available, this can also be included.
+
+Finally, the predictions are drawn on the image, in the same way as shown in \cref{fig:opencv}, and the image is published to the output image topic.
+The predictions are also published as a list, in the form shown in \cref{lst:prediction-msg}.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: PYTHON IMPLEMENTATION
+%----------------------------------------------------------------------------------------
+
+\subsection{Python implementation}
+
+As described previously, the main advantage to using C++ over Python was believed to be in the ability to run the zed\_ros\_wrapper in the same process as the object detection algorithm.
+In order to test this hypothesis, it was necessary to also implement the same functionality as a Python node.
+This initially met a roadblock, as up until the new version of ROS released in May 2018 ROS used its own version of OpenCV, which typically lagged the latest release by several months.
+As the Deep Neural Network functionality in OpenCV has been rewritten very recently, this meant that this functionality was unavailable in ROS until recently.
+For this reason, we initially implemented one version in Python without using OpenCV, and a second version after ROS released their new version.
+
+\subsubsection{Initial version}
+
+Initially, object detection was implemented in ROS using the PyYOLO library, which is a simple Python interface to the original C implementation of YOLO.
+Just as the C implementation, the performance of this implementation is significantly higher than the OpenCV implementation described above.
+This is hypothesized to be due to CUDA support in the C implementation, which is lacking in OpenCV.
+
+The program flow in the Python version of the object detection node is generally similar to the C++ implementation, but implementing in Python yields significantly more compact code.
+
+\subsubsection{OpenCV version}
+
+With the ability to use a custom compiled version of OpenCV with ROS, it became possible to use a version with support for cutting edge features, including the Deep Neural Network (DNN) module.
+While OpenCV has CUDA support for much of its functionality, the DNN module is limited to GPU acceleration through OpenCL which currently only supports Intel GPUs.
+As the Cyborg project uses an Nvidia Jetson TX1 for graphics processing, this is a limitation.
+As GPU acceleration is key to achieving usable performance when running neural networks, backend support for this platform is key to making an OpenCV solution practical.
+Even so, this makes it possible to perform an apples to apples performance comparison between a C++ and a Python implementation using OpenCV, which is interesting in itself.
+Though this was only made possible shortly before the deadline for this report, it was interesting enough for the Cyborg project that this second Python implementation was created.
+
+\end{document}

@@ -3,109 +3,38 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Implementation of the control system and monitoring application} % Main chapter title
+\chapter{Chapter Title Here} % Main chapter title
 
 \label{ch:foo} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-\section{Visualizing the behavior Tree}
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
 
-At the outset of this project, the existing solution, which used a state machine approach, was evaluated.
-SMACH, short for state machine, is a task-level state machine architecture for the Robot Operating System (ROS).
-There are some intrinsic issues with large state machines, in particular concerning maintainability and scalability.
-As the cyborg state machine grew in size and complexity, these became more apparent.
+\section{Main Section 1}
 
-As outlined in \cref{ch:matmet}, the events that govern transitions between states in a state machine are tightly coupled.
-Because of this, when adding or removing a state, it is necessary to update the transitions to every state that transitions to the state that is being added or removed.
-Furthermore, a state machine with many states can be difficult to grasp as it becomes cluttered.
-Reusability of behaviors can also be difficult, as the states are tightly coupled to their transitions.
-Finally, as outlined in the SMACH documentation, SMACH is poorly suited to unstructured tasks.
-As one goal of the NTNU Cyborg project is lifelike behavior, it was found that a decision making approach more suited to unstructured behavior was desirable.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultricies lacinia euismod. Nam tempus risus in dolor rhoncus in interdum enim tincidunt. Donec vel nunc neque. In condimentum ullamcorper quam non consequat. Fusce sagittis tempor feugiat. Fusce magna erat, molestie eu convallis ut, tempus sed arcu. Quisque molestie, ante a tincidunt ullamcorper, sapien enim dignissim lacus, in semper nibh erat lobortis purus. Integer dapibus ligula ac risus convallis pellentesque.
 
-After evaluating several options, the behavior tree implementation that was decided on was one called \emph{behavior3}.
-\emph{behavior3} has an implementation in Python, \emph{behavior3py}, as well as Javascript, \emph{behavior3js}.
-In addition, the project includes an editor which produces JSON configuration files that describe a complete tree. 
-This configuration file can be parsed and run using \emph{behavior3py} or \emph{behavior3js}.
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
+\subsection{Subsection 1}
 
-As described in \cref{ch:matmet}, a behavior tree is built from standard composite nodes, as well as nodes that implement decorators and actions.
-To use the library, a ROS node was made, called \emph{cyborg\_bt}. 
-This node contains all the decorators and actions needed by the cyborg, and runs the tree produced with the \emph{behavior3} editor.
-Many of these nodes depend on services or topics exposed by other cyborg nodes.
-In this way, the behavior is made as reusable as possible.
+Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
 
-\begin{wrapfigure}{R}{0.5\columnwidth}
-    \pimage[0.49]{Figures/patrol}
-    \caption{Behavior tree that checks battery state, and charges if necessary, while patrolling.\label{fig:patrol}}
-\end{wrapfigure}
+%-----------------------------------
+%	SUBSECTION 2
+%-----------------------------------
 
-An example of such a node, the action node MoveTo, which moves the cyborg to a named location, constrained by a minimum radius around the target, is included in the appendix.
-The node receives a request to go to a given location, retrieves the coordinates of this location from a local store of named locations and then monitors the progress of the cyborg as it moves along the path.
-It is important to not merely monitor the changing distance between the cyborg and the target location, as the cyborg may have to circumnavigate obstacles along the path which involve moving further away from the target.
+\subsection{Subsection 2}
+Morbi rutrum odio eget arcu adipiscing sodales. Aenean et purus a est pulvinar pellentesque. Cras in elit neque, quis varius elit. Phasellus fringilla, nibh eu tempus venenatis, dolor elit posuere quam, quis adipiscing urna leo nec orci. Sed nec nulla auctor odio aliquet consequat. Ut nec nulla in ante ullamcorper aliquam at sed dolor. Phasellus fermentum magna in augue gravida cursus. Cras sed pretium lorem. Pellentesque eget ornare odio. Proin accumsan, massa viverra cursus pharetra, ipsum nisi lobortis velit, a malesuada dolor lorem eu neque.
 
-A simple demonstration of a working behavior tree is shown in \cref{fig:patrol}.
-This behavior tree causes the cyborg to move in a patrol pattern between several locations while it monitors the state of the cyborg's battery charge and recharges as needed.
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
 
-\section{Monitoring Application}
+\section{Main Section 2}
 
-The second main goal of this paper is to present the development of an application that allows the user to monitor the status of the cyborg.
-There are several libraries available that allow for visualization of the relevant data, and a choice must be made as to which direction the project should take.
-
-One approach that was evaluated, was to create a standalone monitoring application, or even a simple dashboard which could be presented in a web browser.
-Among the options that have been investigated are d3, which is a visualization library for Javascript, and Bokeh and Plotly which are written in Python.
-One of the desired features for the application was that the visualizations should be interactive, so that the user could influence the state of the robot.
-Both of these libraries enable rich visualizations in the browser, but both Bokeh and Plotly were found to offer a higher degree of interactability.
-As interaction is a desired feature in the monitoring application, a Python solution using either Bokeh or Plotly was investigated further.
-
-ROS nodes can be implemented in either C++ or Python, as seen in \cref{ch:matmet}.
-For implementing visualizations for a web service, Python was found to be a good choice.
-The monitoring application might have been implemented as a ROS node, were it not for the fact that ROS uses Python 2.7.
-Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
-This presents a challenge, and two ways to overcome it have been identified.
-
-\section{Rosbridge}
-
-In order to access information from ROS in an outside application, the Robot Web Tools project has developed a protocol called \emph{rosbridge} \cite{Toris}. 
-The rosbridge protocol exports data from ROS using websocket, which is a two-way TCP protocol, and uses a simple JSON API for communication.
-By communicating with ROS over websocket an application, including a web application, can access information from the cyborg.
-This solution makes the interface easily accessible without requiring that the user installs software locally, and it allows for the cyborg to be monitored from any computer with a browser.
-
-Existing front-ends for \href{http://wiki.ros.org/rosbridge_suite}{\emph{rosbridge}} include \href{http://wiki.ros.org/roslibjs}{\emph{roslibjs}}.
-As it was found that visualization should be done with Bokeh, it would been necessary to port roslibjs to Python.
-
-\section{ROS 2.0}
-
-As an alternative to implementing a Python frontend for rosbridge, a new project intended to replace ROS was evaluated.
-ROS 2.0 intends to improve on some of the fundamental shortcomings of ROS, and in so doing it solves the aforementioned problems.
-
-As outlined in \cite{Gerkey2017}, the development of ROS involved the from-scratch implementation of the publish-subscribe middleware system which has been described earlier.
-Since then, many new technologies have become available which provide features beyond the scope of the implementation used in ROS.
-Crucially for the purpose of this project, ROS 2.0 uses Python 3, which is a requirement for the visualizations that will be included in the monitoring application.
-
-The Cyborg project depends on ROS nodes developed by MobileRobots, the manufacturer of the Pioneer LX, and it is outside the scope of this project to port these to ROS 2.0
-However, as ROS 2.0 includes the ability to interoperate with ROS, the existing parts of the project could be left as they are.
-Unfortunately, while the core functionality of ROS 2.0 is stable, many important libraries are not yet ported.
-As a lot of the underlying functionality of our current software stack depends on nav\_core and move\_base, it is infeasible to move the project to ROS 2.0 for now.
-It is the view of the author that ROS 2.0 is the future of ROS, and that the Cyborg project should aim to target this platform as the ROS 2.0 ecosystem matures.
-
-\section{RQT}
-
-In the end, it was found that a bridge solution needlessly complicated the architecture of the control system software.
-Furthermore, using off-the-shelf solutions wherever possible minimizes the work needed to be done by the project, which allows the project to focus on more important tasks.
-
-An alternative approach to the above options, and the one decided on by the project, is to implement the required functionality as one or more plugins for RQT.
-RQT is a Qt-based framework for GUI development for ROS, and comes with a rich set of plugins out of the box.
-RQT provides much of the functionality the project requires, such as visualization of time series data, a rich logging interface and command input.
-Of the two main features lacking for a complete visualization suite for the cyborg, one will be implemented as an RQT plugin.
-
-A viewer plugin similar to smach viewer will be implemented, for visualizing our behavior tree.
-These two use cases are somewhat similar, and differ mainly in the layout of the nodes in the visualization.
-If we compare \cref{fig:fsm} and \cref{fig:bt}, we see that the visualizations are superficially similar, but that the two approaches logically use different layouts.
-The take-away from this is that there is significant overlap between the goals of smach viewer, made for visualizing state machines, and the visualizer we are creating.
-
-Inspired by the approach taken by the smach viewer, the behavior tree node should publish two pieces of information, as needed.
-First, a structure message will be available as a service response.
-New visualization clients will be expected to request this message when they start.
-Second, a status message will be published as required.
-This message contains information describing the currently active nodes in the tree.
-Taken together, this information allows a client to receive all information necessary to create a visual representation of the behavior tree as it executes.
+Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
 
 \end{document}

@@ -1,0 +1,45 @@
+class ObjectDetectorNodelet: public nodelet::Nodelet {
+    public:
+        virtual void onInit();
+
+    private:
+        ros::NodeHandle nh;
+        ros::NodeHandle nh_ns;
+
+        /* Dynamic reconfigure */
+        dynamic_reconfigure::Server<ros_dnn::ObjectDetectorConfig> server;
+        dynamic_reconfigure::Server<ros_dnn::ObjectDetectorConfig>::CallbackType f;
+        void dyn_reconf_cb(ros_dnn::ObjectDetectorConfig &config, uint32_t level);
+
+        /* Neural network */
+        cv::dnn::Net net;
+        double conf_threshold;
+        std::vector<std::string> class_labels;
+        int frame_height;
+        int frame_width;
+
+        /* Draw a list of predictions on an image.
+         * This adds a bounding box, a label and a confidence.
+         */
+        cv::Mat draw_predictions(
+                std::vector<ros_dnn::Prediction> predictions,
+                cv::Mat& frame) const;
+
+        /* Pass an image through the neural net and return a list of predictions */
+        std::vector<ros_dnn::Prediction> get_predictions(
+                cv::Mat& frame,
+                const cv::Mat& out,
+                cv::dnn::Net& net) const;
+
+        /* Publish/subscribe */
+        image_transport::Subscriber sub_img;
+        image_transport::Publisher pub_img;
+        ros::Publisher pub_pred;
+
+        /* Callback for receiving an image.
+         * This comes in two flavors, with and without depth map. */
+        void camera_cb(
+                const sensor_msgs::ImageConstPtr& img,
+                const sensor_msgs::ImageConstPtr& depth);
+        void camera_cb(const sensor_msgs::ImageConstPtr& img);
+};

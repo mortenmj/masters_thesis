@@ -1,0 +1,13 @@
+<launch>
+  <node pkg="nodelet" type="nodelet" name="ros_dnn"  args="manager"/>
+
+  <node pkg="nodelet"
+        type="nodelet"
+        name="zed_wrapper"
+        args="load zed_wrapper/ZEDWrapperNodelet ros_dnn"/>
+
+  <node pkg="nodelet"
+        type="nodelet"
+        name="object_detector"
+        args="load ros_dnn/ObjectDetectorNodelet ros_dnn"/>
+</launch>

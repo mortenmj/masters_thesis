@@ -29,6 +29,29 @@ The robot base is also intended to display a representation of the measured nerv
 
 \section{Previous work on the Cyborg project}
 
-\section{Motivation and goal}
+Previously, student groups have added a rudimentary body for the robot, upon which the existing LED box is mounted.
+This also acts as a mounting frame for existing equipment, including the power supply, Jetson computer, Raspberry Pi computer and so on.
+There is also a stereo camera mounted on the robot, although it is currently not in use.
+Work has also been done to pass information from the Micro-Electrode Array to the existing LED box, but this is also not in use at the outset of this project.
+
+\section{The author's contribution}
+
+This project aims to complete the ROS-based state machine, by implementing a variation on traditional state machines called a behavior tree.
+This will involve integrating a behavior tree implementation, ideally one that already exists and is well tested, with the ROS architecture.
+Furthermore, it will involve developing computer program for visualization of the behavior tree so that the state of the behavior tree can be inspected during robot operation.
+The mounting frame that is already on the robot will be improved by mounting industry-standard 10 inch rack-mounting rails to the frame.
+This will allow for secure, modular mounting of hardware within the robot body.
+Finally, imagery from the stereo camera will be analyzed to detect objects in the robot's view field, such as humans and other everyday objects.
+These will be classified by a neural network, and the distance to each object will be calculated so their location relative to the robot can be determined.
+
+The goal of these tasks is to take the robot a few steps closer to a state where it is able to autonomously roam the hallways of the university and act as a mascot for the university and the Cyborg project.
+
+Several existing software applications are used to achieve these goals, and will be described in more detail in the following chapter.
+The software used by the author is primarily ROS, or the Robot Operating System.
+ROS is a middleware system, composed by a number of modules, for the sake of this thesis primarily those delivered by MobileRobots, manufacturers of the Pioneer LX.
+The ROS modules, or nodes, developed by the Cyborg project and by the author interface with these existing modules.
+A library called b3, for implementing behavior trees, has been used to add a control system to our ROS environment.
+Visualization of our behavior tree was developed as a module, or plugin, which extends the rqt software, a graphical interface for ROS.
+Object detection was implemented using the OpenCV library.
 
 \end{document}

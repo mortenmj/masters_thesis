@@ -1,0 +1,57 @@
+% Chapter Template
+\providecommand{\rootfolder}{../..} % Relative path to main.tex
+\documentclass[\rootfolder/main.tex]{subfiles}
+\begin{document}
+
+\chapter{Other tasks}
+
+\label{ch:other-tasks} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
+
+%----------------------------------------------------------------------------------------
+%	SECTION RACK MOUNTING SYSTEM
+%----------------------------------------------------------------------------------------
+
+\section{Rack mounting system}
+
+\begin{figure}[h]
+    \centering
+    \subcaptionbox{Before.\label{fig:before-rack}}[0.38\columnwidth][l]{\pimage[0.38]{Figures/before}}
+    \subcaptionbox{After.\label{fig:after-rack}}[0.38\columnwidth][r]{\pimage[0.38]{Figures/after}}
+    \caption{The robot, showing equipment mounting before and after installation of the 10 inch rack.\label{fig:before-after-rack}}
+\end{figure}
+
+At the outset of the project, the robot was equipped with a mounting frame, as shown in \cref{fig:before-rack}.
+A 10 inch rack mounting system was planned for this mounting frame, inspired by the use of 10 inch equipment enclosures used for home and small business networking equipment.
+An example of such an enclosure is shown in \cref{fig:rack-example}.
+
+\begin{figure}[h]
+    \subcaptionbox{Example of a 10 inch cabinet.\label{fig:rack-example}}[0.48\columnwidth][l]{\pimage[0.38]{Figures/rack-example}}
+    \subcaptionbox{Rack rails fitted on the robot.\label{fig:rack-detail}}[0.48\columnwidth][r]{\pimage[0.38]{Figures/rack-detail}}
+\end{figure}
+
+10 inch racks, or network enclosures, are a common equipment standard for small network equipment such as network patch panels, switches and so forth.
+By using standard dimensions for enclosure width and height, as well as standard placement for mounting holes, equipment can easily be swapped in and out of the rack.
+This modularity was found to simplify work on the robot. 
+Both the existing power supply and the enclosure for the Jetson TX2 computer were mountable in the rack, while leaving ample space for one or two extra modules in the future.
+By fitting the robot with four rack posts, as shown in \cref{fig:rack-detail}, allows for mounting the power supply facing backwards.
+This allows for neater routing of power cables, as most computing and networking equipment have power connectors at the back.
+The robot can be seen before and after installation of the new rack mounting system in \cref{fig:before-after-rack}.
+The rack itself was constructed by the authors of \cite{Johansen2018}, as part of their Experts in Team project, with guidance from the author.
+
+\section{Convenience nodes for future ROS development}
+
+\subsection{cyborg\_nav}
+
+For simplifying navigational tasks, a set of services were created which can be used by e.g. the behavior tree.
+These provide functionality which might be useful to multiple parts of the Cyborg software environment, and to simplify code reuse are created as individual services.
+
+\subsubsection{AvailableGoals service}
+
+For managing a set of known locations, and exposing these to other parts of the control system, a service was created called \emph{Available Goals}
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter6/Listings/available_goals.py}
+    \caption{Implementation of the AvailableGoals service \label{lst:availablegoals}
+\end{listing}
+
+\end{document}
