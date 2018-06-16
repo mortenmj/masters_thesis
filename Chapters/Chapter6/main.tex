@@ -40,6 +40,35 @@ The rack itself was constructed by the authors of \cite{Johansen2018}, as part o
 
 \section{Convenience nodes for future ROS development}
 
+\subsection{cyborg\_util}
+
+To support collection functionality used by all nodes in the Cyborg software environment, some common classes are placed in a node called cyborg\_util.
+This node includes cyborg\_types, which contains common data types for dealing with data received from other nodes.
+
+\subsubsection{Point}
+
+The Point class represents a point in space.
+The data used to create a Point is generally received as a geometry\_msgs/Pose or geometry\_msgs/Pose2D message, both of which include a geometry\_msgs/Point message, from the navigation subsystem in ROS.
+In addition to exposing the x, y and z coordinates of the 3D point, the class also provides a convenience method for computing the Euclidean distance to a second Point.
+
+\subsubsection{Quaternion}
+
+The Quaternion class represents an orientation in space.
+The geometry\_msgs/Pose message includes a geometry\_msgs/Quaternion message, which contains the x, y, z and w coordinates used to instantiate the class.
+The class also includes a method for instantiating from a geometry\_msgs/Pose2D message, which includes the orientation as an Euler angle.
+
+\subsubsection{Pose}
+
+The Pose class represents a point and orientation in space, represented by the previous two classes.
+In addition to providing class methods allowing the class to be instantiated from any of the Pose messages in geometry\_msgs, the class also provides a convenience method for computing the Euclidean distance to a second Pose.
+
+\subsubsection{Path}
+
+A Path is an ordered collection of Poses, which typically represents a path between two locations in the world.
+In the Cyborg control system, it is used to keep an updated representation of the current path the Cyborg is moving along, so that progress can be tracked.
+To do this, it includes methods for adding and removing Poses from the Path, as well as advancing along the Path to a given Pose -- so long as the given Pose is within a certain distance from a Pose along the Path.
+The class also contains a method to retrieve the total distance from the first to the last Pose along the Path.
+
 \subsection{cyborg\_nav}
 
 For simplifying navigational tasks, a set of services were created which can be used by e.g. the behavior tree.
@@ -47,11 +76,59 @@ These provide functionality which might be useful to multiple parts of the Cybor
 
 \subsubsection{AvailableGoals service}
 
-For managing a set of known locations, and exposing these to other parts of the control system, a service was created called \emph{Available Goals}
+For managing a set of known locations, and exposing these to other parts of the control system, a service was created called \emph{AvailableGoals}.
+The service is shown in \cref{lst:availablegoals}.
+The service is instantiated with a map file, which contains a list of named waypoints or goals.
+Upon request of the list of available goals, the service will parse this map, and create a response message containing the list.
+This list will be cached, so that it can be returned in the future without needing to recreate it.
 
 \begin{listing}
     \inputminted{python}{\rootfolder/Chapters/Chapter6/Listings/available_goals.py}
-    \caption{Implementation of the AvailableGoals service \label{lst:availablegoals}
+    \caption{Implementation of the AvailableGoals service \label{lst:availablegoals}}
 \end{listing}
+
+\subsubsection{DistanceToGoal service}
+
+For requesting the distance to a goal, or waypoint, from the current location of the Cyborg, a service was created called \emph{DistanceToGoal}.
+As shown in \cref{lst:distancetogoal}, the service will receive a goal, from which a Pose object is created.
+The \emph{Pose} class is included with the attached source code.
+Using the created Pose object, the service calls the \emph{MakePlan} service, which is exposed by the ROSARNL node from MobileRobots, described in \cref{ch:background}.
+The DistanceToGoal service will then receive a plan, consisting of a list of positions, which show the path from the Cyborg to the desired final position.
+The list of positions is used to create a Path object.
+The Path class, which is also included in the attached source code, acts as a wrapper for this list of positions, and exposes useful functions for interacting with the list.
+The DistanceToGoal service will retrieves the length of the Path object, which is then returned to the user.
+The length is found by calculating the Euclidean distance between each pair of coordinates along the path.
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter6/Listings/distance_to_goal.py}
+    \caption{Implementation of the DistanceToGoal service \label{lst:distancetogoal}}
+\end{listing}
+
+\subsubsection{ClosestGoal service}
+
+For requesting the closest goal, or waypoint, from the current location of the Cyborg, a service was created called \emph{ClosestGoal}.
+Upon creation, this service instantiates a Location object.
+The Location class is included in the attached source code.
+When the Location class is instantiated, it will call the AvailableGoals service, and create a cache to hold the list of available goals.
+The ClosestGoal service iterates through this list, calling the DistanceToGoal service for each available goal, and return the goal with the shortest distance from the Cyborg.
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter6/Listings/closest_goal.py}
+    \caption{Implementation of the ClosestGoal service \label{lst:closestgoal}}
+\end{listing}
+
+\subsubsection{LoadMap service}
+
+The ROSARNL service LoadMap provides the ability to load a new map file to the Cyborg.
+Unfortunately, the service does not allow for automatically loading a given map on startup.
+In order to automatically load this map on startup, a simple service was created to call the ROSARNL LoadMap service.
+The Cyborg LoadMap service takes a single startup parameter, \emph{map\_file}, which is used to load the map using the ROSARNL LoadMap service.
+The service implementation is shown in \cref{lst:loadmap}.
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter6/Listings/load_map.py}
+    \caption{Implementation of the LoadMap service \label{lst:loadmap}}
+\end{listing}
+
 
 \end{document}

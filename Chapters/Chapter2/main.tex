@@ -56,6 +56,14 @@ The information is exported as a black and white depth map.
 By identifying the pixels of an object, the distance to the object can be determined by calculating the mean intensity of these pixels in the depth map.
 
 %----------------------------------------------------------------------------------------
+%	SUBSECTION: NVIDIA JETSON TX2
+%----------------------------------------------------------------------------------------
+
+\subsection{Nvidia Jetson TX2}
+
+TODO: Describe TX2
+
+%----------------------------------------------------------------------------------------
 %	SECTION: SOFTWARE
 %----------------------------------------------------------------------------------------
 
@@ -127,7 +135,6 @@ Services can be used to request information, request the execution of a physical
     \label{lst:ros_service}
 \end{listing}
 
-
 \subsubsection{Actions}
 
 While service calls are useful for remote procedure calls which execute quickly, they are blocking and should be avoided for long-running tasks, or tasks that may have to be preempted.
@@ -152,11 +159,68 @@ The software updates the current position automatically, using data from the rob
 These features are provided in ROS as a node, called ros-arnl, which exposes this functionality in the form of topics and services.
 This node provides a simple interface for higher-level software to monitor and control the position of the robot.
 
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: ROS 2
+%----------------------------------------------------------------------------------------
+
+\subsection{ROS 2}
+
+Here, we will give an overview of ROS 2, and how the project has attempted to remedy some perceived shortcomings in ROS.
+As outlined in \cite{Gerkey2017} ROS was developed based on the use case of the Willow Garage PR2 robot.
+Due to this, development was guided by some considerations that have later shown to be detrimental, including
+
+\begin{itemize}
+    \item a single robot
+    \item significant computational resources
+    \item no real-time requirements
+    \item strong network connectivity
+    \item mainly academic applications
+\end{itemize}
+
+Since the beginning of ROS in 2007, several of these assumptions have changed, and ROS has been used on a far wider range of robots than for what it was originally designed.
+Among the new use cases outlined, are
+
+\begin{itemize}
+    \litem{Control of multiple robots}
+        Currently, there is no standard way to control more than a single robot using ROS.
+        ROS has a single-master architecture, and multi-robot support does not elegantly integrate into this design.
+    \litem{limited computational resources}
+        ROS is not designed to run on microcontrollers. Therefore, nodes must interact with these through a device driver.
+        ROS 2 is designed so that these controllers can be implemented as nodes, and thereby participate directly in the control system as first-class citizens.
+    \item{built-in real-time support}
+    \litem{non-ideal networks}
+        As seen in earlier work on this project by \cite{Waløen2017}, ROS does not degrade gracefully when run on unreliable networks.
+        ROS 2 aims to alleviate this.
+    \litem{academic and industrial applications}
+        ROS 2 aims for ROS to remain the platform of choice in academic robotics, while also becoming increasingly relevant in industrial applications.
+\end{itemize}
+
+The central feature of ROS is the publish-subscribe middleware which allows for loose coupling of individual nodes.
+As ROS was begun in 2007, there was no sufficiently mature off-the-shelf technology that provided this, and this system was built essentially from scratch.
+The ROS project implemented the necessary framework for node discovery, message definition, serialization and transport.
+Since 2007, a number of technologies have mature which provide this capability, and it would not have been necessary to build a custom solution today.
+Several advantages to this are listed by \cite{Gerkey2017}:
+
+\begin{itemize}
+    \item Less code to be maintained by the project developers
+    \item Third party solutions may offer features outside the scope of what the project could develop themselves
+    \item The project benefits from ongoing improvements to third party solutions
+    \item Third party solutions may be rigorously proven, and thereby improve the perceived reliability of ROS
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: MOBILEEYES
+%----------------------------------------------------------------------------------------
+
 \subsection{MobileEyes}
 
 MobileEyes is a graphical interface from MobileRobots for monitoring robot motion and sensor output.
 The program allows the user to monitor the movement of the robot on the map, and it is possible to send commands to the robot remotely.
 The software also allows for reconfiguring the robot, and it is possible to send custom commands or create custom overlays that are shown on the map.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: MOBILESIM
+%----------------------------------------------------------------------------------------
 
 \subsection{MobileSim}
 
@@ -381,7 +445,7 @@ In a follow-up paper, Gerschick proposes an approach in two significant ways.
 Firstly, rather than running individual regions of the image through the feature classifier one by one, features are computed on the entire image in a single pass to create a feature map, in a process called Region of Interest Pooling.
 Then, the features for each region can be obtained by selecting the appropriate area from the pre-computed feature map.
 Secondly, the three models used previously (region proposer, image classifier and bounding box regression model), are combined into a single model.
-This allows for end-to-end training, which greatly improves trainability \cite{Girschick2015}.
+This allows for end-to-end training, which greatly improves trainability \cite{Girshick2015}.
 
 \subsubsection{Faster R-CNN}
 
@@ -393,7 +457,7 @@ This allows for end-to-end training, which greatly improves trainability \cite{G
 
 While the advances outlined greatly improve on the efficiency of object detection algorithms, they expose the region proposer as a significant bottleneck \cite{Ren2017}.
 As outlined previously, selective search is used to generate region proposals, while a CNN is used to extract features, classify the image and compute a bounding box.
-The work done by \cite{Ren2007} uses the features computed by the CNN discussed previously, and combines this with a separate CNN, called the Region Proposal Network.
+The work done by \cite{Ren2017} uses the features computed by the CNN discussed previously, and combines this with a separate CNN, called the Region Proposal Network.
 By making use of the same feature map that is used to classify images, the authors enable essentially cost-free region proposals.
 The network passes a sliding window over the feature map, and computes region proposals along with an objectness-score.
 The objectness-score measures the probability that the region contains an object, and allows for selecting only the regions that meet some minimum threshold.
@@ -424,10 +488,10 @@ This allows the network to reason globally about the contents of the image, wher
 Furthermore, performing detection in a single pass provides greater speed \cite{Redmon2015}.
 
 %----------------------------------------------------------------------------------------
-%	SECTION: TRANSFER LEARNING
+%	SUBSECTION: TRANSFER LEARNING
 %----------------------------------------------------------------------------------------
 
-\section{Transfer learning}
+\subsection{Transfer learning}
 
 \begin{figure}
     \pimage{Figures/nvidia}
@@ -450,15 +514,15 @@ In the case of the work done at NVIDIA, a general image classifier trained on th
 This can then be done much faster, and with a much smaller dataset, than what is required train a new network.
 Using this technique resulted in a network able to detect pedestrians and vehicles, and identify which sections of the road are safe for driving, as shown in \cref{fig:nvidia-cnn}.
 
-\section{Motivation}
+%\section{Motivation}
 
-\section{Functions of the robot}
+%\section{Functions of the robot}
 
-\section{Related projects}
+%\section{Related projects}
 
-\section{Input and output}
+%\section{Input and output}
 
-\section{Objective}
+%\section{Objective}
 
 %\chapter{Components}
 
@@ -470,19 +534,16 @@ Using this technique resulted in a network able to detect pedestrians and vehicl
 
 \section{Finite State Machines}
 
+At the outset of the work on this thesis, the cyborg was running the decision making software outlined in \cite{Andersen2017}.
+
+While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
+This and the following section will provide some background on these two approaches.
+
 \begin{wrapfigure}{R}{0.5\columnwidth}
     \pimage[0.49]{Figures/statemachine}
     \caption{An example of a simple state machine.}
     \label{fig:fsm}
 \end{wrapfigure}
-
-States are connected by transitions, which lead from one state to another.
-
-%----------------------------------------------------------------------------------------
-%	SUBSECTION: DEFINITION
-%----------------------------------------------------------------------------------------
-
-\subsection{Definition}
 
 A finite state machine is an abstract model of computation, that allows for actions to be encoded into a finite number of states.
 Changes from one state to another are referred to as transitions.
@@ -506,11 +567,19 @@ Instead, events arrive asynchronously and are consumed by the state machine befo
 
 \subsection{Actions}
 
-\section{Strengths and weaknesses}
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: STRENGTHS AND WEAKNESSES
+%----------------------------------------------------------------------------------------
+
+\subsection{Strengths and weaknesses}
 \label{sec:state_machine_strength_weaknesses}
 
 An overview of the use of state machines for AI in computer games is given in \cite{Millington2009}.
 In general, the concerns outlined here overlap with the concerns relevant in the sort of high-level decision making that is necessary in the Cyborg project.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: IMPLEMENTATION IN ROS
+%----------------------------------------------------------------------------------------
 
 \subsection{Implementation in ROS}
 
@@ -529,6 +598,10 @@ Actions to be performed by the robot are associated with states in the state mac
 \caption{State example from the SMACH documentation.}
 \end{listing}
 
+%----------------------------------------------------------------------------------------
+%	SECTION: BEHAVIOR TREES
+%----------------------------------------------------------------------------------------
+
 \section{Behavior trees}
 
 \begin{wrapfigure}{L}{0.5\columnwidth}
@@ -537,17 +610,94 @@ Actions to be performed by the robot are associated with states in the state mac
     \label{fig:bt}
 \end{wrapfigure}
 
-\subsection{Definition}
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/priority.py}
+    \caption{An example implementation of the Priority node in Python.\label{lst:priority}}
+\end{listing}
+
+A behavior tree is a model for for task execution commonly used artificial intelligence in  video games, but that is also applicable to robotics and other types of control system \cite{Millington2009}.
+Much of the strength in the behavior tree approach lies in the ability to compose complex behavior from simple building blocks, without needing to consider the implementation of each building block.
+In this sense they are similar to state machines, but while the fundamental building block in a state machine is the state the fundamental building block in behavior trees is the task.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: TYPES OF TASKS
+%----------------------------------------------------------------------------------------
+
+\subsection{Types of tasks}
+
+All nodes in a behavior tree share certain similarities.
+At their core, tasks are small execution units which are run for a certain length of time by the program which executes the behavior tree whereupon they return a status code, typically success, failure or running.
+There are three types of tasks commonly used in behavior trees, \emph{actions}, \emph{conditions} and \emph{composites}.
+
+\subsubsection{Actions}
+
+Actions are behaviors that change the state of the system.
+For example, an action may cause the Cyborg to move to a given location or check the status of its battery.
+
+\subsubsection{Conditions}
+
+Conditions are checks made to test a property of the system.
+For example, the battery status that was updated may be compared to a critical value.
+In this way, an action can be executed if and only if it is found that the battery state permits it, or the system may execute behavior to recharge the battery if not.
+
+\subsubsection{Composites}
+
+Composites are nodes which tie the actions and conditions together.
+While actions and conditions are implemented by the programmer, there are a fixed and very small set of typical composite nodes.
+Generally there are two composite nodes that are used, the \emph{priority} node and the \emph{sequence} node.
+
+In the simple example shown in \cref{fig:bt} the the first control node, with the \emph{?} symbol, is a priority node.
+This node will execute, or tick, its children from left to right until one of the children returns a successfully, as shown in \cref{lst:priority}.
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/sequence.py}
+    \caption{An example implementation of the Sequence node in Python.\label{lst:sequence}}
+\end{listing}
+
+The first child of this node, with the \emph{\rightarrow} symbol, is a sequence node.
+This node will execute its children from left to right until one of the children returns failure, as shown in \cref{lst:sequence}.
+By combining these, the tree shown in \cref{fig:bt} will first attempt to tick nodes \emph{t1} and \emph{t2}, and only if either of those fail will it tick node \emph{t3}.
+
+This approach can be repeated to create increasingly complex behavior, without consideration of the actual behavior performed by the tasks \emph{t1}, \emph{t2} and so on.
+If behavior reuse is required, it is possible to compose the behavior in a sub-tree which can be included as a task in a parent tree.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: THE BLACKBOARD
+%----------------------------------------------------------------------------------------
+
+\subsection{The blackboard}
+
+In order to create more complex behavior, it is generally necessary to be able to share data between tasks in a tree.
+For example, the action which queries for the Cyborg's battery charge level would need somewhere to store this value, so that it can be used by the condition which compares the charge level to a critical value.
+The blackboard, as it is commonly called, is a data store used for just this purpose.
+Generally, a blackboard is a key-value store for data exchange between tasks.
+The blackboard allows for storage of data that is available to any node in the tree.
+Depending on the implementation, it may also allow for data to be available only to other nodes in a sub-tree or data that is only available to the node which stored the data.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: STRENGTHS AND WEAKNESSES
+%----------------------------------------------------------------------------------------
 
 \subsection{Strengths and weaknesses}
 
+Behavior trees shine in the fact that complex behavior arises from composition of simple behaviors.
+Where the state machine approach may encourage the developer to encode a large amount of behavior in each state, when using behavior trees it is useful to break tasks into their smallest useful parts.
+By combining the behavior tree approach with a graphical interface for composing the tree, this allows for non-programmers to create trees from basic building blocks without needing to write code.
+
+One commonly encountered limitation of behavior trees is that they make it difficult to implement state-based behavior.
+For example, while it is simple to encode behavior that causes the Cyborg to dock with its charging station if the battery runs low, it is more difficult to make the Cyborg generally act in a way that conserves energy if it is in a state of having a somewhat low battery.
+Doing so would require either that two similar behavior trees are implemented, one for a normal state and one for an energy-depleted state, or that each task in the tree is a state machine with these two states.
+While this is possible to do, it adds significant design complexity and is therefore generally avoided.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: IMPLEMENTATION IN ROS
+%----------------------------------------------------------------------------------------
+
 \subsection{Implementation in ROS}
 
-While several behavior tree implementations were considered for this project, in the end the choice was made to use a library named behavior3.
-
-\subsection{Events}
-
-\subsection{Actions}
+Unlike finite state machines, ROS does not have a go-to implementation like SMACH.
+Therefore, this thesis required the evaluation of multiple possible solutions.
+These will be described in the following chapter.
 
 %\chapter{Physical body}
 
@@ -567,7 +717,6 @@ While several behavior tree implementations were considered for this project, in
 
 %\section{Software}
 
-
 %\section{MobileRobots}
 
 %\section{Applications}
@@ -584,80 +733,13 @@ While several behavior tree implementations were considered for this project, in
 
 %\chapter{Material and Methods} % Main chapter title
 
-\label{ch:matmet} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+%\label{ch:matmet} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
-\section{ROS}
+%\section{Monitoring Application}
 
-As the Cyborg initially used the original version of ROS, and was ported to ROS 2 by the author, we provide some background on both.
-The original version of ROS will be referred to as ROS, while the newer ROS 2 version will be referred to as such.
-
-\subsection{Components}
-
-\subsection{ROS 2}
-
-Here, we will give an overview of ROS 2, and how the project has attempted to remedy some perceived shortcomings in ROS.
-
-As outlined in \cite{Gerkey2017} ROS was developed based on the use case of the Willow Garage PR2 robot.
-Due to this, development was guided by some considerations that have later shown to be detrimental, including
-
-\begin{itemize}
-    \item a single robot
-    \item significant computational resources
-    \item no real-time requirements
-    \item strong network connectivity
-    \item mainly academic applications
-\end{itemize}
-
-Since the beginning of ROS in 2007, several of these assumptions have changed, and ROS has been used on a far wider range of robots than for what it was originally designed.
-
-Among the new use cases outlined, are
-
-\begin{itemize}
-    \litem{Control of multiple robots}
-        Currently, there is no standard way to control more than a single robot using ROS.
-        ROS has a single-master architecture, and multi-robot support does not elegantly integrate into this design.
-    \litem{limited computational resources}
-        ROS is not designed to run on microcontrollers. Therefore, nodes must interact with these through a device driver.
-        ROS 2 is designed so that these controllers can be implemented as nodes, and thereby participate directly in the control system as first-class citizens.
-    \item{built-in real-time support}
-    \litem{non-ideal networks}
-        As seen in earlier work on this project by \cite{Waløen2017}, ROS does not degrade gracefully when run on unreliable networks.
-        ROS 2 aims to alleviate this.
-    \litem{academic and industrial applications}
-        ROS 2 aims for ROS to remain the platform of choice in academic robotics, while also becoming increasingly relevant in industrial applications.
-\end{itemize}
-
-The central feature of ROS is the publish-subscribe middleware which allows for loose coupling of individual nodes.
-As ROS was begun in 2007, there was no sufficiently mature off-the-shelf technology that provided this, and this system was built essentially from scratch.
-The ROS project implemented the necessary framework for node discovery, message definition, serialization and transport.
-Since 2007, a number of technologies have mature which provide this capability, and it would not have been necessary to build a custom solution today.
-Several advantages to this are listed by \cite{Gerkey2017}:
-
-\begin{itemize}
-    \item Less code to be maintained by the project developers
-    \item Third party solutions may offer features outside the scope of what the project could develop themselves
-    \item The project benefits from ongoing improvements to third party solutions
-    \item Third party solutions may be rigorously proven, and thereby improve the perceived reliability of ROS
-\end{itemize}
-
-\section{Decision Making}
-
-At the outset of the work on this thesis, the cyborg was running the decision making software outlined in \cite{Andersen2017}.
-
-While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
-This section will provide some background on these two approaches.
-
-\subsection{State Machines} \label{sec:statemachines}
-
-
-\subsection{Behavior Trees} \label{sec:behaviortrees}
-
-
-\section{Monitoring Application}
-
-The main purpose of this paper is to create an application which allows the user to monitor the state of the robot.
-This will include showing a graphical representation of the behavior tree, showing the control flow as the tree is running.
-If possible, it will also include a representation of the map the robot uses to navigate, and real-time visualization of sensor data.
-It will also include the ability to interact with the robot, such as sending it to a particular location.
+%The main purpose of this paper is to create an application which allows the user to monitor the state of the robot.
+%This will include showing a graphical representation of the behavior tree, showing the control flow as the tree is running.
+%If possible, it will also include a representation of the map the robot uses to navigate, and real-time visualization of sensor data.
+%It will also include the ability to interact with the robot, such as sending it to a particular location.
 
 \end{document}
