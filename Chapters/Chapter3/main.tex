@@ -3,38 +3,88 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Chapter Title Here} % Main chapter title
+\chapter{Implementation of the behavior tree control system} % Main chapter title
 
-\label{ch:foo} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
-
-%----------------------------------------------------------------------------------------
-%	SECTION 1
-%----------------------------------------------------------------------------------------
-
-\section{Main Section 1}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultricies lacinia euismod. Nam tempus risus in dolor rhoncus in interdum enim tincidunt. Donec vel nunc neque. In condimentum ullamcorper quam non consequat. Fusce sagittis tempor feugiat. Fusce magna erat, molestie eu convallis ut, tempus sed arcu. Quisque molestie, ante a tincidunt ullamcorper, sapien enim dignissim lacus, in semper nibh erat lobortis purus. Integer dapibus ligula ac risus convallis pellentesque.
-
-%-----------------------------------
-%	SUBSECTION 1
-%-----------------------------------
-\subsection{Subsection 1}
-
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
-
-%-----------------------------------
-%	SUBSECTION 2
-%-----------------------------------
-
-\subsection{Subsection 2}
-Morbi rutrum odio eget arcu adipiscing sodales. Aenean et purus a est pulvinar pellentesque. Cras in elit neque, quis varius elit. Phasellus fringilla, nibh eu tempus venenatis, dolor elit posuere quam, quis adipiscing urna leo nec orci. Sed nec nulla auctor odio aliquet consequat. Ut nec nulla in ante ullamcorper aliquam at sed dolor. Phasellus fermentum magna in augue gravida cursus. Cras sed pretium lorem. Pellentesque eget ornare odio. Proin accumsan, massa viverra cursus pharetra, ipsum nisi lobortis velit, a malesuada dolor lorem eu neque.
+\label{ch:implementation-bt} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
 %----------------------------------------------------------------------------------------
-%	SECTION 2
+%	SECTION: GOALS
 %----------------------------------------------------------------------------------------
 
-\section{Main Section 2}
+\section{Goals}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+At the outset of this thesis, the existing solution which used a state machine approach, was evaluated.
+SMACH, short for state machine, is a task-level state machine architecture for the Robot Operating System (ROS).
+There are some intrinsic issues with large state machines, in particular concerning maintainability and scalability.
+As the cyborg state machine grew in size and complexity, these became increasingly apparent.
+
+As outlined in \cref{ch:background}, the events that govern transitions between states in a state machine are tightly coupled.
+Because of this, when adding or removing a state, it is necessary to update the transitions between this state and potentially every other state in the state machine.
+Furthermore, a state machine with many states can be difficult to grasp as it becomes cluttered, and the many states and transitions require the user to maintain a complex mental model.
+Reusability of behaviors can also be difficult, as the states are tightly coupled to their transitions.
+Finally, as outlined in the SMACH documentation, SMACH is poorly suited for unstructured tasks.
+As one goal of the NTNU Cyborg project is life like behavior, it was found that a decision making approach which is more suited for unstructured behavior was desirable.
+
+%----------------------------------------------------------------------------------------
+%	SECTION: EVALUATION OF ALTERNATIVES
+%----------------------------------------------------------------------------------------
+
+\section{Evaluation of alternatives}
+
+Before implementing a behavior tree control system for the Cyborg, several existing implementations and libraries were evaluated.
+Among these implementations were two existing implementation in ROS called \emph{behavior\_trees} \cite{Colledanchise} and \emph{pi\_trees} \cite{Goebel}.
+Also, a behavior tree library not specifically for ROS was evaluated, called \emph{behavior3} by the author of \cite{Pereira2015}.
+
+The main considerations in choosing an implementation was that it needed to be available in \CC or Python, as those are the available languages in ROS, and that it be possible to specify the behavior tree in a config file.
+All the evaluated options were available in one of these languages, but only behavior3 allowed for specifying the tree in a text file.
+An attempt was made to implement a tree using one of the other libraries, but it was quickly discovered that specifying the tree in code, either \CC or Python, quickly became unwieldy.
+As an example, consider a simple tree implementation from Pi Trees, from the Pi Robot project \cite{PiRobot} shown in \cref{lst:pitrees}.
+The iterator node used here has not been discussed previously, as it is less commonly used.
+It iterates through its children similarily to other composite nodes, but ignores their return value.
+
+\begin{listing}
+    \inputminted[fontsize=\scriptsize]{Python}{\rootfolder/Chapters/Chapter3/Listings/pitrees}
+    \caption{Implementation of a behavior tree using Pi Trees}
+    \label{lst:pitrees}
+\end{listing}
+
+Here, each composite node need to be named.
+Also, as Python lacks the ability to do forward declarations of objects, there is a significant amount of jumping back and forth when configuring the tree.
+Note for example that the \emph{CLEAN\_ROOM} task is referred to throughout the example.
+This is necessary as its children need to be created before they can be assigned to the parent node.
+It was found that this requirement to essentially build the tree from the bottom up was harder to do than to build the tree from the top down.
+
+After evaluating the described options, it was decided to use behavior3.
+behavior3 is implemented as both a Python library, \emph{behavior3py}, as well as a Javascript library, \emph{behavior3js}.
+Additionally, the project includes an editor, \emph{behavior3editor}.
+The editor provides a graphical interface for creating behavior trees, and allows the user to export these as JSON configuration files.
+The configuration files can be parsed and run using behavior3py or behavior3js.
+As ROS allows for nodes to be implemented in \CC or Python, this project will use behavior3py.
+
+%----------------------------------------------------------------------------------------
+%	SECTION: IMPLEMENTATION
+%----------------------------------------------------------------------------------------
+
+\section{Implementation}
+
+As described in \cref{ch:background}, a behavior tree is build from standard composite nodes, as well as nodes that implement decorators and actions.
+To use behavior3py a ROS node was made, called \emph{cyborg\_bt}, as well as a node for organizing custom decorators and actions called \emph{cyborg\_bt\_nodes}.
+cyborg\_bt imports the required decorators and actions needed by the Cyborg control system, from cyborg\_bt\_nodes, and runs the tree produced with behavior3editor.
+Much of the functionality required to implement these decorators and actions has been placed in ROS services or topics, in order to make behavior as reusable as possible.
+
+An example of such a node, the action node MoveTo, which moves the Cyborg to a requested location, is included with the attached source code.
+The node issues a movement request to the navigation subsystem, and then monitors the progress of the Cyborg as it moves along the path to its target.
+If progress stalls for longer than an allowed timeout, the movement request is aborted.
+In this case, we monitor the movement along the path to the target and not merely the Euclidean distance to the target.
+This is important, as the Cyborg may have to navigate around obstacles along its path which can involve moving further away from the target.
+
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.48]{Figures/patrol}
+    \caption{Behavior tree that checks battery state, and charges if necessary, while patrolling}
+    \label{fig:patrol-tree}
+\end{wrapfigure}
+
+A simple demonstration of a working behavior tree is shown in \cref{fig:patrol-tree}.
+This behavior tree causes the cyborg to move in a patrol pattern between several locations while it monitors the state of the Cyborg's battery charge, and recharges as needed.
 
 \end{document}

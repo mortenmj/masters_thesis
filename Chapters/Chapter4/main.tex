@@ -3,69 +3,48 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Implementation of the control system and monitoring application} % Main chapter title
+\chapter{Implementation of the control system monitoring application} % Main chapter title
 
-\label{ch:controlsystem} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
+\label{ch:implementation-monitoring} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-\section{Visualizing the behavior tree}
+%----------------------------------------------------------------------------------------
+%	SECTION: GOALS
+%----------------------------------------------------------------------------------------
 
-At the outset of this project, the existing solution which used a state machine approach, was evaluated.
-SMACH, short for state machine, is a task-level state machine architecture for the Robot Operating System (ROS).
-There are some intrinsic issues with large state machines, in particular concerning maintainability and scalability.
-As the cyborg state machine grew in size and complexity, these became increasingly apparent.
-
-As outlined in \cref{ch:background}, the events that govern transitions between states in a state machine are tightly coupled.
-Because of this, when adding or removing a state, it is necessary to update the transitions between this state and potentially every other state in the state machine.
-Furthermore, a state machine with many states can be difficult to grasp as it becomes cluttered, and the many states and transitions require the user to maintain a complex mental model.
-Reusability of behaviors can also be difficult, as the states are tightly coupled to their transitions.
-Finally, as outlined in the SMACH documentation, SMACH is poorly suited for unstructured tasks.
-As one goal of the NTNU Cyborg project is life like behavior, it was found that a decision making approach which is more suited for unstructured behavior was desirable.
-
-After evaluating several options, the behavior tree implementation that was decided on was one called \emph{behavior3}.
-behavior3 is implemented as both a Python library, \emph{behavior3py}, as well as a Javascript library, \emph{behavior3js}.
-Additionally, the project includes an editor, \emph{behavior3editor}.
-The editor provides a graphical interface for creating behavior trees, and allows the user to export these as JSON configuration files.
-The configuration files can be parsed and run using behavior3py or behavior3js.
-As ROS allows for nodes to be implemented in \CC or Python, this project will use behavior3py.
-
-As described in \cref{ch:background}, a behavior tree is build from standard composite nodes, as well as nodes that implement decorators and actions.
-To use behavior3py a ROS node was made, called \emph{cyborg\_bt}, as well as a node for organizing custom decorators and actions called \emph{cyborg\_bt\_nodes}.
-cyborg\_bt imports the required decorators and actions needed by the Cyborg control system, from cyborg\_bt\_nodes, and runs the tree produced with behavior3editor.
-Much of the functionality required to implement these decorators and actions has been placed in ROS services or topics, in order to make behavior as reusable as possible.
-
-An example of such a node, the action node MoveTo, which moves the Cyborg to a requested location, is included in the appendix (TODO: reference).
-The node issues a movement request to the navigation subsystem, and then monitors the progress of the Cyborg as it moves along the path to its target.
-If progress stalls for longer than an allowed timeout, the movement request is aborted.
-In this case, we monitor the movement along the path to the target and not merely the Euclidean distance to the target.
-This is important, as the Cyborg may have to navigate around obstacles along its path which can involve moving further away from the target.
-
-\begin{wrapfigure}{R}{0.4\columnwidth}
-    \pimage[0.38]{Figures/patrol}
-    \caption{Behavior tree that checks battery state, and charges if necessary, while patrolling}
-    \label{fig:patrol-tree}
-\end{wrapfigure}
-
-A simple demonstration of a working behavior tree is shown in \cref{fig:patrol-tree}.
-This behavior tree causes the cyborg to move in a patrol pattern between several locations while it monitors the state of the Cyborg's battery charge, and recharges as needed.
-
-\section{Monitoring application}
+\section{Goals}
 
 In addition to the control system, a main objective of this thesis is to present the development of an application that allows the user to monitor the status of the Cyborg.
+One shortcoming of behavior trees is that it can be hard to troubleshoot behavior, as the behavior stems from complex interaction of simple components \cite{Millington2009}.
+For this reason, it was found necessary to create an application that made it possible to visualize the execution of the tree in real time.
+
+The application should show the structure of the behavior tree, as well as highlight those nodes in the tree that are being executed at the current time.
+It would also be useful if the application gave the user the ability to halt and resume the execution of the tree.
+
+Initially, the ability to interact with the tree in order to manually change its execution was also investigated, but was found not to be a necessary feature.
+
+%----------------------------------------------------------------------------------------
+%	SECTION: EVALUATION OF ALTERNATIVES
+%----------------------------------------------------------------------------------------
+
+\section{Evaluation of alternatives}
+
 There are several libraries and applications available that allow for visualization of the relevant data, and a choice had to be made regarding which option to choose.
+
+\subsection{Plotting framework}
 
 One approach that was evaluated was to create a standalone monitoring application, or even a simple dashboard which could be presented in a web browser.
 Among the options that have been investigated are d3, which is a visualization library for Javascript, and Bokeh and Plotly which are visualization libraries for Python.
 One of the desired features of the application was that the visualization should be interactive, so that the user could influence the state of the Cyborg.
 All three libraries enable rich visualizations in the browser, but Bokeh and Plotly were found to offer a higher degree of interaction.
-As interaction is a desired feature in the monitoring application, a Python solution using either Bokeh or Plotly was investigated further.
+As interaction was originally a desired feature in the monitoring application, a Python solution using either Bokeh or Plotly was investigated further.
 
 ROS nodes can be implemented in either \CC or Python, as explained in \cref{ch:background}.
 For implementing visualizations as a web service, Python was deemed to be a good choice.
 The monitoring application might have been implemented as a ROS node, were it not for the fact that ROS uses Python 2.7. Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
 This presented a challenge.
-Two ways to overcome this were identified, which will be explained in the following section.
+Three ways to overcome this were identified, which will be explained in the following sections.
 
-\section{Rosbridge}
+\subsection{Rosbridge}
 
 In order to access information from ROS in an outside application, the Robot Web Tools project has developed a protocol called \emph{rosbridge} \cite{Toris}.
 The rosbridge protocol exports data from ROS using websocket, which is a two-way TCP protocol, and uses a simple JSON API for communication.
@@ -75,7 +54,7 @@ This solution makes the interface easily accessible without requiring that the u
 Existing frontends for rosbridge include \emph{roslibjs}, which is written in Javascript.
 As it was found that visualization should be done with Plotly or Bokeh, this would have required porting of roslibjs to Python.
 
-\section{ROS 2.0}
+\subsection{ROS 2.0}
 
 As porting roslibjs to Python would involve a significant amount of work, ROS 2.0 was evaluated as an alternative.
 ROS 2.0 is a new project by the creators of ROS, intended to improve on some of the fundamental shortcomings of ROS.
@@ -91,7 +70,7 @@ However, ROS 2.0 does include the ability to interoperate with ROS, meaning that
 Unfortunately, many important libraries are not yet ported, including underlying functionality such as nav\_core and move\_base, the navigation and movement subsystems respectively.
 Once these subsystems are ported it would be feasible to transition the Cyborg project to ROS 2.0, and certainly to target new functionality at ROS 2.0.
 
-\section{rqt}
+\subsection{rqt}
 
 After evaluating both rosbridge and ROS 2.0, it was found that these solutions complicated the architecture of the Cyborg control system to an unacceptable degree.
 Furthermore, using off-the-shelf solutions wherever possible minimizes the work needed to be performed, and maintained, by the Cyborg project, which allows for efforts to be focused on improving core functionality.
@@ -111,6 +90,12 @@ The behavior tree visualization plugin will be based on the existing rqt graph v
 This plugin visualizes the nodes that make up the ROS control system, and the communication paths between these nodes, as shown in \cref{fig:rqt-graph}.
 The use case for rqt\_graph and the behavior tree plugin are somewhat similar, as they both will generate DOT code that describes the graph, which will then be passed to a Qt library for drawing.
 Due to this overlap, the rqt\_graph served as valuable inspiration for the behavior tree plugin.
+
+%----------------------------------------------------------------------------------------
+%	SECTION: IMPLEMENTATION
+%----------------------------------------------------------------------------------------
+
+\section{Implementation}
 
 \subsection{Graphical User Interface}
 

@@ -61,7 +61,15 @@ By identifying the pixels of an object, the distance to the object can be determ
 
 \subsection{Nvidia Jetson TX2}
 
-TODO: Describe TX2
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.49]{Figures/tx2}
+\caption[Nvidia Jetson TX2 development kit]{Nvidia Jetson TX2 development kit, image courtesy of Nvidia\label{fig:tx2}}
+\end{wrapfigure}
+
+The Jetson TX2, shown in \cref{fig:tx2}, is an embedded computer from Nvidia, designed for real-time data processing for artificial intelligence.
+The stated purpose of the device is to move data processing from a central location to the edge, meaning on the robot or drone itself.
+The TX2 has a small form factor of 17 by 17 centimeters, and a power consumption of 7.5 watts under normal load.
+Dispite the low footprint in size and power consumption, the onboard GPU delivers in excess of 1 TFLOP ($10^{12}$ floating point operations per second) of computing power.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: SOFTWARE
@@ -236,8 +244,10 @@ This simulation includes data streams from sensors such as the sonar and laser r
 
 \begin{figure}
     \pimage{Figures/biological-neuron}
-    \caption{Model of a biological neuron TODO: SOURCE.\label{fig:biological_neuron}}
+    \caption{Model of a biological neuron.\label{fig:biological_neuron}}
 \end{figure}
+
+% TODO: Source for neuron image
 
 As a long-term goal, the Cyborg project hopes to use biological neurons in a robot control loop.
 Here, we will give some background on relevant biological concepts.
@@ -539,8 +549,8 @@ At the outset of the work on this thesis, the cyborg was running the decision ma
 While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
 This and the following section will provide some background on these two approaches.
 
-\begin{wrapfigure}{R}{0.5\columnwidth}
-    \pimage[0.49]{Figures/statemachine}
+\begin{wrapfigure}{R}{0.4\columnwidth}
+    \pimage[0.39]{Figures/statemachine}
     \caption{An example of a simple state machine.}
     \label{fig:fsm}
 \end{wrapfigure}
