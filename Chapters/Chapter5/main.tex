@@ -3,14 +3,16 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Implementation of object detection} % Main chapter title
-
+\chapter{Implementation of object detection and classification} % Main chapter title
 \label{ch:implementation-objdet} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-This project continues the work done by EiT students working for the Cyborg project.
+To provide the Cyborg's control system with information about objects in the Cyborg's surroundings, an object detection and classification system was implemented.
+This system uses data from the Cyborg's depth-sensing stereo camera to both identify and locate objects in the Cyborg's surroundings.
+It continues the work done by EiT students working for the Cyborg project, who evaluated various object detection approaches and produced a demonstration using the YOLO algorithm.
 Throughout the time spent on this thesis, the author has collaborated with and guided this group in their work.
 This has allowed the author to focus on proven ideas, unlike previous parts of this thesis where much effort was spent identifying promising solutions.
 While partially based on these ideas, the following work is done by the author.
+This chapter will provide details on the goals of this system, the choices that were made in planning the system and a description of the implementation of the system itself.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: GOALS
@@ -21,8 +23,9 @@ While partially based on these ideas, the following work is done by the author.
 As described in \cref{ch:background}, the ros-zed-wrapper from StereoLabs exposes the left and right images of the Cyborg's stereo camera, as well as a depth map calculated from these images.
 Here, we intend to analyze the images from the stereo camera to detect objects in the images, and then calculate the distance to each object.
 The output from the system will be twofold.
-First, an image with bounding boxes drawn around each detected object, along with its class and distance also drawn on the image.
-Secondly, a list of detected objects, along with a header containing the time stamp of the prediction message, and a copy of the header from the input image.
+First, an image with bounding boxes drawn around each detected object is published as an \arcshort{ros} topic.
+Furthermore, the object's class and distance from the Cyborg also drawn on the image.
+Secondly, a list of detected objects, along with a header containing the time stamp of the prediction message, and a copy of the header from the input image is also published as an \acrshort{ros} topic.
 Each detected object will be represented by a structure containing its label, a polygon structure describing its bounding box, and its distance.
 
 \begin{listing}
@@ -37,6 +40,8 @@ Each detected object will be represented by a structure containing its label, a 
 
 \section{Evaluation of alternatives}
 
+% TODO: Object detection, evaluation of alternatives
+
 %----------------------------------------------------------------------------------------
 %	SECTION: IMPLEMENTATION
 %----------------------------------------------------------------------------------------
@@ -44,7 +49,8 @@ Each detected object will be represented by a structure containing its label, a 
 \section{Implementation}
 
 As described in \cref{ch:background}, there are many possible algorithms that perform object detection and image classification.
-Key to this project was using an approach that performed well using the limited available computational resources on the Cyborg.
+Key to this project is using an approach that performs well using the limited available computational resources on the Cyborg.
+It was also desirable to use off-the-shelf software, to minimize the work needed to create and maintain the solution.
 As described, the YOLO algorithm allows for object detection and classification using a single pass through the neural network.
 For this reason, this has been the approach used in this project.
 In the following, we will detail to separate implementations using this algorithm, written by the author.
@@ -98,7 +104,7 @@ This includes a config file describing layers of the network, a file with weight
 
 \begin{figure}[ht]
     \pimage{Figures/yolo}
-    \caption{Screenshot of OpenCV object detection, from opencv.org.\label{fig:opencv}}
+    \caption[Screenshot of OpenCV object detection.]{Screenshot of OpenCV object detection, courtesy of opencv.org.\label{fig:opencv}}
 \end{figure}
 
 Once all the required parameters are retrieved, the class loads the neural network and subscribes to the image and depth map topics published by zed\_ros\_wrapper.

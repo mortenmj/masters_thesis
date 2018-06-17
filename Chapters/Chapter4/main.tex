@@ -4,8 +4,10 @@
 \begin{document}
 
 \chapter{Implementation of the control system monitoring application} % Main chapter title
-
 \label{ch:implementation-monitoring} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
+
+To monitor the state of the control system described in \cref{ch:implementation-control}, a monitoring application was implemented.
+This chapter will provide details on the goals of this system, the choices that were made in planning the system and a description of the implementation of the system itself.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: GOALS
@@ -18,9 +20,12 @@ One shortcoming of behavior trees is that it can be hard to troubleshoot behavio
 For this reason, it was found necessary to create an application that made it possible to visualize the execution of the tree in real time.
 
 The application should show the structure of the behavior tree, as well as highlight those nodes in the tree that are being executed at the current time.
-It would also be useful if the application gave the user the ability to halt and resume the execution of the tree.
+It is also useful for the application to give the user the ability to halt and resume the execution of the tree.
 
-Initially, the ability to interact with the tree in order to manually change its execution was also investigated, but was found not to be a necessary feature.
+Initially, the ability to interact with the tree in order to manually change its execution was also investigated.
+The original idea was for the application to include the ability to trigger execution of a particular node of the behavior tree.
+However, the necessary increase in the complexity of the application was found not to be justified.
+Description of the feature is included, as it significantly influenced the planning stage of the monitoring application before being dropped from consideration.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: EVALUATION OF ALTERNATIVES
@@ -32,23 +37,23 @@ There are several libraries and applications available that allow for visualizat
 
 \subsection{Plotting framework}
 
-One approach that was evaluated was to create a standalone monitoring application, or even a simple dashboard which could be presented in a web browser.
-Among the options that have been investigated are d3, which is a visualization library for Javascript, and Bokeh and Plotly which are visualization libraries for Python.
+One approach that was evaluated was to create a standalone monitoring application, or even a simple dashboard that could be presented in a web browser.
+Among the options that have been investigated are d3, which is a visualization library for Javascript, Bokeh, and Plotly, which are visualization libraries for Python.
 One of the desired features of the application was that the visualization should be interactive, so that the user could influence the state of the Cyborg.
 All three libraries enable rich visualizations in the browser, but Bokeh and Plotly were found to offer a higher degree of interaction.
 As interaction was originally a desired feature in the monitoring application, a Python solution using either Bokeh or Plotly was investigated further.
 
-ROS nodes can be implemented in either \CC or Python, as explained in \cref{ch:background}.
+\acrshort{ros} nodes can be implemented in either \CC or Python, as explained in \cref{ch:background}.
 For implementing visualizations as a web service, Python was deemed to be a good choice.
-The monitoring application might have been implemented as a ROS node, were it not for the fact that ROS uses Python 2.7. Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
+The monitoring application might have been implemented as a \acrshort{ros} node, were it not for the fact that \acrshort{ros} uses Python 2.7. Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
 This presented a challenge.
-Three ways to overcome this were identified, which will be explained in the following sections.
+Three ways to overcome this were identified that will be explained in the following sections.
 
 \subsection{Rosbridge}
 
-In order to access information from ROS in an outside application, the Robot Web Tools project has developed a protocol called \emph{rosbridge} \cite{Toris}.
-The rosbridge protocol exports data from ROS using websocket, which is a two-way TCP protocol, and uses a simple JSON API for communication.
-An application, including a web application, can access information from the Cyborg by communicating with ROS using websocket.
+In order to access information from \acrshort{ros} in an outside application, the Robot Web Tools project has developed a protocol called \emph{rosbridge} \cite{Toris}.
+The rosbridge protocol exports data from \acrshort{ros} using websocket which is a two-way \acrshort{tcp} protocol, and uses a simple \acrshort{json} \acrshort{api} for communication.
+An application, including a web application, can access information from the Cyborg by communicating with \acrshort{ros} using websocket.
 This solution makes the interface easily accessible without requiring that the user installs software locally, and it allows for the Cyborg to be monitored from any computer with a web browser.
 
 Existing frontends for rosbridge include \emph{roslibjs}, which is written in Javascript.
@@ -56,39 +61,39 @@ As it was found that visualization should be done with Plotly or Bokeh, this wou
 
 \subsection{ROS 2.0}
 
-As porting roslibjs to Python would involve a significant amount of work, ROS 2.0 was evaluated as an alternative.
-ROS 2.0 is a new project by the creators of ROS, intended to improve on some of the fundamental shortcomings of ROS.
-In doing so, it also solves the same problems that rosbridge intends to solve, by making it far easier for outside applications to communicate with an ROS control system.
+As porting roslibjs to Python would involve a significant amount of work, \acrshort{ros} 2.0 was evaluated as an alternative.
+\acrshort{ros} 2.0 is a new project by the creators of \acrshort{ros} intended to improve on some of the fundamental shortcomings of \acrshort{ros}.
+In doing so, it also solves the same problems that rosbridge intends to solve, by making it far easier for outside applications to communicate with an \acrshort{ros} control system.
 
-As outlined in \cref{Gerkey2017}, the development of ROS involved the from-scratch implementation of a publish-subscribe system.
-Since the start of the ROS project, many new technologies have become available which provide features beyond the scope of the implementation used in ROS.
-Crucially for the purpose of this project ROS 2.0 uses Python 3, which is a requirements for the visualization libraries discussed above.
+As outlined in \cite{Gerkey2017}, the development of \acrshort{ros} involved the from-scratch implementation of a publish-subscribe system.
+Since the start of the \acrshort{ros} project, many new technologies have become available which provide features beyond the scope of the implementation used in \acrshort{ros}.
+Crucially for the purpose of this project \acrshort{ros} 2.0 uses Python 3, which is a requirement for the visualization libraries discussed above.
 
-While the core ROS 2.0 implementation is considered stable and production ready at the time of writing, the Cyborg project depends on ROS nodes that are not yet available for ROS 2.0.
-Specifically, the project depends on nodes developed by MobileRobots, the manufacturer of the Pioneer LX, and it is outside the scope of this project to port these to ROS 2.0.
-However, ROS 2.0 does include the ability to interoperate with ROS, meaning that it would be possible to leave existing ROS functionality as is, while new functionality could target ROS 2.0.
+While the core \acrshort{ros} 2.0 implementation is considered stable and ready for production use at the time of writing, the Cyborg project depends on \acrshort{ros} nodes that are not yet available for \acrshort{ros} 2.0.
+Specifically, the project depends on nodes developed by MobileRobots, the manufacturer of the Pioneer LX, and it is outside the scope of this project to port these to \acrshort{ros} 2.0.
+However, \acrshort{ros} 2.0 does include the ability to interoperate with \acrshort{ros}, meaning that it is possible to leave existing \acrshort{ros} functionality as is, while new functionality could target \acrshort{ros} 2.0.
 Unfortunately, many important libraries are not yet ported, including underlying functionality such as nav\_core and move\_base, the navigation and movement subsystems respectively.
-Once these subsystems are ported it would be feasible to transition the Cyborg project to ROS 2.0, and certainly to target new functionality at ROS 2.0.
+Once these subsystems are ported it would be feasible to transition the Cyborg project to \acrshort{ros} 2.0, and certainly to target new functionality at \acrshort{ros} 2.0.
 
 \subsection{rqt}
 
-After evaluating both rosbridge and ROS 2.0, it was found that these solutions complicated the architecture of the Cyborg control system to an unacceptable degree.
-Furthermore, using off-the-shelf solutions wherever possible minimizes the work needed to be performed, and maintained, by the Cyborg project, which allows for efforts to be focused on improving core functionality.
+After evaluating both rosbridge and \acrshort{ros} 2.0, it was found that these solutions complicated the architecture of the Cyborg control system more than necessary.
+Furthermore, using off-the-shelf solutions wherever possible minimizes necessary work and maintenance for the Cyborg project, which allows for efforts to be focused on improving core functionality.
 
-An alternative approach to the solutions described above, and the one decided upon by Martinius Knudsen and the author, was to implement the required functionality as one or more plugins for rqt.
-rqt is a Qt-based framework for GUI development for ROS, and comes with a rich set of plugins already available.
-rqt provides much of the functionality the Cyborg project requires, such as visualization of time series data, a rich logging interface and command nput.
+An alternative approach to the solutions described above, and the one decided upon by Martinius Knudsen (the author's co-advisor) and the author, was to implement the required functionality as one or more plugins for rqt.
+rqt is a Qt-based framework for \acrfull{gui} development for \acrshort{ros}, and comes with a rich set of plugins already available.
+rqt provides much of the functionality the Cyborg project requires, such as visualization of time series data, a rich logging interface and command input.
 For these reasons, the choice was made to implement the behavior tree visualization as a plugin for rqt, and use existing rqt plugins for the other visualizations needed by the project.
 
 \begin{figure}[ht]
     \pimage{Figures/rqt-graph}
-    \caption{Screenshot of rqt-graph, showing a visualization of the currently running ROS nodes and the communication pathways between them.}
+    \caption{Screenshot of rqt-graph, showing the currently running \acrshort{ros} nodes and the communication pathways between them.}
     \label{fig:rqt-graph}
 \end{figure}
 
-The behavior tree visualization plugin will be based on the existing rqt graph visualizer, \emph{rqt\_graph}.
-This plugin visualizes the nodes that make up the ROS control system, and the communication paths between these nodes, as shown in \cref{fig:rqt-graph}.
-The use case for rqt\_graph and the behavior tree plugin are somewhat similar, as they both will generate DOT code that describes the graph, which will then be passed to a Qt library for drawing.
+The behavior tree visualization plugin will be based on the existing rqt graph visualizer \emph{rqt\_graph}.
+This plugin visualizes the nodes that make up the \acrshort{ros} control system, and the communication paths between these nodes as shown in \cref{fig:rqt-graph}.
+The use case for rqt\_graph and the behavior tree plugin are somewhat similar, as they both generate DOT code that describes the graph which will then be passed to a Qt library for drawing.
 Due to this overlap, the rqt\_graph served as valuable inspiration for the behavior tree plugin.
 
 %----------------------------------------------------------------------------------------
@@ -99,27 +104,28 @@ Due to this overlap, the rqt\_graph served as valuable inspiration for the behav
 
 \subsection{Graphical User Interface}
 
-Implementing the GUI using Qt provides a range of graphical widgets, which can be composed using the Qt Creator software.
-The resulting UI text file can then be loaded in Python, which automatically creates objects for each widget specified in the UI file.
+Implementing the \acrshort{gui} using Qt provides a range of graphical widgets, which can be composed using the Qt Creator software.
+The resulting \acrshort{ui} text file can then be loaded in Python which automatically creates objects for each widget specified in the \acrshort{ui} file.
 Interactive widgets provide signals which are emitted upon actions such as a button click, a value change and so forth.
 These signals may be connected to functions implemented by the developer, in order to perform actions when the user interacts with the graphical interface.
 Actions may be performed immediately, or they may be deferred in situations where this is required.
-For example, long running tasks may cause the interface to become inresponsive if they are executed indiscriminantly, and it may be necessary to defer them for the sake of a better user experience.
-Where required, widgets may be subclassed in order to add additional signals, but this has not been necessary for this project.
+For example, long running tasks may cause the interface to become unresponsive if they are executed indiscriminantly, and it may be necessary to defer them for the sake of a better user experience.
+Where required, widgets may be subclassed in order to add additional signals, but this has not been necessary for this project as the default signals sufficed to implement the needed functionality.
 
 \begin{figure}[ht]
     \pimage{Figures/qt-creator}
-    \caption{Screenshot of Qt Creator}
+    \caption{Screenshot of Qt Creator.}
     \label{fig:qt-creator}
 \end{figure}
 
 The behavior tree visualization plugin was named \emph{rqt\_bt}.
-The plugin was designed using Qt Creator, as shown in \cref{fig:qt-creator}.
-The entire GUI is composed of a widget created by the author, \emph{rqt\_bt\_widget}, which acts as a container for the other components of the GUI.
+The plugin was designed using Qt Creator.
+The interface of Qt Creator is shown in \cref{fig:qt-creator}.
+The entire \acrshort{gui} is composed of a widget created by the author, \emph{rqt\_bt\_widget}, which acts as a container for the other components of the \acrshort{gui}.
 At the top of the interface, the layout is made up of a \emph{QHBoxLayout} widget, which is a container widget for laying out widgets horizontally.
 This widget contains the control buttons for interacting with the application.
 Below this the layout contains an \emph{InteractiveGraphicsView} widget.
-This is a widget created by the ROS project, which extends the stock \emph{QGraphicsWidget}.
+This is a widget created by the \acrshort{ros} project, which extends the stock \emph{QGraphicsWidget}.
 The widget is responsible for drawing the actual graphics view to the screen.
 All of the listed widgets subclass \emph{QWidget}, which is the base class for all user interface objects in Qt.
 
@@ -130,9 +136,9 @@ The buttons in the interface allow the user to control the behavior of the plugi
 \item The \emph{Fit} check box will cause the graph to be automatically drawn to fit within the view port, so that the whole graph can be seen at the same time. The graph will resize to fit even if the graph changes.
 \item The \emph{Fit in View} push button will cause the graph to be resized to fit in the view port, but only a single time. That is, it will not be automatically updated.
 \item The \emph{Draw Depth} spin box allows the user to select how deeply nested behavior trees should be drawn. Trees deeper than the selected level are collapsed to a single node, as shown in \cref{fig:rqt-bt-depth}.
-\item The \emph{Save as DOT}, \emph{Save as SVG} and \emph{Save as Image} push buttons allow the user to save the graph in a variety of formats.
+\item The \emph{Save as DOT}, \emph{Save as \acrshort{svg}} and \emph{Save as Image} push buttons allow the user to save the graph in a variety of formats.
 \item The \emph{Refresh Graph} push button forces redrawing of the graph.
-\item The \emph{Run} push button enables or disables the behavior tree node running in ROS.
+\item The \emph{Run} push button enables or disables the behavior tree node running in \acrshort{ros}.
 \end{itemize}
 
 The run push button deserves some further explanation.
@@ -143,7 +149,7 @@ Conversely, if the behavior tree's execution is paused, the button displays a pl
 
 \begin{figure}[ht]
     \pimage{Figures/rqt-bt}
-    \caption{Screenshot of rqt\_bt}
+    \caption{Screenshot of rqt\_bt.}
     \label{fig:rqt-bt}
 \end{figure}
 
@@ -155,37 +161,38 @@ Conversely, if the behavior tree's execution is paused, the button displays a pl
 
 \subsection{Displaying the tree}
 
-In order to display the behavior tree, as well as which nodes are currently active, two pieces of information are required to be published by the behavior tree node, cyborg\_bt.
-Firstly, we require that it publish the structure of the tree, and secondly we require that it publish a list with the IDs of the currently active nodes.
-When the cyborg\_bt node is created, the behavior tree is traversed an a NetworkX graph is created that represents the tree.
+In order to display the behavior tree, as well as which nodes are currently active, two pieces of information are required to be published by the behavior tree node cyborg\_bt.
+Firstly, we require that it publish the structure of the tree, and secondly we require that it publishes a list with the IDs of the currently active nodes.
+When the cyborg\_bt node is created, the behavior tree is traversed and a NetworkX graph is created that represents the tree.
 NetworkX provides a method for converting these graphs to and from JSON data, which allows for transmitting the structure of the tree as a string message on a topic, and recover it upon receipt.
-The generated data is made available in two separate topics, as a JSON string and as a list of ID strings, respectively.
+The generated data is made available in two separate topics, as a JSON string, and as a list of ID strings, respectively.
 
 \begin{listing}
-    \inputminted{Python}{\rootfolder/Chapters/Chapter4/Listings/btdata.py}
+    \inputminted{python}{\rootfolder/Chapters/Chapter4/Listings/btdata.py}
     \caption{Implementation of the BTData class for rqt\_bt}
     \label{lst:btdata}
 \end{listing}
 
 In order to consume the provided data, the rqt\_bt\_widget creates a \emph{BTData} object, which listens to these two topics, as shown in \cref{lst:btdata}.
-The BTData instance is provided to the DOT code generator class, \emph{BTDotcodeGenerator}, shown in \cref{lst:btdotcode}.
+The BTData instance is provided to the DOT code generator class \emph{BTDotcodeGenerator}, shown in \cref{lst:btdotcode}.
 The BTData instance will continue to listen to the provided topics, and maintain an updated representation of the behavior tree graph, which can be retrieved using the \emph{get\_graph()} method.
 The topics published by cyborg\_bt are latched, meaning that the most recently transmitted message will be retransmitted to any new subscribers.
 This means that the BTData instance receives updated information as soon as it is created.
 If this is not the case, BTData falls back to providing an empty graph so that consumers of the graph avoid having to add special cases for invalid data.
 
 When rqt\_bt\_widget requires a redraw of the behavior tree graph, either due to periodic redrawing or due to user interaction, the \emph{generate\_dotcode()} method in BTDotcodeGenerator is called.
-This method retrieves the current graph and the list of currently active nodes, from its instance of BTData.
+This method retrieves the current graph and the list of currently active nodes from its instance of BTData.
 The method performs processing of the graph, such as culling nodes that are deeper than the requested drawing depth, and adds highlighting to indicate the currently active nodes.
 Finally, DOT code is generated to represent the graph, which is passed back to rqt\_bt\_widget so that it can be drawn by the Qt framework.
 If the DOT code has changed since the last time it was drawn, it is passed to an instance of \emph{DotToQtGenerator}.
-This class is provided by \emph{qt\_dotgraph}, which is a library created by the ROS project that provides helper functions for drawing DOT graphcs in Qt.
+This class is provided by \emph{qt\_dotgraph}, which is a library created by the \acrshort{ros} project that provides helper functions for drawing DOT graphcs in Qt.
 
 Using the \emph{dotcode\_to\_qt\_items()} method provided by DotToQtGenerator, we create a list of nodes and edges.
-These are added to a \emph{QGraphicsScene}, which is finally passed to the QGraphicsView widget described previously, which draws the scene on the user's screen.
+These are added to a \emph{QGraphicsScene} which is passed to the QGraphicsView.
+The QGraphicsView widget draws the scene on the user's screen.
 
 \begin{listing}
-    \inputminted{Python}{\rootfolder/Chapters/Chapter4/Listings/dotcode.py}
+    \inputminted{python}{\rootfolder/Chapters/Chapter4/Listings/dotcode.py}
     \caption{Implementation of the BTDotcodeGenerator class for rqt\_bt}
     \label{lst:btdotcode}
 \end{listing}

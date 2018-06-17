@@ -4,26 +4,36 @@
 \begin{document}
 
 \chapter{Results}
-
 \label{ch:results} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
+% TODO: Results intro
+
 %----------------------------------------------------------------------------------------
-%	SECTION CONTROL SYSTEM AND MONITORING APPLICATION
+%	SECTION BEHAVIOR TREE CONTROL SYSTEM
 %----------------------------------------------------------------------------------------
 
-\section{Control System and Monitoring Application}
+\section{Behavior tree control system}
 
-In implementing a behavior tree solution using b3 and custom ROS nodes as basic building blocks, as described in \cref{ch:control-monitoring}, the foundation has been laid for a scalable, complex control system for the robot.
+In implementing a behavior tree solution using b3 and custom ROS nodes as basic building blocks, as described in \cref{ch:implementation-control}, the foundation has been laid for a scalable, complex control system for the Cyborg.
 It was found that composing complex control systems from basic blocks can lead to behavior which can be hard to understand without the ability to visualize the flow of control in the system.
-In this regard, the visualization software that was developed has been a valuable diagnostic tool, which it is believed will be useful to the project when increasingly complex behavior is implemented.
+
+%----------------------------------------------------------------------------------------
+%	SECTION CONTROL SYSTEM MONITORING APPLICATION
+%----------------------------------------------------------------------------------------
+
+\section{Control system monitoring application}
+
+The visualization software, described in \cref{ch:implementation-monitoring}, has been a valuable diagnostic tool. 
+It is believed will be useful to the project when increasingly complex behavior is implemented.
 
 %----------------------------------------------------------------------------------------
 %	SECTION OBJECT DETECTION VISUALIZATION
 %----------------------------------------------------------------------------------------
 
-\section{Object Detection Visualization}
+\section{Object detection visualization}
 
-Two parts of the image processing pipeline are evaluated, being the image transmission from the zed\_ros\_wrapper to the object\_detection, running as \CC nodes and nodelets, and as Python nodes, as described in \cref{ch:object-detection}.
+Here, the object detection system described in \cref{ch:implementation-objdet} is evaluated.
+Two parts of the image processing pipeline are considered, being the image transmission from the zed\_ros\_wrapper to the object\_detection, running as \CC nodes and nodelets, and as Python nodes, as described in \cref{ch:object-detection}.
 In comparing the execution times of the different implementations, some interesting results are found.
 
 Firstly, the difference when running the \CC implementation in the nodelet configuration compared to the node configuration, that is when using shared memory rather than TCP for data transfer, is found to be small.
@@ -45,7 +55,7 @@ Secondly, as expected, the object detection takes the same amount of time for bo
 However, unexpectedly, the Python implementation takes a shorter amount of time clocking in at only 70\% of the runtime of the \CC implementations.
 This difference was confirmed not to be due to any differences in the pre- or post-processing done to the results, but rather be due to differences in OpenCV itself.
 Similar results have also been confirmed by others \cite{Liu}.
-It should be noted that these results are from running the neural network on a CPU, and that improved performanced for the object detection phase should be expected when running on a GPU.
+It should be noted that these results are from running the neural network on a CPU, and that improved performanced for the object detection phase should be expected when running on a \acrfull{GPU}.
 While OpenCV supports OpenCL as a backend for the DNN module, this is only available on Intel GPUs, while the Cyborg project uses an Nvidia GPU for image processing.
 Support for a CUDA backend for the DNN module is under active development, it is expected that this will greatly improve performance with minimal changes required to our software.
 

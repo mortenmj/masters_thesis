@@ -123,6 +123,7 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 \usepackage{marginnote}
 \usepackage{subfiles}
 \usepackage{enumitem}
+\usepackage{dirtytalk}
 
 \usepackage[chapter]{minted}
 \setminted{fontsize=\footnotesize, baselinestretch=1, frame=lines, framesep=2mm}
@@ -154,6 +155,9 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 \hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
 \hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
 }
+
+\makenoidxglossaries
+\input{glossary.tex}
 
 \begin{document}
 
@@ -248,6 +252,8 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
 Abstract goes here...
+
+%TODO: Abstract
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -258,6 +264,7 @@ Abstract goes here...
 %\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
 %The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
 %\end{acknowledgements}
+%TODO: Acknowledgements
 
 %----------------------------------------------------------------------------------------
 %    LIST OF CONTENTS/FIGURES/TABLES PAGES
@@ -275,14 +282,13 @@ Abstract goes here...
 %    ABBREVIATIONS
 %----------------------------------------------------------------------------------------
 
-\begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
 
-\textbf{DAE} & \textbf{D}ifferential \textbf{A}lgebraic \textbf{E}quation\\
-\textbf{FMI} & \textbf{F}unctional \textbf{M}ock-up \textbf{I}nterface\\
-\textbf{FMU} & \textbf{F}unctional \textbf{M}odelling \textbf{U}nit\\
-\textbf{ODE} & \textbf{O}rdinary \textbf{D}ifferential \textbf{E}quation\\
+%\begin{abbreviations}{l} % Include a list of abbreviations (a table of two columns)
 
-\end{abbreviations}
+%TODO: Abbreviations
+
+
+%\end{abbreviations}
 
 %----------------------------------------------------------------------------------------
 %    PHYSICAL CONSTANTS/OTHER DEFINITIONS
@@ -319,6 +325,8 @@ Abstract goes here...
 
 %\dedicatory{For/Dedicated to/To my\ldots}
 
+%TODO: Dedication
+
 %----------------------------------------------------------------------------------------
 %    THESIS CONTENT - CHAPTERS
 %----------------------------------------------------------------------------------------
@@ -337,17 +345,18 @@ Abstract goes here...
 \subfile{Chapters/Chapter5/main}
 \subfile{Chapters/Chapter6/main}
 \subfile{Chapters/Chapter7/main}
+\subfile{Chapters/Chapter8/main}
 
 %----------------------------------------------------------------------------------------
 %    THESIS CONTENT - APPENDICES
 %----------------------------------------------------------------------------------------
 
-\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+%\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
 
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-\subfile{Appendices/AppendixA}
+%\subfile{Appendices/AppendixA}
 
 %----------------------------------------------------------------------------------------
 %    BIBLIOGRAPHY
