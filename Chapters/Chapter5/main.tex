@@ -8,7 +8,7 @@
 
 To provide the Cyborg's control system with information about objects in the Cyborg's surroundings, an object detection and classification system was implemented.
 This system uses data from the Cyborg's depth-sensing stereo camera to both identify and locate objects in the Cyborg's surroundings.
-It continues the work done by EiT students working for the Cyborg project, who evaluated various object detection approaches and produced a demonstration using the YOLO algorithm.
+It continues the work done by EiT students working for the Cyborg project, who evaluated various object detection approaches and produced a demonstration using the \acrfull{yolo} algorithm \cite{Opheim2018}.
 Throughout the time spent on this thesis, the author has collaborated with and guided this group in their work.
 This has allowed the author to focus on proven ideas, unlike previous parts of this thesis where much effort was spent identifying promising solutions.
 While partially based on these ideas, the following work is done by the author.
@@ -26,7 +26,7 @@ The output from the system will be twofold.
 First, an image with bounding boxes drawn around each detected object is published as an \arcshort{ros} topic.
 Furthermore, the object's class and distance from the Cyborg also drawn on the image.
 Secondly, a list of detected objects, along with a header containing the time stamp of the prediction message, and a copy of the header from the input image is also published as an \acrshort{ros} topic.
-Each detected object will be represented by a structure containing its label, a polygon structure describing its bounding box, and its distance.
+Each detected object will be represented by a structure containing its classification, a polygon structure describing its bounding box, its distance from the Cyborg, and the classification confidence outputted by the detection algorithm.
 
 \begin{listing}
     \inputminted{python}{\rootfolder/Chapters/Chapter5/Listings/Prediction.msg}
@@ -40,7 +40,21 @@ Each detected object will be represented by a structure containing its label, a 
 
 \section{Evaluation of alternatives}
 
-% TODO: Object detection, evaluation of alternatives
+As described in \cref{ch:background}, there are many possible algorithms that perform object detection and image classification.
+Key to this project is using an approach that performs well using the limited available computational resources on the Cyborg.
+It was also desirable to use off-the-shelf software, to minimize the work needed to create and maintain the solution.
+
+As described, the \acrshort{yolo} algorithm allows for object detection and classification using a single pass through the neural network, which is an efficient approach \cite{Redmon2015}.
+As the object detection part of this thesis continued existing work by \cite{Opheim2018}, the choice was made to continue to use the \acrshort{yolo} algorithm.
+Consideration was given to which implementation of this algorithm to use.
+
+The demo implementation by \cite{Opheim2018} used a library called PyYOLO.
+PyYOLO is a Python wrapper around the original CUDA implementation by the author of \acrshort{yolo}, and therefore performs very well.
+The downside to this is that the underlying \acrshort{yolo} implementation must be compiled for PyYOLO to be used, which adds to the maintenance burden of the project members.
+
+As of late 2017 there is support for \acrshort{yolo} in the \emph{\acrfull{dnn}} module of \emph{OpenCV}, and it was decided that this merited further research.
+While OpenCV lacks \emph{CUDA} support, and was therefore expected not to perform as well in timing benchmarks, this is planned for inclusion in future versions of OpenCV.
+Furthermore, OpenCV's \acrshort{dnn} module is able to use a number of neural networks, which allows for different object detection algorithms to be run with only minimal changes to the Cyborg software.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: IMPLEMENTATION
@@ -48,12 +62,7 @@ Each detected object will be represented by a structure containing its label, a 
 
 \section{Implementation}
 
-As described in \cref{ch:background}, there are many possible algorithms that perform object detection and image classification.
-Key to this project is using an approach that performs well using the limited available computational resources on the Cyborg.
-It was also desirable to use off-the-shelf software, to minimize the work needed to create and maintain the solution.
-As described, the YOLO algorithm allows for object detection and classification using a single pass through the neural network.
-For this reason, this has been the approach used in this project.
-In the following, we will detail to separate implementations using this algorithm, written by the author.
+In this section, we will detail to separate implementations using this algorithm, written by the author.
 These implementations make use of a reference implementation of the YOLO algorithm, to meet the goals outlined above, but are subject to different considerations.
 
 %----------------------------------------------------------------------------------------
@@ -62,10 +71,10 @@ These implementations make use of a reference implementation of the YOLO algorit
 
 \subsection{C++ implementation}
 
-First, a C++ implementation was developed.
+First, a C++ implementation using OpenCV was developed.
 There are two significant advantages to implementing the object detection node in C++.
 First, it is possible to run the detection algorithm as a nodelet in the same process as the ros-zed-wrapper.
-A nodelet is a variation on the concept of an ROS node, as described in \cref{ch:background}.
+A nodelet is a variation on the concept of an \acrshort{ros} node, as described in \cref{ch:background}.
 Rather than running the zed-ros-wrapper node and the object detection node in separate processes, which would require transporting raw image data over TCP, these are run in the same process.
 This allows us to use the same publish/subscribe interface as in a normal node, but have message transport handled using shared memory.
 This change is handled seamlessly by the Nodelet class, which nodelets inherit from.
@@ -99,7 +108,7 @@ This provides a level of flexibility, and also allows for the Cyborg project to 
 
 The full implementation can be found in the attachments, but we will give a run-through of the steps taken.
 After the nodelet manager creates an instance of the class, the OnInit() function is run, which performs the steps normally found in the class constructor.
-In the case of the ObjectDetectorNodelet, shown in \cref{lst:objectdetectornodelet}, this function fetches parameters from the ROS parameter server, such as the names for the input and output topics as well as parameters required to load the neural network.
+In the case of the ObjectDetectorNodelet, shown in \cref{lst:objectdetectornodelet}, this function fetches parameters from the \acrshort{ros} parameter server, such as the names for the input and output topics as well as parameters required to load the neural network.
 This includes a config file describing layers of the network, a file with weights for the network as described in \cref{ch:background}, and so forth.
 
 \begin{figure}[ht]
@@ -137,23 +146,25 @@ The predictions are also published as a list, in the form shown in \cref{lst:pre
 
 As described previously, the main advantage to using C++ over Python was believed to be in the ability to run the zed\_ros\_wrapper in the same process as the object detection algorithm.
 In order to test this hypothesis, it was necessary to also implement the same functionality as a Python node.
-This initially met a roadblock, as up until the new version of ROS released in May 2018 ROS used its own version of OpenCV, which typically lagged the latest release by several months.
-As the Deep Neural Network functionality in OpenCV has been rewritten very recently, this meant that this functionality was unavailable in ROS until recently.
-For this reason, we initially implemented one version in Python without using OpenCV, and a second version after ROS released their new version.
+This initially met a roadblock, as up until the new version of \acrshort{ros} released in May 2018 \acrshort{ros} used its own version of OpenCV.
+The version of OpenCV included with \acrshort{ros} has typically lagged the latest OpenCV release by several months.
+As the \acrshort{dnn} functionality in OpenCV has been rewritten very recently, this meant that this functionality was unavailable in \acrshort{ros} until recently.
+For this reason, we initially implemented one version in Python without using OpenCV, and a second version after \acrshort{ros} released their new version.
 
 \subsubsection{Initial version}
 
-Initially, object detection was implemented in ROS using the PyYOLO library, which is a simple Python interface to the original C implementation of YOLO.
+Initially, object detection was implemented in \acrshort{ros} using the PyYOLO library, which is a simple Python interface to the original C implementation of YOLO.
 Just as the C implementation, the performance of this implementation is significantly higher than the OpenCV implementation described above.
 This is hypothesized to be due to CUDA support in the C implementation, which is lacking in OpenCV.
 
+The demonstration application created by \cite{Opheim2018} was modified to output the detection image and prediction list described earlier.
 The program flow in the Python version of the object detection node is generally similar to the C++ implementation, but implementing in Python yields significantly more compact code.
 
 \subsubsection{OpenCV version}
 
-With the ability to use a custom compiled version of OpenCV with ROS, it became possible to use a version with support for cutting edge features, including the Deep Neural Network (DNN) module.
-While OpenCV has CUDA support for much of its functionality, the DNN module is limited to GPU acceleration through OpenCL which currently only supports Intel GPUs.
-As the Cyborg project uses an Nvidia Jetson TX1 for graphics processing, this is a limitation.
+With the ability to use a custom compiled version of OpenCV with \acrshort{ros}, it became possible to use a version with support for cutting edge features, including the \acrfull{dnn} module.
+While OpenCV has CUDA support for much of its functionality, the \acrshort{dnn} module is limited to GPU acceleration through OpenCL which currently only supports Intel GPUs.
+As the Cyborg project uses an Nvidia Jetson TX2 for graphics processing, this is a limitation.
 As GPU acceleration is key to achieving usable performance when running neural networks, backend support for this platform is key to making an OpenCV solution practical.
 Even so, this makes it possible to perform an apples to apples performance comparison between a C++ and a Python implementation using OpenCV, which is interesting in itself.
 Though this was only made possible shortly before the deadline for this report, it was interesting enough for the Cyborg project that this second Python implementation was created.

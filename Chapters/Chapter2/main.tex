@@ -252,10 +252,8 @@ This simulation includes data streams from sensors such as the sonar and laser r
 
 \begin{figure}
     \pimage{Figures/biological-neuron}
-    \caption{Model of a biological neuron.\label{fig:biological_neuron}}
+    \caption[Model of a biological neuron]{Model of a biological neuron, courtesy of Blausen Medical.\label{fig:biological_neuron}}
 \end{figure}
-
-% TODO: Source for neuron image
 
 As a long-term goal, the Cyborg project hopes to use biological neurons in a robot control loop.
 Here, we will give some background on relevant biological concepts.
@@ -298,7 +296,7 @@ Finally, at higher levels of the neocortex, complex objects such as cars and hou
     \caption{Model of an artificial neuron.\label{fig:artificial_neuron}}
 \end{wrapfigure}
 
-Our robot is intended to move around in its surroundings, and is equipped with a stereo camera in order to orient itself.
+The Cyborg is intended to move around in its surroundings, and is equipped with a stereo camera in order to orient itself.
 Here, an overview is given of the techniques used in computer and robot vision, and the research that has driven the explosion of activity within this field in the past few years.
 This section provides some background on how artificial neural networks relate to robot vision, as well as an overview of how they function in general.
 
@@ -443,30 +441,30 @@ The very earliest attempts at object detection using \acrshort{cnn}s employ a na
 Using windows of various sizes and classifying these sub-images one by one, it is possible to detect objects within an image composed of multiple objects.
 However, this is a brute force approach and for fine-grained detection requires classifying thousands of windows per image.
 
-\subsubsection{Regions with CNN (R-CNN)}
+\subsubsection{\acrfull{rcnn}}
 
 \begin{figure}
     \pimage{Figures/rcnn}
     \caption[Object detection and classification using \acrshort{rcnn}]{Object detection and classification using \acrshort{rcnn} \cite{Girshick2013}.\label{fig:r-cnn}}
 \end{figure}
 
-The approach taken by \cite{Girshick2013}, called \acrfull{rcnn} extracts region proposals from the image by a process called \emph{selective search}.
+The approach taken by \cite{Girshick2013}, called \emph{\acrfull{rcnn}} extracts region proposals from the image by a process called \emph{selective search}.
 The selective search algorithm looks at the image through windows of different sizes, and identifies relevant regions by grouping adjacent pixels by color, texture or intensity.
 The resulting groups are reshaped into bounding boxes, and the contents of each bounding box are fed to an image classifier.
 If the contents of a box are successfully classified, the algorithm attempts to tighten the bounding box using a linear regression model.
 The process is shown in \cref{fig:r-cnn}.
 The approach has low error rate, but the connection of three different models leads to high complexity which makes the system difficult to train.
 
-\subsubsection{Fast R-CNN}
+\subsubsection{Fast \acrshort{rcnn}}
 
-While this approach of generating region proposals is significantly less computationally expensive than using sliding windows, it still requires that around 2000 region proposals are classified.
-In a follow-up paper, Gerschick proposes an approach that is improved in two significant ways.
+While the approach of generating region proposals is significantly less computationally expensive than using sliding windows, it still requires that around 2000 region proposals are classified.
+In a follow-up paper, Gerschick proposes an approach that is improved in two significant ways called \emph{Fast \arcshort{rcnn}}.
 Firstly, rather than running individual regions of the image through the feature classifier one by one, features are computed on the entire image in a single pass to create a feature map, in a process called Region of Interest Pooling.
 Subsequently, the features for each region can be obtained by selecting the appropriate area from the pre-computed feature map.
 Secondly, the three models used previously (region proposer, image classifier and bounding box regression model), are combined into a single model.
 This allows for end-to-end training, which greatly improves trainability \cite{Girshick2015}.
 
-\subsubsection{Faster R-CNN}
+\subsubsection{Faster \acrshort{rcnn}}
 
 \begin{wrapfigure}{r}{0.4\columnwidth}
     \pimage[0.39]{Figures/faster-rcnn}
@@ -477,22 +475,23 @@ This allows for end-to-end training, which greatly improves trainability \cite{G
 While the advances outlined above greatly improve on the efficiency of object detection algorithms, they expose the region proposer as a significant bottleneck \cite{Ren2017}.
 Selective search is used to generate region proposals, while a \acrshort{cnn} is used to extract features, classify the image and compute a bounding box.
 The work done by \cite{Ren2017} uses the features computed by the \acrshort{cnn} discussed previously, and combines this with a separate \acrshort{cnn}, called the \emph{Region Proposal Network}.
+They name this approach \emph{Faster \arcshort{rcnn}}.
 By making use of the same feature map that is used to classify images, the authors enable essentially cost-free region proposals.
 The network passes a sliding window over the feature map, and computes region proposals along with an objectness-score.
 The objectness-score measures the probability that the region contains an object, and allows for selecting only the regions that meet some minimum threshold.
 
-\subsubsection{Mask R-CNN}
+\subsubsection{Mask \acrshort{rcnn}}
 
 \begin{figure}[H]
     \pimage{Figures/mask-rcnn}
     \caption[Pixel-level object detection using Mask \acrshort{rcnn}.]{Pixel-level object detection using Mask \acrshort{rcnn} \cite{He2017}.\label{fig:mask-rcnn}}
 \end{figure}
 
-Later work extends this approach by detecting which pixels belong to each of the detected objects, as shown in \cref{fig:mask-rcnn} \cite{He2017}.
+Later work extends this approach by detecting which pixels belong to each of the detected objects, as shown in \cref{fig:mask-rcnn} \cite{He2017}, a method named \emph{Mask \acrshort{rcnn}}.
 Here, in parallel to the region proposal network, a network is branched off which simultaneously computes a binary mask for each object.
 The binary map identifies which pixels belong to the object, as shown in \cref{fig:mask-rcnn}.
 
-\subsubsection{You Only Look Once}
+\subsubsection{\acrfull{yolo}}
 
 \begin{figure}[H]
     \pimage{Figures/yolo}
@@ -543,6 +542,7 @@ At the outset of the work on this thesis, the cyborg was running the decision ma
 
 While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
 This and the following section will provide some background on these two approaches.
+The information in this section is largely based on \cite{Millington2009}.
 
 \begin{wrapfigure}{R}{0.4\columnwidth}
     \pimage[0.39]{Figures/statemachine}
@@ -572,7 +572,10 @@ Instead, events arrive asynchronously and are consumed by the state machine befo
 
 \subsection{Actions}
 
-% TODO: Explain state machine actions
+Actions in finite state machines are associated with transitions.
+In actual use, actions are typically modularized by splitting into an entry action and an exit action for each state as well as component executed repeatedly while the state is active.
+Often, it is desirable to specify behavior that should trigger when the state machine enters or leaves a state.
+This granularity achieved by splitting each actions simplifies behavior reuse, for example if every transition into a states share behavior that can be placed in an entry action.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: STRENGTHS AND WEAKNESSES
@@ -584,7 +587,22 @@ Instead, events arrive asynchronously and are consumed by the state machine befo
 An overview of the use of state machines for AI in computer games is given in \cite{Millington2009}.
 In general, the concerns outlined here overlap with the concerns relevant in the sort of high-level decision making that is necessary in the Cyborg project.
 
-% TODO: Explain state machine strengths and weaknesses
+State machines have work well for structured behavior, as they make it simple to implement a sequence of behaviors and the conditions for transitioning between them.
+They work particularily well for behavior where it is necessary to interrupt the current behavior due to external events.
+
+One major weakness of state machines is that as the control system grows, the number of states and transitions between states quickly balloons and can be come unmanageable.
+Take as an example a control system for the Cyborg, where it should act in different ways depending on the charge level of its battery.
+If the battery is in good condition, the Cyborg should behave as normal.
+If the battery is in a medium condition, the Cyborg should attempt to minimize its energy use and should recharge as soon as is convenient.
+And, if the battery is in poor condition, the Cyborg should do whatever it can to recharge as soon as possible.
+Using a state machine, there are two ways to implement this.
+Either, would be possible to use a hierarchy of state machines, one for each battery state.
+Alternatively, each state in the state machine can be a state machine in itself, with a state for each battery state.
+In both cases, the number of states would be three times the number of states in the original control system.
+Furthermore, the number of transitions that must be added when including a new state grow with the size of the state machine, and the process can quickly become cumbersome.
+
+Another weakness, which has been an important consideration for this project, is that state machines fall short when implementing unstructured behavior.
+While they are well suited for structured behavior of the type that a robot may do in an industrial setting, they are less suited for a robot which is intended to roam freely and react in a life-like way to its surroundings.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: IMPLEMENTATION IN ROS
@@ -698,7 +716,8 @@ By combining the behavior tree approach with a graphical interface for composing
 One commonly encountered limitation of behavior trees is that they make it difficult to implement state-based behavior.
 For example, while it is simple to encode behavior that causes the Cyborg to dock with its charging station if the battery runs low, it is more difficult to make the Cyborg generally act in a way that conserves energy if it is in a state of having a somewhat low battery.
 Doing so would require either that two similar behavior trees are implemented, one for a normal state and one for an energy-depleted state, or that each task in the tree is a state machine with these two states.
-While this is possible to implement this feature, it adds significant design complexity and is therefore generally avoided \cite{Millington}.
+In this way, behavior trees share some of the weaknesses found in state machines.
+While this is possible to implement this functionality, it adds significant design complexity and is therefore generally avoided \cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: IMPLEMENTATION IN ROS

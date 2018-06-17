@@ -14,8 +14,12 @@
 
 \section{Behavior tree control system}
 
-In implementing a behavior tree solution using b3 and custom ROS nodes as basic building blocks, as described in \cref{ch:implementation-control}, the foundation has been laid for a scalable, complex control system for the Cyborg.
+In implementing a behavior tree solution using behavior3 and custom ROS nodes as basic building blocks, as described in \cref{ch:implementation-control}, the foundation has been laid for a scalable, complex control system for the Cyborg.
 It was found that composing complex control systems from basic blocks can lead to behavior which can be hard to understand without the ability to visualize the flow of control in the system.
+
+The ability to create behavior trees using configuration files and load them using \acrshort{ros} launch files was found to be a significant advantage.
+The graphical editor behavior3editor simplified behavior tree creation further.
+Compared to the more manual approaches required with the other libraries that were evaluated, where the behavior tree is specified in code, this was found to greatly simplify the design process.
 
 %----------------------------------------------------------------------------------------
 %	SECTION CONTROL SYSTEM MONITORING APPLICATION
@@ -23,7 +27,7 @@ It was found that composing complex control systems from basic blocks can lead t
 
 \section{Control system monitoring application}
 
-The visualization software, described in \cref{ch:implementation-monitoring}, has been a valuable diagnostic tool. 
+The visualization software, described in \cref{ch:implementation-monitoring}, has been a valuable diagnostic tool.
 It is believed will be useful to the project when increasingly complex behavior is implemented.
 
 %----------------------------------------------------------------------------------------
