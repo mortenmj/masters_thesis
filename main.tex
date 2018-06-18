@@ -75,7 +75,30 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 \usepackage{fontspec}
 \usepackage[english]{selnolig}
 \usepackage{ebgaramond}
-\usepackage{microtype}
+%\usepackage{microtype}
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+
+% Superscript protrusion %
+\SetProtrusion{encoding={*},family={bch},series={*},size={6,7}}
+              {1={ ,750},2={ ,500},3={ ,500},4={ ,500},5={ ,500},
+               6={ ,500},7={ ,600},8={ ,500},9={ ,500},0={ ,500}}
+
+% Kerning
+\SetExtraKerning[unit=space]
+    {encoding={*}, family={bch}, series={*}, size={footnotesize,small,normalsize}}
+    {\textendash={400,400}, % en-dash, add more space around it
+     "28={ ,150}, % left bracket, add space from right
+     "29={150, }, % right bracket, add space from left
+     \textquotedblleft={ ,150}, % left quotation mark, space from right
+     \textquotedblright={150, }} % right quotation mark, space from left
+
+\SetExtraKerning[unit=space]
+   {encoding={*}, family={qhv}, series={b}, size={large,Large}}
+   {1={-200,-200},
+    \textendash={400,400}}
+
+% Tracking
+\SetTracking{encoding={*}, shape=sc}{40}
 
 %----------------------------------------------------------------------------------------
 %   MATH SETTINGS
@@ -277,6 +300,8 @@ Finally, I would like to extend my deepest gratitude to my mother, Birgit Mjelva
 %    LIST OF CONTENTS/FIGURES/TABLES PAGES
 %----------------------------------------------------------------------------------------
 
+\microtypesetup{protrusion=false} % disables protrusion locally in the document
+
 \tableofcontents % Prints the main table of contents
 
 \listoffigures % Prints the list of figures
@@ -284,6 +309,8 @@ Finally, I would like to extend my deepest gratitude to my mother, Birgit Mjelva
 \listoftables % Prints the list of tables
 
 \listoflistings % Print the list of listings
+
+\microtypesetup{protrusion=true} % enables protrusion
 
 %----------------------------------------------------------------------------------------
 %    ABBREVIATIONS
