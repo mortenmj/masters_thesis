@@ -31,8 +31,8 @@ english, % ngerman for German
 onehalfspacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
 %draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
 rnolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
-%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
-%toctotoc, % Uncomment to add the main table of contents to the table of contents
+liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+toctotoc, % Uncomment to add the main table of contents to the table of contents
 parskip, % Uncomment to add space between paragraphs
 %nohyperref, % Uncomment to not load the hyperref package
 headsepline, % Uncomment to get a line under the header
@@ -110,12 +110,31 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 
 
 %----------------------------------------------------------------------------------------
+%   LISTING SETTINGS
+%----------------------------------------------------------------------------------------
+
+\usepackage[chapter]{minted}
+\setminted{fontsize=\footnotesize, baselinestretch=1, frame=lines, framesep=2mm}
+
+%----------------------------------------------------------------------------------------
+%   TOC SETTINGS
+%----------------------------------------------------------------------------------------
+
+\usepackage{tocbibind}
+
+\renewcommand{\listoflistings}{%
+  \cleardoublepage
+  \addcontentsline{toc}{chapter}{\listoflistingscaption}%
+  \listof{listing}{\listoflistingscaption}%
+}
+
+%----------------------------------------------------------------------------------------
 %   MISC SETTINGS
 %----------------------------------------------------------------------------------------
 
 \numberwithin{figure}{chapter}
 \numberwithin{table}{chapter}
-\usepackage[acronym]{glossaries}
+\usepackage[acronym,toc]{glossaries}
 \usepackage[section]{placeins}
 \usepackage{booktabs}
 \usepackage[l2tabu]{nag}
@@ -124,9 +143,6 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 \usepackage{subfiles}
 \usepackage{enumitem}
 \usepackage{dirtytalk}
-
-\usepackage[chapter]{minted}
-\setminted{fontsize=\footnotesize, baselinestretch=1, frame=lines, framesep=2mm}
 
 \usepackage[inkscape=newer,inkscapelatex=false]{svg}
 
@@ -156,7 +172,7 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 \hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
 }
 
-\makenoidxglossaries
+\makeglossaries
 \input{glossary.tex}
 
 \begin{document}
@@ -197,7 +213,6 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 
 \large \textsw{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
 \textsw{in the}\\[0.4cm]
-%\groupname\\
 \deptname\\[2.6cm] % Research group name and department name
 
 \vfill
@@ -236,16 +251,6 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 %\cleardoublepage
 
 %----------------------------------------------------------------------------------------
-%    QUOTATION PAGE
-%----------------------------------------------------------------------------------------
-
-%\vspace*{0.2\textheight}
-
-%\noindent\enquote{\itshape Thanks to my solid academic training, today I can write hundreds of words on virtually any topic without possessing a shred of information, which is how I got a good job in journalism.}\bigbreak
-
-%\hfill Dave Barry
-
-%----------------------------------------------------------------------------------------
 %    ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
@@ -260,11 +265,13 @@ Abstract goes here...
 %    ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-%\begin{acknowledgements}
-%\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
-%The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
-%\end{acknowledgements}
-%TODO: Acknowledgements
+\begin{acknowledgements}
+\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+
+I would like to thank my co-advisor Martinius Knudsen for his guidance and my partner, Katharina Fechtner, for her support and feedback during the work of this thesis.
+Finally, I would like to extend my deepest gratitude to my mother, Birgit Mjelva, for all her support throughout my education.
+
+\end{acknowledgements}
 
 %----------------------------------------------------------------------------------------
 %    LIST OF CONTENTS/FIGURES/TABLES PAGES
@@ -282,13 +289,7 @@ Abstract goes here...
 %    ABBREVIATIONS
 %----------------------------------------------------------------------------------------
 
-
-%\begin{abbreviations}{l} % Include a list of abbreviations (a table of two columns)
-
-%TODO: Abbreviations
-
-
-%\end{abbreviations}
+\printglossary[type=\acronymtype,style=long,title=List of Acronyms,nonumberlist]
 
 %----------------------------------------------------------------------------------------
 %    PHYSICAL CONSTANTS/OTHER DEFINITIONS
