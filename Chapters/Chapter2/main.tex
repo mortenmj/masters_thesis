@@ -33,7 +33,7 @@ Here, some detail will be given on each hardware component that is relevant to t
     \label{fig:robot-comparison}
 \end{figure}
 
-The NTNU Cyborg uses the Pioneer LX robot, from MobileRobots (\cref{fig:robot-original})~\cite{MobileRobots}.
+The NTNU Cyborg uses the Pioneer LX robot, from MobileRobots~(\cref{fig:robot-original})~\cite{MobileRobots}.
 Omron Adept MobileRobots, previously MobileRobots, is a manufacturer of intelligent mobile robots for commercial and industrial use.
 
 The Pioneer LX comes equipped with the required sensors for safe, autonomous operation.
@@ -54,7 +54,7 @@ It is designed for continuous operation for 13 hours before recharging, which ca
     \label{fig:zed-camera}
 \end{figure}
 
-The Stereolabs ZED (\cref{fig:zed-camera}) is a dual 4 megapixel camera.
+The Stereolabs ZED~(\cref{fig:zed-camera}) is a dual 4 megapixel camera.
 It provides 1920$\times$1080 video at 30 \acrfull{fps} frames per second, or 800$\times$400 at 100 \acrshort{fps}, with a \ang{110} angle of view~\cite{Stereolabs}.
 
 The camera is designed to emulate the stereoscopic operation of human eyes.
@@ -75,7 +75,7 @@ By identifying the pixels of an object, the distance to the object can be determ
     \label{fig:tx2}
 \end{wrapfigure}
 
-The Nvidia Jetson TX2, shown in \cref{fig:tx2}, is an embedded computer from Nvidia, designed for real-time data processing for \emph{artificial intelligence}\footnote{https://www.nvidia.com/en-us/autonomous-machines/embedded-systems-dev-kits-modules/}
+The Nvidia Jetson TX2, shown in~\cref{fig:tx2}, is an embedded computer from Nvidia, designed for real-time data processing for \emph{artificial intelligence}\footnote{https://www.nvidia.com/en-us/autonomous-machines/embedded-systems-dev-kits-modules/}
 The stated purpose of the device is to move data processing from a central location to the edge, meaning on the robot or drone itself.
 The TX2 has a small form factor of 17 by 17 centimeters, and a power consumption of 7.5 watts under normal load.
 Despite the low footprint in size and power consumption, the onboard GPU delivers in excess of 1 T\acrshort{flops} ($10^{12}$ \acrlong{flops}) of computing power~\cite{Nvidia2017}.
@@ -283,7 +283,7 @@ Synaptic communication generally travels along axons and synaptic \emph{terminal
 Synapses may either transmit electric signals directly, in \emph{electrical synapses}, or by using neurotransmitters, in \emph{chemical synapses}.
 
 The neurons in the brain are organized in a hierarchical manner.
-Signals enter through the \emph{brain stem}, and travel upwards as shown in \cref{fig:brain-hierarchy}.
+Signals enter through the \emph{brain stem}, and travel upwards as shown in~\cref{fig:brain-hierarchy}.
 As shown, higher layers of the brain are responsible for increasingly sophisticated levels of thought.
 This layering is also present in the \emph{neocortex}.
 Taking vision as an example, lower levels of the neocortex are responsible for simple features such as edges and corners.
@@ -310,7 +310,7 @@ This section provides some background on how artificial neural networks relate t
 This approach is inspired by the activity of neurons in the brain.
 The artificial neuron is modelled by an \emph{activation function}, which outputs a value as a function of the sum of its inputs.
 Historically, this has been one of several possible \emph{sigmoid functions}, for example $g\left(x\right) = \frac{1}{1 - e^{-x}}$.
-An illustration of an artificial neuron is shown in \cref{fig:artificial_neuron}.
+An illustration of an artificial neuron is shown in~\cref{fig:artificial_neuron}.
 
 \emph{Nodes} in artificial neural networks are organized into \emph{layers} of units which are connected to the units in the consequent and previous layers.
 The value of the signal flowing into a node is a function of the value flowing out of the previous layer, and the weights assigned to the particular connections.
@@ -322,7 +322,7 @@ A neural network with a sufficient number of units and a continuous, bounded and
     \label{fig:xor_net}
 \end{wrapfigure}
 
-A simple example, which approximates the \acrfull{xor} function, is illustrated in \cref{fig:xor_net}.
+A simple example, which approximates the \acrfull{xor} function, is illustrated in~\cref{fig:xor_net}.
 The weights in this example are determined by construction.
 In a real scenario, the weights are found by minimizing some \emph{cost function} through the process of \emph{gradient descent}, which is referred to as training the network~\cite{Mitchell1997}.
 Through training, the network would find a different set of weights while still achieving the same output.
@@ -350,11 +350,11 @@ Through training, the network would find a different set of weights while still 
     \label{fig:cnn-classification}
 \end{figure}
 
-For a fully connected network as the one shown in \cref{fig:mnist-net}, every neuron in the \emph{hidden layer} is connected to each input.
+For a fully connected network as the one shown in~\cref{fig:mnist-net}, every neuron in the \emph{hidden layer} is connected to each input.
 In this case there are 784 connections, one for each pixel in the input image.
 However, with one input per color channel, per pixel, this number would quickly balloon into the hundreds of thousands for a larger image.
 Instead of flattening an image to a column vector, as done in the fully connected network shown before, a \acrshort{cnn} arranges its neurons in a 3D volume corresponding to the width, height and color channel depth of the input image.
-Furthermore, each neuron in a hidden layer is connected only to a smaller region of the previous layer, as shown in \cref{fig:cnn-classification}.
+Furthermore, each neuron in a hidden layer is connected only to a smaller region of the previous layer, as shown in~\cref{fig:cnn-classification}.
 Between \emph{convolutional layers}, \emph{pooling layers} have traditionally been inserted to reduce the spatial size of the network.
 This decreases the computational complexity of the network, and by lowering the number of parameters also limits \emph{overfitting}~\cite{Szegedy2014}.
 
@@ -368,7 +368,7 @@ This decreases the computational complexity of the network, and by lowering the 
 A \acrshort{cnn} consists of convolutional, pooling, and fully connected layers, which perform the following tasks.
 A convolutional layer consists of a set of learned \emph{filters}.
 These filters are moved across the input image, and as the network is trained it learns filters that activate when presented with some visual feature.
-As shown in \cref{fig:abstract-features}, early layers may learn basic features such as horizontal or vertical lines.
+As shown in~\cref{fig:abstract-features}, early layers may learn basic features such as horizontal or vertical lines.
 Later layers learn increasingly high-level features, such as the shape of an eye, the corner of a mouth or some other building block of an image~\cite{Brown2015}.
 
 %----------------------------------------------------------------------------------------
@@ -407,15 +407,15 @@ As explained in~\cite{Krizhevsky2012}, the ability to correctly classify complex
 However, even with the millions of images in a dataset such as ImageNet it is infeasible to train an fully connected neural network to perform this task.
 \acrlongpl{cnn} enable networks to detect features in images, with a lower computational complexity than standard nets.
 At the most basic levels of the network, such features may be simple horizontal and vertical lines while later layers may learn more abstract features.
-This is illustrated in \cref{fig:abstract-features} and \cref{fig:cnn-classification}.
-Compared to fully connected networks, such as the one illustrated in \cref{fig:mnist-net}, \acrshortpl{cnn} have fewer connections and parameters and are therefore easier to train.
+This is illustrated in~\cref{fig:abstract-features} and~\cref{fig:cnn-classification}.
+Compared to fully connected networks, such as the one illustrated in~\cref{fig:mnist-net}, \acrshortpl{cnn} have fewer connections and parameters and are therefore easier to train.
 
 Until 2012, the top performing algorithms in the yearly \acrfull{ilsvrc} was dominated by algorithms requiring a large amount of manual hand coding of features, and that still had an error rate of over 26\%.
-In 2012, researchers from the University of Toronto presented a deep \acrshort{cnn}, made possible by using a new activation function termed the \emph{\acrfull{relu}}, see \cref{fig:activation-functions}.
+In 2012, researchers from the University of Toronto presented a deep \acrshort{cnn}, made possible by using a new activation function termed the \emph{\acrfull{relu}}, see~\cref{fig:activation-functions}.
 While the Sigmoid function quickly saturates which slows down training in deeper layers, the \acrshort{relu} function does not.
 This makes networks using \acrshort{relu} less susceptible to disappearing gradients, which has allowed for training of a deeper network than previously possible~\cite{Krizhevsky2012}.
 Their network was entered in the 2012 \acrshort{ilsvrc} competition, and was able to classify images with an error rate of 15.3\%.
-This outcompeted previous winners by over 10 percentage points, as shown in \cref{fig:ilsvrc}.
+This outcompeted previous winners by over 10 percentage points, as shown in~\cref{fig:ilsvrc}.
 While the concept of \acrshortpl{cnn} and deep learning had been known for many years, this was the first significant use of such networks in computer vision.
 
 Later advances have improved the applicability of deep neural networks further.
@@ -426,8 +426,8 @@ However, the result found in practice was that as network depth increases, netwo
 The authors proposed that this is a problem of training the network, rather than a fundamental problem of extremely deep networks.
 To overcome this, the authors note that the desired mapping is likely to be closer to its input $\vec{x}$, than a zero mapping.
 If the original desired mapping is the function $\mathcal{H}(\vec{x})$, the network is instead trained to approximate $\mathcal{F}(\vec{x}) = \mathcal{H}(\vec{x}) - \vec{x}$.
-This greatly improves the trainability of the network and allows for the increase in network depth shown in \cref{fig:ilsvrc}.
-Unlike previous approaches, the network achieves high accuracy through a deep but simple and repeating architecture composed of residual blocks as shown in \cref{fig:residual-block}.
+This greatly improves the trainability of the network and allows for the increase in network depth shown in~\cref{fig:ilsvrc}.
+Unlike previous approaches, the network achieves high accuracy through a deep but simple and repeating architecture composed of residual blocks as shown in~\cref{fig:residual-block}.
 This approach gives the network a computational complexity much lower than the number of layers might seem to imply~\cite{He2016}.
 
 As deeper networks are able to capture more abstract features in images, machine vision becomes more robust and consequently applicable to a larger range of tasks.
@@ -464,7 +464,7 @@ The approach taken by~\cite{Girshick2013}, called \emph{\acrfull{rcnn}} extracts
 The selective search algorithm looks at the image through windows of different sizes, and identifies relevant regions by grouping adjacent pixels by color, texture or intensity.
 The resulting groups are reshaped into bounding boxes, and the contents of each bounding box are fed to an image classifier.
 If the contents of a box are successfully classified, the algorithm attempts to tighten the bounding box using a linear regression model.
-The process is shown in \cref{fig:r-cnn}.
+The process is shown in~\cref{fig:r-cnn}.
 The approach has low error rate, but the connection of three different models leads to high complexity which makes the system difficult to train.
 
 \subsubsection{Fast \acrshort{rcnn}}
@@ -500,9 +500,9 @@ The objectness-score measures the probability that the region contains an object
     \label{fig:mask-rcnn}
 \end{figure}
 
-Later work extends this approach by detecting which pixels belong to each of the detected objects, as shown in \cref{fig:mask-rcnn}~\cite{He2017}, a method named \emph{Mask \acrshort{rcnn}}.
+Later work extends this approach by detecting which pixels belong to each of the detected objects, as shown in~\cref{fig:mask-rcnn}~\cite{He2017}, a method named \emph{Mask \acrshort{rcnn}}.
 Here, in parallel to the region proposal network, a network is branched off which simultaneously computes a binary mask for each object.
-The binary map identifies which pixels belong to the object, as shown in \cref{fig:mask-rcnn}.
+The binary map identifies which pixels belong to the object, as shown in~\cref{fig:mask-rcnn}.
 
 \subsubsection{\acrfull{yolo}}
 
@@ -538,14 +538,14 @@ These are in turn augmented by various transformations to a total dataset of 22 
 By training on such a large dataset, it is possible to create a very robust feature detector.
 However, the amount of training required can take weeks or months, as in the example described by the researchers.
 
-The features learned by a convolutional neural network, as shown in \cref{fig:abstract-features}, have been found to be similar across many different applications.
-Observe in \cref{fig:cnn-classification}, that the majority of a network performs feature detection while only the last few layers use these features to classify the image.
+The features learned by a convolutional neural network, as shown in~\cref{fig:abstract-features}, have been found to be similar across many different applications.
+Observe in~\cref{fig:cnn-classification}, that the majority of a network performs feature detection while only the last few layers use these features to classify the image.
 One application of transfer learning is adapting an existing network to a new domain.
 This can be done by replacing erasing the weights of the classification part of the network, or replacing these layers with new layers if required.
 By keeping the weights of the feature learning layers of the network fixed, the network can be retrained to a new purpose.
 In the case of the work done at NVIDIA, a general image classifier trained on the ImageNet dataset was repurposed to identify objects in the autonomous vehicle domain.
 This can then be done much faster, and with a much smaller dataset, than what is required to train a new network.
-Using this technique resulted in a network able to detect pedestrians and vehicles, and identify which sections of the road are safe for driving, as shown in \cref{fig:nvidia-cnn}\cite{NVIDIA}.
+Using this technique resulted in a network able to detect pedestrians and vehicles, and identify which sections of the road are safe for driving, as shown in~\cref{fig:nvidia-cnn}\cite{NVIDIA}.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: FINITE STATE MACHINES
@@ -566,7 +566,7 @@ This and the following section will provide some background on these two approac
 
 A \emph{finite state machine} is an abstract model of computation, that allows for actions to be encoded into a finite number of states.
 Changes from one state to another are referred to as \emph{transitions}.
-The transition from an initial state to a new state is governed only by the starting \emph{state}, and the \emph{event}, as shown in \cref{fig:fsm}.
+The transition from an initial state to a new state is governed only by the starting \emph{state}, and the \emph{event}, as shown in~\cref{fig:fsm}.
 Whenever the conditions for a transition are met, the system will perform that transition and execute the \emph{action} associated with the new state.
 State machines typically have actions associated with entering and exiting a state~\cite{Millington2009}.
 
@@ -627,7 +627,7 @@ While they are well suited for structured behavior of the type that a robot may 
 The existing control system at the outset of this project was implemented using \acrshort{smach}, a task-level state machine architecture for \acrshort{ros}.
 \acrshort{smach} allows for fast prototyping and implementing complex state machines.
 Since it is a task-level architecture, it is not suitable for low-level control but rather for high-level decision making.
-As mentioned in \cref{sec:state_machine_strength_weaknesses}, state machines are not well suited to handle unstructured tasks.
+As mentioned in~\cref{sec:state_machine_strength_weaknesses}, state machines are not well suited to handle unstructured tasks.
 This is also stated by the \acrshort{smach} developers~\cite{Bohren}.
 
 States in \acrshort{smach} are implemented as individual classes, which allows for reuse.
@@ -651,7 +651,7 @@ Actions to be performed by the robot are associated with states in the state mac
     \label{fig:behaviortree}
 \end{wrapfigure}
 
-A \emph{behavior tree} is a model for task execution commonly used for artificial intelligence in video games, but that is also applicable to robotics and other types of control systems.
+A behavior tree is a model for task execution commonly used for artificial intelligence in video games, but that is also applicable to robotics and other types of control systems.
 Much of the strength of the behavior tree approach lies in the ability to compose complex behavior from simple building blocks, without needing to consider the implementation of each building block.
 In this sense they are similar to finite state machines.
 However, while the fundamental building block in a state machine is the state, the fundamental building block in behavior trees is the task~\cite{Millington2009}.
@@ -692,8 +692,8 @@ Composites are nodes which tie the actions and conditions together.
 While actions and conditions are implemented by the programmer, there are a fixed and very small set of typical composite nodes.
 Generally there are two composite nodes that are used, the \emph{Priority} node and the \emph{Sequence} node.
 
-In the simple example shown in \cref{fig:behaviortree} the first control node, with the \emph{?} symbol, is a Priority node.
-This node will execute, or tick, its children from left to right until one of the children returns successfully, as shown in \cref{lst:priority}.
+In the simple example shown in~\cref{fig:behaviortree} the first control node, with the \emph{?} symbol, is a Priority node.
+This node will execute, or tick, its children from left to right until one of the children returns successfully, as shown in~\cref{lst:priority}.
 
 \begin{listing}
     \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/sequence.py}
@@ -702,8 +702,8 @@ This node will execute, or tick, its children from left to right until one of th
 \end{listing}
 
 The first child of this node, with the \emph{\rightarrow} symbol, is a Sequence node.
-This node will execute its children from left to right until one of the children returns failure, as shown in \cref{lst:sequence}.
-By combining these, the tree shown in \cref{fig:behaviortree} will first attempt to tick nodes \emph{t1} and \emph{t2}, and only if either of those fail will it tick node \emph{t3}.
+This node will execute its children from left to right until one of the children returns failure, as shown in~\cref{lst:sequence}.
+By combining these, the tree shown in~\cref{fig:behaviortree} will first attempt to tick nodes \emph{t1} and \emph{t2}, and only if either of those fail will it tick node \emph{t3}.
 
 This approach can be repeated to create increasingly complex behavior, without consideration of the actual behavior performed by the tasks \emph{t1}, \emph{t2}, and so on.
 If behavior reuse is required, it is possible to compose the behavior in a sub-tree which can be included as a task in a parent tree~\cite{Millington2009}.

@@ -20,7 +20,7 @@ At the outset of this thesis, the existing solution which used a state machine a
 There are some intrinsic issues with large state machines, in particular concerning maintainability and scalability.
 As the cyborg state machine grew in size and complexity, these became increasingly apparent.
 
-As outlined in \cref{ch:background}, the events that govern transitions between states in a state machine are tightly coupled.
+As outlined in~\cref{ch:background}, the events that govern transitions between states in a state machine are tightly coupled.
 Because of this, when adding or removing a state, it is necessary to update the transitions between this state and potentially every other state in the state machine.
 Furthermore, a state machine with many states can be difficult to grasp as it becomes cluttered, and the many states and transitions require the user to maintain a complex mental model.
 Reusability of behaviors can also be difficult, as the states are tightly coupled to their transitions.
@@ -35,7 +35,7 @@ As one goal of the NTNU Cyborg project is life-like behavior, it was found that 
 
 Before implementing a behavior tree control system for the Cyborg, several existing implementations and libraries were evaluated.
 Among these implementations were two existing implementation in \arcshort{ros} called \emph{ROS-Behavior-Tree} \cite{Colledanchise} and \emph{pi\_trees} \cite{Goebel}.
-Also, a behavior tree library not specifically for \acrshort{ros} is evaluated, called \emph{behavior3} by the author of \cite{Pereira2015}.
+Also, a behavior tree library not specifically for \acrshort{ros} is evaluated, called behavior3 by the author of \cite{Pereira2015}.
 The main considerations in choosing an implementation are that it needs to be written in \CC or Python, as those are the available languages in \acrshort{ros}.
 Furthermore, it would be beneficial if it were possible to specify the behavior tree in a configuration file.
 
@@ -50,7 +50,7 @@ Furthermore, it would be beneficial if it were possible to specify the behavior 
 Pi Trees is implemented by the Pi Robot project.
 The library is implemented in Python, and is designed specifically for use with \acrshort{ros} \cite{Goebel}.
 Behavior trees are implemented in code, rather than being specified using a configuration file, which adds some complexity to the design process.
-As an example, consider a simple tree implementation from the Pi Robot project \cite{PiRobot} shown in \cref{lst:pitrees}.
+As an example, consider a simple tree implementation from the Pi Robot project \cite{PiRobot} shown in~\cref{lst:pitrees}.
 
 The Iterator node used here has not been discussed previously, as it is less commonly used.
 It iterates through its children in the same way as done by the other types of composite nodes, but it ignores their return value.
@@ -71,7 +71,7 @@ It was found that this requirement to essentially build the tree from the bottom
 \end{listing}
 
 ROS-Behavior-Tree is implemented in \CC, and like Pi Trees it is created specifically for use with \acrshort{ros}.
-The tree is implemented in code, as shown in \cref{lst:rosbehaviortree}.
+The tree is implemented in code, as shown in~\cref{lst:rosbehaviortree}.
 As the tree is implemented in code the same added complexity is seen here as described above.
 Furthermore, as \CC is a compiled language, any change to the tree requires that the project is rebuild.
 
@@ -84,7 +84,7 @@ An attempt has been made to implement a tree using one of the other libraries, b
 
 After evaluating the described options, it was decided to use behavior3.
 The editor provides a graphical interface for creating behavior trees, and allows the user to export these as \acrshort{json} configuration files.
-The editor is shown in \cref{fig:b3editor}.
+The editor is shown in~\cref{fig:b3editor}.
 The configuration files can be parsed and run using behavior3py or behavior3js.
 As \acrshort{ros} allows for nodes to be implemented in \CC or Python, this project will use behavior3py.
 
@@ -100,7 +100,7 @@ As \acrshort{ros} allows for nodes to be implemented in \CC or Python, this proj
     \label{fig:patrol-tree}
 \end{wrapfigure}
 
-As described in \cref{ch:background}, a behavior tree is build from standard composite nodes, as well as nodes that implement decorators and actions.
+As described in~\cref{ch:background}, a behavior tree is build from standard composite nodes, as well as nodes that implement decorators and actions.
 To use behavior3py a \acrshort{ros} node was made, called \emph{cyborg\_bt}, as well as a node for organizing custom decorators and actions called \emph{cyborg\_bt\_nodes}.
 cyborg\_bt imports the required decorators and actions needed by the Cyborg control system from cyborg\_bt\_nodes and runs the tree produced with behavior3editor.
 Much of the functionality required to implement these decorators and actions has been placed in \acrshort{ros} services or topics, in order to make behavior as reusable as possible.
@@ -117,8 +117,8 @@ If progress stalls for longer than an allowed timeout, the movement request is a
 In this case, we monitor the movement along the path to the target and not merely the Euclidean distance to the target.
 This is important, as the Cyborg may have to navigate around obstacles along its path which can involve moving further away from the target.
 
-A simple demonstration of a working behavior tree is shown in \cref{fig:patrol-tree}.
+A simple demonstration of a working behavior tree is shown in~\cref{fig:patrol-tree}.
 This behavior tree causes the Cyborg to move in a patrol pattern between several locations while it monitors the state of the Cyborg's battery charge, and recharges as needed.
-\cref{fig:b3editor} shows the same functionality being implemented in behavior3.
+\Cref{fig:b3editor} shows the same functionality being implemented in behavior3.
 
 \end{document}

@@ -23,9 +23,9 @@ These tasks are described in this chapter.
     \label{fig:before-after-rack}
 \end{figure}
 
-At the outset of the project, the Cyborg was equipped with a mounting frame, as shown in \cref{fig:before-rack}.
+At the outset of the project, the Cyborg was equipped with a mounting frame, as shown in~\cref{fig:before-rack}.
 A 10 inch rack mounting system was planned for this mounting frame, inspired by the use of 10 inch equipment enclosures used for home and small business networking equipment.
-An example of such an enclosure is shown in \cref{fig:rack-example}.
+An example of such an enclosure is shown in~\cref{fig:rack-example}.
 
 \begin{figure}[h]
     \subcaptionbox{Example of a 10 inch cabinet.\label{fig:rack-example}}[0.48\columnwidth][l]{\pimage[0.38]{Figures/rack-example}}
@@ -36,10 +36,10 @@ An example of such an enclosure is shown in \cref{fig:rack-example}.
 By using standard dimensions for enclosure width and height, as well as standard placement for mounting holes, equipment can easily be swapped in and out of the rack.
 This modularity was found to simplify work on the Cyborg. 
 Both the existing power supply and the enclosure for the Jetson TX2 computer were mountable in the rack, while leaving ample space for one or two extra modules in the future.
-By fitting the Cyborg with four rack posts, as shown in \cref{fig:rack-detail}, it is possible to mount the power supply facing backwards.
+By fitting the Cyborg with four rack posts, as shown in~\cref{fig:rack-detail}, it is possible to mount the power supply facing backwards.
 This enables neater routing of power cables, as most computing and networking equipment have power connectors at the back.
-The Cyborg can be seen before and after installation of the new rack mounting system in \cref{fig:before-after-rack}.
-The rack itself was constructed by the authors of \cite{Johansen2018}, as part of their Experts in Team project, with guidance from the author of this thesis.
+The Cyborg can be seen before and after installation of the new rack mounting system in~\cref{fig:before-after-rack}.
+The rack itself was constructed by the authors of~\cite{Johansen2018}, as part of their Experts in Team project, with guidance from the author of this thesis.
 
 \section{Convenience functionality for future ROS development}
 
@@ -89,7 +89,7 @@ These provide functionality which might be useful to multiple parts of the Cybor
 \subsubsection{AvailableGoals service}
 
 For managing a set of known locations, and exposing these to other parts of the control system, a service was created called AvailableGoals.
-The service is shown in \cref{lst:availablegoals}.
+The service is shown in~\cref{lst:availablegoals}.
 The service is instantiated with a map file, which contains a list of named waypoints or goals.
 Upon request of the list of available goals, the service will parse this map, and create a response message containing the list.
 This list will be cached, so that it can be returned in the future without needing to recreate it.
@@ -103,9 +103,9 @@ This list will be cached, so that it can be returned in the future without needi
 \subsubsection{DistanceToGoal service}
 
 For requesting the distance to a goal or waypoint measured from the current location of the Cyborg, a service was created called \emph{DistanceToGoal}.
-As shown in \cref{lst:distancetogoal}, the service will receive a goal, from which a Pose object is created.
+As shown in~\cref{lst:distancetogoal}, the service will receive a goal, from which a Pose object is created.
 The Pose class is included with the attached source code.
-Using the created Pose object, the service calls the \emph{MakePlan} service, which is exposed by the ros\_arnl node from MobileRobots, described in \cref{ch:background}.
+Using the created Pose object, the service calls the \emph{MakePlan} service, which is exposed by the ros\_arnl node from MobileRobots, described in~\cref{ch:background}.
 The DistanceToGoal service will then receive a plan, consisting of a list of positions, which show the path from the Cyborg to the desired final position.
 The list of positions is used to create a Path object.
 The Path class, which is also included in the attached source code, acts as a wrapper for this list of positions, and exposes useful functions for interacting with the list.
@@ -138,7 +138,7 @@ The ros\_arnl service LoadMap provides the ability to load a new map file to the
 Unfortunately, the service does not allow for automatically loading a given map on startup.
 In order to automatically load this map on startup, a simple service was created to call the ros\_arnl LoadMap service.
 The Cyborg LoadMap service takes a single startup parameter, \emph{map\_file}, which is used to load the map using the ros\_arnl LoadMap service.
-The service implementation is shown in \cref{lst:loadmap}.
+The service implementation is shown in~\cref{lst:loadmap}.
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{python}{\rootfolder/Chapters/Chapter6/Listings/load_map.py}

@@ -20,7 +20,7 @@ This chapter will provide details on the goals of this system, the choices that 
 
 \section{Goals}
 
-As described in \cref{ch:background}, the ros-zed-wrapper from StereoLabs exposes the left and right images of the Cyborg's stereo camera, as well as a depth map calculated from these images.
+As described in~\cref{ch:background}, the ros-zed-wrapper from StereoLabs exposes the left and right images of the Cyborg's stereo camera, as well as a depth map calculated from these images.
 Here, we intend to analyze the images from the stereo camera to detect objects in the images, and then calculate the distance to each object.
 The output from the system will be twofold.
 First, an image with bounding boxes drawn around each detected object is published as an \arcshort{ros} topic.
@@ -41,7 +41,7 @@ Each detected object will be represented by a structure containing its classific
 
 \section{Evaluation of alternatives}
 
-As described in \cref{ch:background}, there are many possible algorithms that perform object detection and image classification.
+As described in~\cref{ch:background}, there are many possible algorithms that perform object detection and image classification.
 Key to this project is using an approach that performs well using the limited available computational resources on the Cyborg.
 It was also desirable to use off-the-shelf software, to minimize the work needed to create and maintain the solution.
 
@@ -53,7 +53,7 @@ The demo implementation by \cite{Opheim2018} used a library called PyYOLO.
 PyYOLO is a Python wrapper around the original CUDA implementation by the author of \acrshort{yolo}, and therefore performs very well.
 The downside to this is that the underlying \acrshort{yolo} implementation must be compiled for PyYOLO to be used, which adds to the maintenance burden of the project members.
 
-As of late 2017 there is support for \acrshort{yolo} in the \emph{\acrfull{dnn}} module of \emph{OpenCV}, and it was decided that this merited further research.
+As of late 2017 there is support for \acrshort{yolo} in the \emph{\acrfull{dnn}} module of OpenCV, and it was decided that this merited further research.
 While OpenCV lacks \emph{CUDA} support, and was therefore expected not to perform as well in timing benchmarks, this is planned for inclusion in future versions of OpenCV.
 Furthermore, OpenCV's \acrshort{dnn} module is able to use a number of neural networks, which allows for different object detection algorithms to be run with only minimal changes to the Cyborg software.
 
@@ -75,7 +75,7 @@ These implementations make use of a reference implementation of the YOLO algorit
 First, a C++ implementation using OpenCV was developed.
 There are two significant advantages to implementing the object detection node in C++.
 First, it is possible to run the detection algorithm as a nodelet in the same process as the ros-zed-wrapper.
-A nodelet is a variation on the concept of an \acrshort{ros} node, as described in \cref{ch:background}.
+A nodelet is a variation on the concept of an \acrshort{ros} node, as described in~\cref{ch:background}.
 Rather than running the zed-ros-wrapper node and the object detection node in separate processes, which would require transporting raw image data over TCP, these are run in the same process.
 This allows us to use the same publish/subscribe interface as in a normal node, but have message transport handled using shared memory.
 This change is handled seamlessly by the Nodelet class, which nodelets inherit from.
@@ -95,10 +95,10 @@ The only caveat the developer must keep in mind is that messages cannot be modif
 
 In order to make up the object detection node, there are two approaches to launching the component nodelets that make up the node.
 It is possible to implement a node in C++ in the usual manner, instantiate a nodelet Loader and use this to load each nodelet.
-This is shown in \cref{lst:detection-node-cpp}.
+This is shown in~\cref{lst:detection-node-cpp}.
 The alternative approach is to load a nodelet manager, and each nodelet, using a launch file.
 This accomplishes the same result, but allows for changing the launch procedure without requiring a recompilation.
-The approach is shown in \cref{lst:detection-node-launch}.
+The approach is shown in~\cref{lst:detection-node-launch}.
 
 The second advantage to using C++ is that we are able to use the implementation of the YOLO algorithm created by the OpenCV project.
 As of recent versions of OpenCV, a wide range of object detection algorithms are available using the same programming interface.
@@ -112,8 +112,8 @@ This provides a level of flexibility, and also allows for the Cyborg project to 
 
 The full implementation can be found in the attachments, but we will give a run-through of the steps taken.
 After the nodelet manager creates an instance of the class, the OnInit() function is run, which performs the steps normally found in the class constructor.
-In the case of the ObjectDetectorNodelet, shown in \cref{lst:objectdetectornodelet}, this function fetches parameters from the \acrshort{ros} parameter server, such as the names for the input and output topics as well as parameters required to load the neural network.
-This includes a configuration file describing layers of the network, a file with weights for the network as described in \cref{ch:background}, and so forth.
+In the case of the ObjectDetectorNodelet, shown in~\cref{lst:objectdetectornodelet}, this function fetches parameters from the \acrshort{ros} parameter server, such as the names for the input and output topics as well as parameters required to load the neural network.
+This includes a configuration file describing layers of the network, a file with weights for the network as described in~\cref{ch:background}, and so forth.
 
 \begin{figure}[ht]
     \pimage{Figures/yolo}
@@ -139,11 +139,11 @@ On reception of an image, and optionally a depth map, the callback function \emp
 Here, we check if there are any subscribers listening to the output of the node, and abort if there are not.
 Then, the received image is converted to OpenCV format and fed through the neural network.
 The returned output from the network, for each detected object, includes the object class label, the label confidence and coordinates for a bounding box around the object.
-These are processed and a vector of Prediction objects, as shown in \cref{lst:prediction}, are created to represent each detected object in the image.
+These are processed and a vector of Prediction objects, as shown in~\cref{lst:prediction}, are created to represent each detected object in the image.
 If the depth map is available, this can also be included.
 
-Finally, the predictions are drawn on the image, in the same way as shown in \cref{fig:opencv}, and the image is published to the output image topic.
-The predictions are also published as a list, in the form shown in \cref{lst:prediction-msg}.
+Finally, the predictions are drawn on the image, in the same way as shown in~\cref{fig:opencv}, and the image is published to the output image topic.
+The predictions are also published as a list, in the form shown in~\cref{lst:prediction-msg}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: PYTHON IMPLEMENTATION

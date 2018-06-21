@@ -6,7 +6,7 @@
 \chapter{Implementation of the control system monitoring application} % Main chapter title
 \label{ch:implementation-monitoring} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-To monitor the state of the control system described in \cref{ch:implementation-control}, a monitoring application was implemented.
+To monitor the state of the control system described in~\cref{ch:implementation-control}, a monitoring application was implemented.
 This chapter will provide details on the goals of this system, the choices that were made in planning the system and a description of the implementation of the system itself.
 
 %----------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ One of the desired features of the application was that the visualization should
 All three libraries enable rich visualizations in the browser, but Bokeh and Plotly were found to offer a higher degree of interaction.
 As interaction was originally a desired feature in the monitoring application, a Python solution using either Bokeh or Plotly was investigated further.
 
-\acrshort{ros} nodes can be implemented in either \CC or Python, as explained in \cref{ch:background}.
+\acrshort{ros} nodes can be implemented in either \CC or Python, as explained in~\cref{ch:background}.
 For implementing visualizations as a web service, Python was deemed to be a good choice.
 The monitoring application might have been implemented as a \acrshort{ros} node, were it not for the fact that \acrshort{ros} uses Python 2.7. Python 2.7, unfortunately, predates the introduction of asynchronous support in Python.
 This presented a challenge.
@@ -92,7 +92,7 @@ For these reasons, the choice was made to implement the behavior tree visualizat
 \end{figure}
 
 The behavior tree visualization plugin will be based on the existing rqt graph visualizer \emph{rqt\_graph}.
-This plugin visualizes the nodes that make up the \acrshort{ros} control system, and the communication paths between these nodes as shown in \cref{fig:rqt-graph}.
+This plugin visualizes the nodes that make up the \acrshort{ros} control system, and the communication paths between these nodes as shown in~\cref{fig:rqt-graph}.
 The use case for rqt\_graph and the behavior tree plugin are somewhat similar, as they both generate DOT code that describes the graph which will then be passed to a Qt library for drawing.
 Due to this overlap, the rqt\_graph served as valuable inspiration for the behavior tree plugin.
 
@@ -120,7 +120,7 @@ Where required, widgets may be subclassed in order to add additional signals, bu
 
 The behavior tree visualization plugin was named \emph{rqt\_bt}.
 The plugin was designed using Qt Creator.
-The interface of Qt Creator is shown in \cref{fig:qt-creator}.
+The interface of Qt Creator is shown in~\cref{fig:qt-creator}.
 The entire \acrshort{gui} is composed of a widget created by the author, \emph{rqt\_bt\_widget}, which acts as a container for the other components of the \acrshort{gui}.
 At the top of the interface, the layout is made up of a \emph{QHBoxLayout} widget, which is a container widget for laying out widgets horizontally.
 This widget contains the control buttons for interacting with the application.
@@ -135,7 +135,7 @@ The buttons in the interface allow the user to control the behavior of the plugi
 \item The \emph{Highlight Connections} check box check box will cause the interface to highlight the connections from a node to its parent and its children, when the node is hovered over by the mouse.
 \item The \emph{Fit} check box will cause the graph to be automatically drawn to fit within the view port, so that the whole graph can be seen at the same time. The graph will resize to fit even if the graph changes.
 \item The \emph{Fit in View} push button will cause the graph to be resized to fit in the view port, but only a single time. That is, it will not be automatically updated.
-\item The \emph{Draw Depth} spin box allows the user to select how deeply nested behavior trees should be drawn. Trees deeper than the selected level are collapsed to a single node, as shown in \cref{fig:rqt-bt-depth}.
+\item The \emph{Draw Depth} spin box allows the user to select how deeply nested behavior trees should be drawn. Trees deeper than the selected level are collapsed to a single node, as shown in~\cref{fig:rqt-bt-depth}.
 \item The \emph{Save as DOT}, \emph{Save as \acrshort{svg}} and \emph{Save as Image} push buttons allow the user to save the graph in a variety of formats.
 \item The \emph{Refresh Graph} push button forces redrawing of the graph.
 \item The \emph{Run} push button enables or disables the behavior tree node running in \acrshort{ros}.
@@ -173,8 +173,8 @@ The generated data is made available in two separate topics, as a JSON string, a
     \label{lst:btdata}
 \end{listing}
 
-In order to consume the provided data, the rqt\_bt\_widget creates a \emph{BTData} object, which listens to these two topics, as shown in \cref{lst:btdata}.
-The BTData instance is provided to the DOT code generator class \emph{BTDotcodeGenerator}, shown in \cref{lst:btdotcode}.
+In order to consume the provided data, the rqt\_bt\_widget creates a \emph{BTData} object, which listens to these two topics, as shown in~\cref{lst:btdata}.
+The BTData instance is provided to the DOT code generator class \emph{BTDotcodeGenerator}, shown in~\cref{lst:btdotcode}.
 The BTData instance will continue to listen to the provided topics, and maintain an updated representation of the behavior tree graph, which can be retrieved using the \emph{get\_graph()} method.
 The topics published by cyborg\_bt are latched, meaning that the most recently transmitted message will be retransmitted to any new subscribers.
 This means that the BTData instance receives updated information as soon as it is created.
