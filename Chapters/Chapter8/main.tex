@@ -3,26 +3,31 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Discussion} % Main chapter title
-\label{ch:discussion} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
+\chapter{Conclusion} % Main chapter title
+\label{ch:conclusion} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-% TODO: Discussion
+In summary, the following tasks have been planned and implemented:
 
+\begin{itemize}
+    \item a control system based on behavior trees
+    \item a visualization application for the control system
+    \item an object detection system using neural networks
+\end{itemize}
 
+Additionally, the author has guided and assisted \acrshort{eit} students contributing to the Cyborg.
+The outcome of the major tasks has been described and discussed.
 
-%----------------------------------------------------------------------------------------
-%	SECTION FUTURE WORK
-%----------------------------------------------------------------------------------------
+The behavior tree control system functions well, and is easier to extend than the state machine system used previously.
+Both approaches have shortcomings in expressing multi-modal behavior.
+This is expected, and is described in \cref{ch:background} and \cref{ch:results}.
 
-\section{Future work}
+The visualization application proved to be a useful debugging tool when creating behavior trees.
+Extending this software to provide more interaction with the behavior tree would be useful, although technically challenging.
 
-% TODO: Discuss future work
+The object detection algorithm works well, but would benefit from improved \acrshort{gpu} support in the underlying library.
 
-At the end of this thesis, there is a functioning object detection system in place.
-Furthermore, a robust behavior tree control system, as well as the tools required to debug the system, is also available.
-It is the view of the author that the next logical steps is to combine these, and use the information obtained from the object detection system to enable life-like behavior for the Cyborg.
-
-The object detection implementations using OpenCV are fully functioning, but would benefit from CUDA support in OpenCV.
-This would also be a useful avenue of research, as any contributions to OpenCV would benefit not only the Cyborg project but the larger computer vision research community.
+When developing software, it is easy to look back and criticize the architectural choices that have been made.
+During the development of this thesis, revisiting previous code and design choices has been a continuous process throughout the work that has been carried out.
+In the end this has been worth the effort, as it has led to robust new functionality implemented in the Cyborg, which yield considerable improvements to its control system.
 
 \end{document}

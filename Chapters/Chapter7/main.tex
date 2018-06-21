@@ -3,10 +3,14 @@
 \documentclass[\rootfolder/main.tex]{subfiles}
 \begin{document}
 
-\chapter{Results}
+\chapter{Results and discussion}
 \label{ch:results} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ch:foo}
 
-% TODO: Results intro
+The objective of this thesis was to bring the Cyborg closer to a state where it could function as a mascot for the university.
+In order to do this, the Cyborg needed a robost and extensible control system as well as an awareness of the objects in the world around it.
+Here, the results of the work that has been done towards these goals, described in \cref{ch:implementation-control,ch:implementation-monitoring,ch:implementation-objdet} is presented.
+The following also includes a discussion of the outcome of the work that has been done and how it may have been improved.
+Furthermore, some interesting avenues of future work are presented.
 
 %----------------------------------------------------------------------------------------
 %	SECTION BEHAVIOR TREE CONTROL SYSTEM
@@ -14,15 +18,39 @@
 
 \section{Behavior tree control system}
 
-% TODO: Finish control system results
-
-The behavior tree solution implemented using behavior3, as described in \cref{ch:implementation-control} was found to be scalable and easy to use.
+A behavior tree control system was implemented using the behavio3 library, described in \cref{ch:implementation-control}.
+In addition to the main goals of being reliable and developer-friendly, the system was found to be easily scalable.
 In particular, the ability to create behavior trees using configuration files and load them using \acrshort{ros} launch files was found to be a significant advantage.
-The graphical editor behavior3editor simplified behavior tree creation further.
-Compared to the more manual approaches required with the other libraries that were evaluated, where the behavior tree is specified in code, this was found to greatly simplify the design process.
+The graphical editor behavior3editor, shown in \cref{fig:b3editor}, simplified behavior tree creation further.
+Compared to the other approaches that were evaluated, where the behavior tree was specified in code, this was found to simplify the design process.
+
+\begin{figure}[h]
+    \pimage{Figures/mobilesim}
+    \caption{Screenshot of the Cyborg running in simulation, shown in MobileEyes.}
+    \label{fig:mobileeyes}
+\end{figure}
+
+The control system was tested using the MobileSim and MobileEyes software applications from MobileRobots, described in \cref{ch:background}.
+A map of the university campus was loaded into the simulation software, and the Cyborg was tested in this environment.
+This can be seen in \cref{fig:mobileeyes}.
+In combination with the behavior tree visualization application, this setup allowed for thorough testing of the control software.
 
 It was found that behavior trees are well suited for splitting behavior into their smallest components, and composing more complex behaviors from sub-trees of these units.
-However, it was also found that composing complex control systems from basic blocks can lead to behavior which can be hard to understand without the ability to visualize the flow of control in the system.
+However, it was found that composing complex control systems from basic blocks can lead to behavior which can be hard to understand without the ability to visualize the flow of control in the system.
+
+As described in \cref{ch:background}, a shortcoming in both finite state machines and behavior trees is the difficulty in representing alternative behavior in different modes, e.g. a low power mode and a normal mode.
+This is a known problem with both approaches, and it would be useful to investigate possible solutions, as it could lead to more life-like behavior in the future.
+As described by \cite{Millington2009} there are two obvious ways to fix this, by combining finite state machines and behavior trees.
+Firstly, one could implement one behavior tree per mode and use a state machine to select which tree to run, or secondly one could implement each task in the behavior tree as a state machine.
+
+In addition to the current composite nodes that exist in behavior3, it would be useful to have a form of parallel node.
+Such a node would make it possible to execute multiple branches at the same time, e.g. in order to monitor the condition of important status variables in one branch while running the Cyborg's behavior in another.
+
+It would also be useful to implement services that can attach to composite nodes, that are run in the background when the composite node's branch is running.
+This would make it possible to retrieve status variables and write them to the blackboard, behind the scenes, which would simplify condition checking in the behavior tree nodes themselves.
+
+Unfortunately, these features were not investigated further since they were beyond the scope of this thesis.
+As the Cyborg as a research platform is continuously subject to improvement and modification, this could be implemented in the course of future projects.
 
 %----------------------------------------------------------------------------------------
 %	SECTION CONTROL SYSTEM MONITORING APPLICATION
@@ -30,13 +58,21 @@ However, it was also found that composing complex control systems from basic blo
 
 \section{Control system monitoring application}
 
-% TODO: Finish monitoring application results
+The visualization software, described in \cref{ch:implementation-monitoring}, was developed in order to simplify creation and debugging of the behavior trees.
+The software has shown itself to be a valuable diagnostic tool for this purpose.
+The end result can be seen in \cref{fig:rqt-bt} and \cref{fig:rqt-bt-depth}.
+The software performed well, and as part of the rqt framework it could be used in the same graphical interface as other useful plugins for rqt.
+This made it possible to create a custom monitoring application by selecting relevant rqt plugins and combining them into a complete monitoring application.
 
-The visualization software, described in \cref{ch:implementation-monitoring}, has been a valuable diagnostic tool.
-The software performs well, and as part of the rqt framework it can be used in the same graphical interface as other useful plugins that exist for rqt.
 In the course of developing behavior trees for testing the control system, it was found that being able to visualize the control flow of the system greatly aided in the design process.
 On some occasions the behavior of the system was difficult to understand initially, but once visualized was simple to debug.
-It is believed will be useful to the project when increasingly complex behavior is implemented.
+It is believed to be useful to the project when increasingly complex behavior is implemented in the scope of future projects.
+
+The initial idea of being able to force the system to go to a particular state, described in \cref{ch:implementation-monitoring}, was dropped from consideration after consultation with co-advisor Martinius Knudsen.
+However, for the purpose of testing during the development of behavior trees, the possibility to enable and disable parts of the tree from from the visualization interface would have been interesting.
+For example, the user might click on a node to disable this node and any children below the node, and click again to re-enable.
+As each node and edge in the visualization is a Qt object it should be possible to execute callback functions when these are interacted with.
+Communication between the visualization interface and the behavior tree node would need to be planned thoroughly, making this a considerable undertaking.
 
 %----------------------------------------------------------------------------------------
 %	SECTION OBJECT DETECTION VISUALIZATION
@@ -44,13 +80,16 @@ It is believed will be useful to the project when increasingly complex behavior 
 
 \section{Object detection visualization}
 
-Here, the object detection system described in \cref{ch:implementation-objdet} is evaluated.
-Two parts of the image processing pipeline are considered, being the image transmission from the zed\_ros\_wrapper to the object\_detection, running as \CC nodes and nodelets, and as Python nodes, as described in \cref{ch:implementation-objdet}.
-In comparing the execution times of the different implementations, some interesting results are found.
+The third objective of this thesis was to enable the Cyborg to detect and classify objects in the surrounding world, as described in \cref{ch:implementation-objdet}.
+Two parts of the image processing pipeline were considered.
+This was evaluated running the same functionality as both \CC and Python implementations.
+The \CC implementation was tested both running the modules as nodes, and as nodelets, as described in \cref{ch:implementation-objdet}.
 
-Firstly, the difference when running the \CC implementation in the nodelet configuration compared to the node configuration, that is when using shared memory rather than TCP for data transfer, is found to be small.
-While the difference is almost 20\%, this amounts to a difference of only 2.5 milliseconds.
-Furthermore, the image transmission step is largely insignificant compared to the time it takes to process the image by running it through the neural network.
+Firstly, the time required for image transmission from the zed\_ros\_wrapper module to the object\_detection module
+In comparing the execution times of the different implementations, some interesting results were found.
+Firstly, the difference when the \CC implementation was run in the nodelet configuration compared to the node configuration was found to be small.
+While the difference in runtime measured in percent was almost 20\%, this amounts to a total difference of only 2.5 milliseconds.
+Furthermore, the image transmission step was found to be largely insignificant compared to the time it took to process the image by running it through the neural network.
 Even for the Python implementation, transmission time increases by only 30\% compared to the nodelet implementation in \CC, and accounts for about 1\% of the total processing time.
 
 \begin{table}[h]
@@ -63,14 +102,26 @@ Even for the Python implementation, transmission time increases by only 30\% com
     \caption{Execution times of object detection implementations, in milliseconds.}
 \end{table}
 
-Secondly, as expected, the object detection takes the same amount of time for both \CC implementations.
-However, unexpectedly, the Python implementation takes a shorter amount of time clocking in at only 70\% of the runtime of the \CC implementations.
+Secondly, as expected, the object detection took the same amount of time for both \CC implementations.
+However, the Python implementation took a shorter amount of time clocking in at only 70\% of the runtime of the \CC implementations.
 This difference was confirmed not to be due to any differences in the pre- or post-processing done to the results, but rather be due to differences in OpenCV itself.
 Similar results have also been confirmed by others \cite{Liu}.
-It should be noted that these results are from running the neural network on a \acrshort{cpu}, and that improved performanced for the object detection phase should be expected when running on a \acrfull{gpu}.
-While OpenCV supports OpenCL as a backend for the DNN module, this is only available on Intel \acrshort{gpu}s, while the Cyborg project uses an Nvidia \acrshort{gpu} for image processing.
+Other parts of the image processing, such as calculating the average depth of the object within the image, were performed using the same underlying libraries in both \CC and Python and as such achieve nearly identical performance.
+
+It should be noted that these results are from running the neural network on a \acrshort{cpu}, and that improved performance for the object detection phase should be expected when running on a \acrfull{gpu}.
+While OpenCV supports OpenCL as a backend for the DNN module, this is only available on Intel \acrshortpl{gpu}, while the Cyborg project uses an Nvidia \acrshort{gpu} for image processing.
 Support for a CUDA backend for the DNN module is under active development, it is expected that this will greatly improve performance with minimal changes required to our software.
 
-Other parts of the image processing, such as calculating the average depth of the object within the image, are performed using the same underlying libraries in both \CC and Python and as such acheive nearly identical performance.
+\section{Other future work}
+
+A logical next step would be to combine the work described above.
+The behavior tree control system and the object detection system could be integrated, in order to make the Cyborg control system aware of objects in its surroundings.
+Making a control system that is aware of objects in the surrounding world would make it possible to enable advanced life-like behavior.
+The ros\_arnl node that is used to communicate with the Cyborg does not provide the necessary low-level access to the map server that would be needed to place objects on the map.
+Placing detected objects on the map would allow for the path planning system to take them into account, thereby making this a useful area of research.
+
+The object detection implementations using OpenCV are fully functioning, but would benefit from CUDA support in OpenCV.
+As shown by \cite{Opheim2018}, CUDA support greatly accelerates object detection on Nvidia platforms such as the one used by the Cyborg.
+This would also be a useful avenue of research, as any contributions to OpenCV would benefit not only the Cyborg project but the larger computer vision research community.
 
 \end{document}

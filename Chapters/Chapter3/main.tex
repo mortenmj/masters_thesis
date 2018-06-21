@@ -43,7 +43,7 @@ Furthermore, it would be beneficial if it were possible to specify the behavior 
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{Python}{\rootfolder/Chapters/Chapter3/Listings/pitrees.py}
-    \caption[Implementation of a behavior tree using Pi Trees]{Implementation of a behavior tree using Pi Trees, from the Pi Trees documentation.}
+    \caption[Implementation of a behavior tree using Pi Trees.]{Implementation of a behavior tree using Pi Trees, from the Pi Trees documentation.}
     \label{lst:pitrees}
 \end{listing}
 
@@ -66,7 +66,7 @@ It was found that this requirement to essentially build the tree from the bottom
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{Python}{\rootfolder/Chapters/Chapter3/Listings/rosbehaviortree.cpp}
-    \caption[Implementation of a behavior tree using ROS-Behavior-Tree]{Implementation of a behavior tree using ROS-Behavior-Tree, from the ROS-Behavior-Tree documentation.}
+    \caption[Implementation of a behavior tree using ROS-Behavior-Tree.]{Implementation of a behavior tree using ROS-Behavior-Tree, from the ROS-Behavior-Tree documentation.}
     \label{lst:rosbehaviortree}
 \end{listing}
 
@@ -77,13 +77,14 @@ Furthermore, as \CC is a compiled language, any change to the tree requires that
 
 \subsection{behavior3}
 
-behavior3 is implemented as both a Python library, \emph{behavior3py}, as well as a Javascript library, \emph{behavior3js}.
+behavior3 is implemented as both a Python library, \emph{behavior3py}, as well as a JavaScript library, \emph{behavior3js}.
 Additionally, the project includes an editor, \emph{behavior3editor}.
 Of the options evaluated, behavior3 was the only one that allows for specifying the tree in a text file.
 An attempt has been made to implement a tree using one of the other libraries, but it was quickly discovered that specifying the tree in code, either \CC or Python, became unwieldy as the tree size increased.
 
 After evaluating the described options, it was decided to use behavior3.
-The editor provides a graphical interface for creating behavior trees, and allows the user to export these as JSON configuration files.
+The editor provides a graphical interface for creating behavior trees, and allows the user to export these as \acrshort{json} configuration files.
+The editor is shown in \cref{fig:b3editor}.
 The configuration files can be parsed and run using behavior3py or behavior3js.
 As \acrshort{ros} allows for nodes to be implemented in \CC or Python, this project will use behavior3py.
 
@@ -93,10 +94,22 @@ As \acrshort{ros} allows for nodes to be implemented in \CC or Python, this proj
 
 \section{Implementation}
 
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.49]{Figures/patrol}
+    \caption{Behavior tree that checks battery state, and charges if necessary, while patrolling.}
+    \label{fig:patrol-tree}
+\end{wrapfigure}
+
 As described in \cref{ch:background}, a behavior tree is build from standard composite nodes, as well as nodes that implement decorators and actions.
 To use behavior3py a \acrshort{ros} node was made, called \emph{cyborg\_bt}, as well as a node for organizing custom decorators and actions called \emph{cyborg\_bt\_nodes}.
 cyborg\_bt imports the required decorators and actions needed by the Cyborg control system from cyborg\_bt\_nodes and runs the tree produced with behavior3editor.
 Much of the functionality required to implement these decorators and actions has been placed in \acrshort{ros} services or topics, in order to make behavior as reusable as possible.
+
+\begin{figure}[h]
+    \pimage{Figures/b3editor}
+    \caption{Screenshot of behavior3editor showing implementation of a simple behavior tree.}
+    \label{fig:b3editor}
+\end{figure}
 
 An example of such a node, the action node MoveTo, which moves the Cyborg to a requested location, is included with the attached source code.
 The node issues a movement request to the navigation subsystem, and then monitors the progress of the Cyborg as it moves along the path to its target.
@@ -104,13 +117,8 @@ If progress stalls for longer than an allowed timeout, the movement request is a
 In this case, we monitor the movement along the path to the target and not merely the Euclidean distance to the target.
 This is important, as the Cyborg may have to navigate around obstacles along its path which can involve moving further away from the target.
 
-\begin{wrapfigure}{R}{0.5\columnwidth}
-    \pimage[0.48]{Figures/patrol}
-    \caption{Behavior tree that checks battery state, and charges if necessary, while patrolling.}
-    \label{fig:patrol-tree}
-\end{wrapfigure}
-
 A simple demonstration of a working behavior tree is shown in \cref{fig:patrol-tree}.
 This behavior tree causes the Cyborg to move in a patrol pattern between several locations while it monitors the state of the Cyborg's battery charge, and recharges as needed.
+\cref{fig:b3editor} shows the same functionality being implemented in behavior3.
 
 \end{document}

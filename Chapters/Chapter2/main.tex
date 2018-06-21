@@ -29,10 +29,11 @@ Here, some detail will be given on each hardware component that is relevant to t
     \centering
     \subcaptionbox{MobileRobots Pioneer LX.\label{fig:robot-original}}[0.48\columnwidth]{\pimage[0.48]{Figures/robot}}%
     \subcaptionbox{NTNU Cyborg.\label{fig:robot-ntnu}}[0.48\columnwidth]{\pimage[0.48]{Figures/final-transp}}
-    \caption{Comparison of the original Pioneer LX and the Cyborg.\label{fig:robot-comparison}}
+    \caption{Comparison of the original Pioneer LX and the Cyborg.}
+    \label{fig:robot-comparison}
 \end{figure}
 
-The NTNU Cyborg uses the Pioneer LX robot, from MobileRobots (\cref{fig:robot-original}).
+The NTNU Cyborg uses the Pioneer LX robot, from MobileRobots (\cref{fig:robot-original})~\cite{MobileRobots}.
 Omron Adept MobileRobots, previously MobileRobots, is a manufacturer of intelligent mobile robots for commercial and industrial use.
 
 The Pioneer LX comes equipped with the required sensors for safe, autonomous operation.
@@ -53,14 +54,14 @@ It is designed for continuous operation for 13 hours before recharging, which ca
     \label{fig:zed-camera}
 \end{figure}
 
-The Stereolabs ZED (\cref{fig:zed-camera}) is a dual 4 megapixel camera \cite{Stereolabs}.
-It provides 1920$\times$1080 video at 30 \acrfull{fps} frames per second, or 800$\times$400 at 100 \acrshort{fps}, with a \ang{110} angle of view.
+The Stereolabs ZED (\cref{fig:zed-camera}) is a dual 4 megapixel camera.
+It provides 1920$\times$1080 video at 30 \acrfull{fps} frames per second, or 800$\times$400 at 100 \acrshort{fps}, with a \ang{110} angle of view~\cite{Stereolabs}.
 
-The ZED camera is designed to emulate the stereoscopic operation of human eyes \cite{Stereolabs}.
+The camera is designed to emulate the stereoscopic operation of human eyes.
 By recording an image from two slightly offset points, depth and motion in space can be inferred by comparing the displacement of pixels in the left and right images.
 This allows for the camera to provide a depth map of the recorded scene, where pixels are defined by an (x, y, z)-tuple rather than the normal (x, y) coordinate pair.
 The information is exported as a black and white depth map.
-By identifying the pixels of an object, the distance to the object can be determined by calculating the mean intensity of these pixels in the depth map.
+By identifying the pixels of an object, the distance to the object can be determined by calculating the mean intensity of these pixels in the depth map~\cite{Stereolabs}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: NVIDIA JETSON TX2
@@ -70,13 +71,14 @@ By identifying the pixels of an object, the distance to the object can be determ
 
 \begin{wrapfigure}{R}{0.5\columnwidth}
     \pimage[0.49]{Figures/tx2}
-\caption[Nvidia Jetson TX2 development kit.]{Nvidia Jetson TX2 development kit, image courtesy of Nvidia\label{fig:tx2}.}
+    \caption[Nvidia Jetson TX2 development kit.]{Nvidia Jetson TX2 development kit, image courtesy of Nvidia.}
+    \label{fig:tx2}
 \end{wrapfigure}
 
-The Nvidia Jetson TX2 (\cref{fig:tx2}), shown in \cref{fig:tx2}, is an embedded computer from Nvidia, designed for real-time data processing for \emph{artificial intelligence}.
+The Nvidia Jetson TX2, shown in \cref{fig:tx2}, is an embedded computer from Nvidia, designed for real-time data processing for \emph{artificial intelligence}\footnote{https://www.nvidia.com/en-us/autonomous-machines/embedded-systems-dev-kits-modules/}
 The stated purpose of the device is to move data processing from a central location to the edge, meaning on the robot or drone itself.
 The TX2 has a small form factor of 17 by 17 centimeters, and a power consumption of 7.5 watts under normal load.
-Dispite the low footprint in size and power consumption, the onboard GPU delivers in excess of 1 T\acrshort{flops} ($10^{12}$ \acrlong{flops}) of computing power.
+Despite the low footprint in size and power consumption, the onboard GPU delivers in excess of 1 T\acrshort{flops} ($10^{12}$ \acrlong{flops}) of computing power~\cite{Nvidia2017}.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: SOFTWARE
@@ -84,7 +86,7 @@ Dispite the low footprint in size and power consumption, the onboard GPU deliver
 
 \section{Software}
 
-The Cyborg's onboard computer comes preinstalled with Ubuntu Linux and \acrshort{ros}.
+The Cyborg's onboard computer comes pre-installed with Ubuntu Linux and \acrshort{ros}.
 MobileRobots provide a number of software packages for efficient use of the robot. 
 Among these are the \acrfull{aria} library, the \acrfull{arnl} library and the software applications MobileSim and MobileEyes, which enable implementation of advanced functionality in ROS.
 
@@ -92,22 +94,20 @@ Among these are the \acrfull{aria} library, the \acrfull{arnl} library and the s
 %	SUBSECTION: ROS
 %----------------------------------------------------------------------------------------
 
-\subsection{ROS}
+\subsection{\acrfull{ros}}
 
-The \acrfull{ros} is an open-source framework for writing robot control software.
+The \acrfull{ros}\footnote{https://www.ros.org} is an open-source framework for writing robot control software.
 It consists of a collection of libraries and tools that simplify the task of implementing complex and robust control software for different robot platforms.
 It is not an operating system in the traditional sense of managing and scheduling processes but acts as middleware, providing a communications layer for a distributed control system.
-Individual modules are known as \emph{nodes}, and implement functionality such as low-level drivers, mapping and navigation, image perception, reasoning and decision-making and so on.
 
 The framework provides middleware for individual software modules, known as nodes, so that modules from various sources can interact using a standard interface.
 These can all be implemented separately and can communicate with each other using the \acrshort{ros} communications layer.
-By enabling a modularized structure of the control system, \acrshort{ros} simplifies the development of robotics software.
 This approach simplifies development, by allowing components developed by separate individuals, teams or organizations to communicate using a standardized interface.
 This promotes collaboration and code reuse, enabling different research teams to focus on a subset of robot control rather than building a complete solution from the ground up.
 
 The following gives a run-down of the various concepts employed by \acrshort{ros} to reach the objective described above.
 
-The components of \acrshort{ros} are \emph{nodes}, \emph{messages}, \emph{topics} and \emph{services} \cite{Quigley2009}.
+The components of \acrshort{ros} are \emph{nodes}, \emph{messages}, \emph{topics} and \emph{services}~\cite{Quigley2009}.
 
 \subsubsection{Nodes}
 
@@ -115,11 +115,12 @@ Nodes are processes that perform computation, and are primarily implemented in P
 Nodes are self-contained processes, and communicate with other nodes by passing messages through the \acrshort{ros} middleware.
 \acrshort{ros} modules are generally constructed from a number of nodes.
 This approach follows the Unix philosophy of \say{do one thing and do it well}, which simplifies software development by limiting the scope of each individual node.
-\acrshort{ros} allows for a control system to be divided into any number of nodes, which may run on the same machine or on different machines \cite{ROS}.
+\acrshort{ros} allows for a control system to be divided into any number of nodes, which may run on the same machine or on different machines~\cite{ROS}.
 
 When implementing nodes in C++, it is also possible to implement them as nodelets.
-A nodelet is implemented similarily to a normal node, but is instantiated by a special node, the \emph{nodelet manager}.
+A nodelet is implemented similarly to a normal node, but is instantiated by a special node, the \emph{nodelet manager}.
 This can be done by creating a separate node, which loads all the required nodelets, or it can be done using a launch file.
+The advantage of running multiple nodelets in one node is that communication is done using shared memory, thereby avoiding the overhead of \acrshort{tcp} communication~\cite{Quigley2009}.
 
 \subsubsection{Messages}
 
@@ -127,14 +128,14 @@ The information passed between nodes is encapsulated in messages, which may be t
 Messages are composed of standard data types such as integers, floats and so on, and arrays of these.
 A message can also be composed of other messages.
 Many standard message formats are available in \acrshort{ros}, and it is also possible to define custom message types.
-Nodes publish messages in one of two ways, either by broadcasting them to a topic or by answering service requests.
+Nodes publish messages in one of two ways, either by broadcasting them to a topic or by answering service requests~\cite{Quigley2009}.
 
 \subsubsection{Topics}
 
 Messages can be published to a topic, that can be subscribed to by other nodes.
 This publish-subscribe model allows for sharing of data in a broadcast manner, and there may be any number of publishers and subscribers for a topic.
 One example of such a node is the feedback node, from move\_base, which publishes the current position of the robot.
-Any other node that wants to know the current position can subscribe to this, and will receive the new position whenever the robot moves.
+Any other node that wants to know the current position can subscribe to this, and will receive the new position whenever the robot moves~\cite{Quigley2009}.
 
 \subsubsection{Services}
 
@@ -143,7 +144,7 @@ For applications where synchronous communication is required, it is possible to 
 A service is defined by two messages, the input message and the result message.
 When called, the service will execute and the result is returned to the caller.
 Services can be used to request information, request the execution of a physical action, or some other task.
-\Cref{lst:ros_service} shows one such service, in use by the Cyborg project.
+\Cref{lst:ros_service} shows one such service, in use by the Cyborg project~\cite{Quigley2009}.
 
 \begin{listing}
     \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/distance_to_goal.py}
@@ -153,27 +154,47 @@ Services can be used to request information, request the execution of a physical
 
 \subsubsection{Actions}
 
-While service calls are useful for remote procedure calls which execute quickly, they are blocking and should be avoided for long-running tasks, or tasks that may have to be preempted \cite{ROS}.
+While service calls are useful for remote procedure calls which execute quickly, they are blocking and should be avoided for long-running tasks, or tasks that may have to be preempted~\cite{ROS}.
 For this purpose, \acrshort{ros} provides actions.
 Actions are used for procedure calls that cause the robot to perform a long-running task, such as moving to a location or some other real-world action.
-Actions are able to keep state for the lifetime of a provided goal, and will provide feedback to each client that issues a goal to the server.
+Actions are able to keep state for the lifetime of a provided goal, and will provide feedback to each client that issues a goal to the server~\cite{Quigley2009}.
 
 \subsection{ARIA}
 
-\emph{\acrfull{aria}} is a \CC library for all robots from MobileRobots \cite{ARIA}.
+\emph{\acrfull{aria}} is a \CC library for all robots from MobileRobots.
 The library allows for dynamic control of the robot's velocity, heading, relative heading as well as other parameters.
 This can be achieved both using a low-level interface and a higher-level Actions infrastructure.
 \acrshort{aria} receives sensor data from the robot platform, such as position estimates, sonar data and laser rangefinder data.
-While written in C++, the \acrshort{aria} library can be accessed from other languages, amongst others Python.
+While written in C++, the \acrshort{aria} library can be accessed from other languages, amongst others Python~\cite{ARIA}.
 
 \subsection{ARNL}
 
-\emph{\acrfull{arnl}} is \CC library from MobileRobots built on top of \acrshort{aria} which provides intelligent navigation and localization \cite{ARNL}.
+\emph{\acrfull{arnl}} is \CC library from MobileRobots built on top of \acrshort{aria} which provides intelligent navigation and localization.
 \acrshort{arnl} provides information about the current position of the robot, and an interface for requesting that the robot move to a given location.
 The software updates the current position automatically, using data from the robot's sensors and map.
 
 These features are provided in \acrshort{ros} as a node, called \emph{ros-arnl}, which exposes this functionality in the form of topics and services.
-This node provides a simple interface for higher-level software to monitor and control the position of the robot.
+This node provides a simple interface for higher-level software to monitor and control the position of the robot~\cite{ARNL}.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: MOBILEEYES
+%----------------------------------------------------------------------------------------
+
+\subsection{MobileEyes}
+
+\emph{MobileEyes} is a graphical interface from MobileRobots for monitoring robot motion and sensor output.
+The program allows the user to monitor the movement of the robot on the map, and it is possible to send commands to the robot remotely.
+The software also allows for reconfiguring the robot, and it is possible to send custom commands or create custom overlays that are shown on the map~\cite{MobileEyes}.
+
+%----------------------------------------------------------------------------------------
+%	SUBSECTION: MOBILESIM
+%----------------------------------------------------------------------------------------
+
+\subsection{MobileSim}
+
+\emph{MobileSim} is a simulation software package from MobileRobots, which allows for testing \acrshort{ros} modules in simulation.
+The software emulates the physical robot so that other parts of the \acrshort{ros} integrate without any necessary changes.
+This simulation includes data streams from sensors such as the sonar and laser rangefinders, which allows for efficient testing of control software during development~\cite{MobileSim}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: ROS 2
@@ -181,8 +202,8 @@ This node provides a simple interface for higher-level software to monitor and c
 
 \subsection{ROS 2}
 
-Here, we will give an overview of \emph{\acrshort{ros} 2}, and how the project has attempted to remedy some perceived shortcomings in \acrshort{ros}.
-As outlined in \cite{Gerkey2017}, \acrshort{ros} was developed based on the use case of the Willow Garage \emph{PR2} robot.
+Here, we will give an overview of \emph{\acrshort{ros} 2}\footnote{http://www.ros2.org/}, and how the project has attempted to remedy some perceived shortcomings in \acrshort{ros}.
+As outlined in~\cite{Gerkey2017}, \acrshort{ros} was developed based on the use case of the Willow Garage \emph{PR2} robot.
 Due to this, development was guided by the characteristics of the PR2 robot, including
 
 \begin{itemize}
@@ -193,7 +214,7 @@ Due to this, development was guided by the characteristics of the PR2 robot, inc
     \item Mainly academic applications.
 \end{itemize}
 
-Since the beginning of \acrshort{ros} in 2007, several of these assumptions have changed, and \acrshort{ros} has been used on a far wider range of robots than for what it was originally designed \cite{Gerkey2017}.
+Since the beginning of \acrshort{ros} in 2007, several of these assumptions have changed, and \acrshort{ros} has been used on a far wider range of robots than for what it was originally designed~\cite{Gerkey2017}.
 Among the new use cases outlined, are
 
 \begin{itemize}
@@ -201,21 +222,21 @@ Among the new use cases outlined, are
         Currently, there is no standard way to control more than a single robot using \acrshort{ros}.
         \acrshort{ros} has a single-master architecture, and multi-robot support does not elegantly integrate into this design.
     \litem{Limited computational resources:}
-        \acrshort{ros} is not designed to run on microcontrollers. Therefore, nodes must interact with these through a device driver.
+        \acrshort{ros} is not designed to run on micro controllers. Therefore, nodes must interact with these through a device driver.
         \acrshort{ros} 2 is designed so that these controllers can be implemented as nodes, and thereby participate directly in the control system as first-class citizens.
     \item{Built-in real-time support.}
     \litem{Non-ideal networks:}
-        As seen in earlier work on this project by \cite{Waløen2017}, \acrshort{ros} does not degrade gracefully when run on unreliable networks.
+        As seen in earlier work on this project by~\cite{Waløen2017}, \acrshort{ros} does not degrade gracefully when run on unreliable networks.
         \acrshort{ros} 2 aims to alleviate this.
     \litem{Academic and industrial applications:}
         \acrshort{ros} 2 aims for \acrshort{ros} to remain the platform of choice in academic robotics, while also becoming increasingly relevant in industrial applications.
 \end{itemize}
 
 The central feature of \acrshort{ros} is the publish-subscribe middleware which allows for loose coupling of individual nodes.
-As \acrshort{ros} was begun in 2007, there was no sufficiently mature off-the-shelf technology that provided this, and this system was built essentially from scratch \cite{Gerkey2017}.
+As \acrshort{ros} was begun in 2007, there was no sufficiently mature off-the-shelf technology that provided this, and this system was built essentially from scratch~\cite{Gerkey2017}.
 The \acrshort{ros} project implemented the necessary framework for node discovery, message definition, serialization and transport.
 Since 2007, a number of technologies have mature which provide this capability, and it would not have been necessary to build a custom solution today.
-Several advantages to this are listed by \cite{Gerkey2017}:
+Several advantages to this are listed by~\cite{Gerkey2017}:
 
 \begin{itemize}
     \item Less code to be maintained by the project developers
@@ -225,26 +246,6 @@ Several advantages to this are listed by \cite{Gerkey2017}:
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
-%	SUBSECTION: MOBILEEYES
-%----------------------------------------------------------------------------------------
-
-\subsection{MobileEyes}
-
-\emph{MobileEyes} is a graphical interface from MobileRobots for monitoring robot motion and sensor output.
-The program allows the user to monitor the movement of the robot on the map, and it is possible to send commands to the robot remotely.
-The software also allows for reconfiguring the robot, and it is possible to send custom commands or create custom overlays that are shown on the map.
-
-%----------------------------------------------------------------------------------------
-%	SUBSECTION: MOBILESIM
-%----------------------------------------------------------------------------------------
-
-\subsection{MobileSim}
-
-\emph{MobileSim} is a simulation software package from MobileRobots, which allows for testing \acrshort{ros} modules in simulation.
-The software emulates the physical robot so that other parts of the \acrshort{ros} integrate without any necessary changes.
-This simulation includes data streams from sensors such as the sonar and laser rangefinders, which allows for efficient testing of control software during development.
-
-%----------------------------------------------------------------------------------------
 %	SECTION: BIOLOGICAL NEURAL NETWORKS
 %----------------------------------------------------------------------------------------
 
@@ -252,21 +253,25 @@ This simulation includes data streams from sensors such as the sonar and laser r
 
 \begin{figure}
     \pimage{Figures/biological-neuron}
-    \caption[Model of a biological neuron]{Model of a biological neuron, courtesy of Blausen Medical.\label{fig:biological_neuron}}
+    \caption[Model of a biological neuron.]%
+            {Model of a biological neuron, courtesy of Blausen Medical.}
+    \label{fig:biological_neuron}
 \end{figure}
 
 As a long-term goal, the Cyborg project hopes to use biological neurons in a robot control loop.
 Here, we will give some background on relevant biological concepts.
-This information is from \cite{Knudsen2016}, where these concepts are explained in further detail.
+This information is from~\cite{Knudsen2016}, where these concepts are explained in further detail.
 
 \emph{Neurons} are electrically excitable cells, which process and transmit information using electrical and chemical signals.
 The signals travel via synapses, which are specialized connections between neurons.
 The sum of neurons and their connections are referred to as a \emph{neural network}.
-They are the core components of the central nervous system, and along with the the \emph{ganglia} form the core of the of the peripheral nervous system.
+They are the core components of the central nervous system, and along with the \emph{ganglia} form the core of the of the peripheral nervous system.
 
 \begin{wrapfigure}{R}{0.5\columnwidth}
     \pimage[0.49]{Figures/brain-hierarchy}
-    \caption[Model of the hierarchical structure of the brain.]{Model of the hierarchical structure of the brain\cite{Perry1999}.\label{fig:brain-hierarchy}}
+    \caption[Model of the hierarchical structure of the brain.]%
+            {Model of the hierarchical structure of the brain~\cite{Perry1999}.}
+    \label{fig:brain-hierarchy}
 \end{wrapfigure}
 
 When the \emph{membrane potential} of a neuron is excited past a certain threshold, an \emph{action potential} is triggered.
@@ -278,7 +283,7 @@ Synaptic communication generally travels along axons and synaptic \emph{terminal
 Synapses may either transmit electric signals directly, in \emph{electrical synapses}, or by using neurotransmitters, in \emph{chemical synapses}.
 
 The neurons in the brain are organized in a hierarchical manner.
-Signals enter through the \emph{brainstem}, and travel upwards as shown in \cref{fig:brain-hierarchy}.
+Signals enter through the \emph{brain stem}, and travel upwards as shown in \cref{fig:brain-hierarchy}.
 As shown, higher layers of the brain are responsible for increasingly sophisticated levels of thought.
 This layering is also present in the \emph{neocortex}.
 Taking vision as an example, lower levels of the neocortex are responsible for simple features such as edges and corners.
@@ -286,14 +291,15 @@ Low-level patterns are combined at mid-levels into more complex features such as
 Finally, at higher levels of the neocortex, complex objects such as cars and houses are recognized.
 
 %----------------------------------------------------------------------------------------
-%	SECTION: ARTIFICAL NEURAL NETWORKS
+%	SECTION: ARTIFICIAL NEURAL NETWORKS
 %----------------------------------------------------------------------------------------
 
 \section{Artificial neural networks}
 
 \begin{wrapfigure}{R}{0.4\columnwidth}
     \iimage[0.39]{Figures/artificial-neuron}
-    \caption{Model of an artificial neuron.\label{fig:artificial_neuron}}
+    \caption{Model of an artificial neuron.}
+    \label{fig:artificial_neuron}
 \end{wrapfigure}
 
 The Cyborg is intended to move around in its surroundings, and is equipped with a stereo camera in order to orient itself.
@@ -307,39 +313,41 @@ Historically, this has been one of several possible \emph{sigmoid functions}, fo
 An illustration of an artificial neuron is shown in \cref{fig:artificial_neuron}.
 
 \emph{Nodes} in artificial neural networks are organized into \emph{layers} of units which are connected to the units in the consequent and previous layers.
-%These layers are typically fully connected.
 The value of the signal flowing into a node is a function of the value flowing out of the previous layer, and the weights assigned to the particular connections.
-A neural network with a sufficient number of units and a continuous, bounded and non-constant activation function, is able to approximate any mathematical function\cite{Cybenko1989}\cite{Hornik1991}.
+A neural network with a sufficient number of units and a continuous, bounded and non-constant activation function, is able to approximate any mathematical function~\cite{Cybenko1989}\cite{Hornik1991}.
 
 \begin{wrapfigure}{R}{0.4\columnwidth}
     \iimage[0.39]{Figures/xor-net}
-    \caption{\acrshort{xor} network, illustrating how neurons can implement basic logic functions.\label{fig:xor_net}}
+    \caption{\acrshort{xor} network, illustrating how neurons can implement basic logic functions.}
+    \label{fig:xor_net}
 \end{wrapfigure}
 
 A simple example, which approximates the \acrfull{xor} function, is illustrated in \cref{fig:xor_net}.
 The weights in this example are determined by construction.
-In a real scenario, the weights are found by minimizing some \emph{cost function} through the process of \emph{gradient descent}, which is referred to as training the network\cite{Mitchell1997}.
+In a real scenario, the weights are found by minimizing some \emph{cost function} through the process of \emph{gradient descent}, which is referred to as training the network~\cite{Mitchell1997}.
 Through training, the network would find a different set of weights while still achieving the same output.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: CONVOLUTIONAL NEURAL NETWORK (CNN)
 %----------------------------------------------------------------------------------------
 
-\subsection{Convolutional Neural Network (CNN)}
+\subsection{\acrfullpl{cnn}}
 
 \begin{figure}
     \iimage{Figures/mnist-net}
     \caption[An example of a neural network with one fully connected hidden layer.]%
-        {An example of a neural network with one fully connected hidden layer. %
-         The input to the network is a 28$\times$28 pixel image of a single digit, flattened to a 784 element vector. %
-         The output is a confidence score for each of the possible digits. %
-         The network was trained by the author, and achieved 92.4\% verification accuracy on the \acrshort{mnist} handwritten digit dataset. %
-         More complex networks exceed 99\% accuracy on this dataset \cite{mnist2010}.\label{fig:mnist-net}}
+            {An example of a neural network with one fully connected hidden layer. %
+            The input to the network is a 28$\times$28 pixel image of a single digit, flattened to a 784 element vector. %
+            The output is a confidence score for each of the possible digits. %
+            The network was trained by the author, and achieved 92.4\% verification accuracy on the \acrshort{mnist} handwritten digit dataset. %
+            More complex networks exceed 99\% accuracy on this dataset~\cite{mnist2010}.}
+    \label{fig:mnist-net}
 \end{figure}
 
 \begin{figure}
     \pimage{Figures/features}
-    \caption[Structure of a \acrfull{cnn}.]{Structure of a \acrfull{cnn}\cite{Mathworks}.\label{fig:cnn-classification}}
+    \caption[Structure of a \acrfull{cnn}.]{Structure of a \acrfull{cnn}~\cite{Mathworks}.}
+    \label{fig:cnn-classification}
 \end{figure}
 
 For a fully connected network as the one shown in \cref{fig:mnist-net}, every neuron in the \emph{hidden layer} is connected to each input.
@@ -348,18 +356,20 @@ However, with one input per color channel, per pixel, this number would quickly 
 Instead of flattening an image to a column vector, as done in the fully connected network shown before, a \acrshort{cnn} arranges its neurons in a 3D volume corresponding to the width, height and color channel depth of the input image.
 Furthermore, each neuron in a hidden layer is connected only to a smaller region of the previous layer, as shown in \cref{fig:cnn-classification}.
 Between \emph{convolutional layers}, \emph{pooling layers} have traditionally been inserted to reduce the spatial size of the network.
-This decreases the computational complexity of the network, and by lowering the number of parameters also limits \emph{overfitting}.
+This decreases the computational complexity of the network, and by lowering the number of parameters also limits \emph{overfitting}~\cite{Szegedy2014}.
 
 \begin{figure}
     \pimage[0.9]{Figures/abstract-features}
-    \caption[Neural network learning increasingly abstract features.]{Neural network learning increasingly abstract features \cite{Brown2015}.\label{fig:abstract-features}}
+    \caption[Neural network learning increasingly abstract features.]%
+            {Neural network learning increasingly abstract features~\cite{Brown2015}.}
+    \label{fig:abstract-features}
 \end{figure}
 
 A \acrshort{cnn} consists of convolutional, pooling, and fully connected layers, which perform the following tasks.
 A convolutional layer consists of a set of learned \emph{filters}.
 These filters are moved across the input image, and as the network is trained it learns filters that activate when presented with some visual feature.
 As shown in \cref{fig:abstract-features}, early layers may learn basic features such as horizontal or vertical lines.
-Later layers learn increasingly high-level features, such as the shape of an eye, the corner of a mouth or some other building block of an image \cite{Brown2015}.
+Later layers learn increasingly high-level features, such as the shape of an eye, the corner of a mouth or some other building block of an image~\cite{Brown2015}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: IMAGE CLASSIFICATION
@@ -371,39 +381,45 @@ Later layers learn increasingly high-level features, such as the shape of an eye
     \iimage[0.9]{Figures/ilsvrc}
     \caption[The influence of deep learning on image classification error rates.]%
             {Progress of image classification, and the growth of deep networks. %
-                The graph shows the top-5 classification errors of each year's \acrshort{ilsvrc} winner, and the depth of the network used. %
-             The 2011 winner did not employ a neural network solution
-             \cite{Krizhevsky2012}\cite{Zeiler2013}\cite{Szegedy2014}\cite{He2016}.\label{fig:ilsvrc}}
+            The graph shows the top-5 classification errors of each year's \acrshort{ilsvrc} winner, and the depth of the network used. %
+            The 2011 winner did not employ a neural network solution~\cite{Krizhevsky2012}\cite{Zeiler2013}\cite{Szegedy2014}\cite{He2016}.}
+    \label{fig:ilsvrc}
 \end{figure}
+
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.49]{Figures/activation}
+    \caption{Illustration of Sigmoid and \acrshort{relu} activation functions.}
+    \label{fig:activation-functions}
+\end{wrapfigure}
 
 \emph{Image classification} refers to the task of assigning images to one of a set of possible classes, based on the contents of the image.
 Several competitions are hosted yearly, where research teams compare progress in detecting a wide variety of objects.
-While neural networks have been known since they were first described in literature in 1943\cite{Mitchell1997}\cite{Mcculloch1943}, their utility in complex tasks such as this has only begun to be developed in the past few years.
+While neural networks have been known since they were first described in literature in 1943~\cite{Mitchell1997}\cite{Mcculloch1943}, their utility in complex tasks such as this has only begun to be developed in the past few years.
 This development has largely been attributed to advances in available computing power, the size of available data sets and algorithmic advances which allow for training larger neural networks.
 
-As explained in \cite{Krizhevsky2012}, the ability to correctly classify complex images into one of several thousand possible categories requires a model with a large learning capacity.
+\begin{wrapfigure}{R}{0.5\columnwidth}
+    \pimage[0.49]{Figures/resnet}
+    \caption[Illustration of a residual block.]{Illustration of a residual block~\cite{He2016}.}
+    \label{fig:residual-block}
+\end{wrapfigure}
+
+As explained in~\cite{Krizhevsky2012}, the ability to correctly classify complex images into one of several thousand possible categories requires a model with a large learning capacity.
 However, even with the millions of images in a dataset such as ImageNet it is infeasible to train an fully connected neural network to perform this task.
-\acrlong{cnn}s enable networks to detect features in images, with a lower computational complexity than standard nets.
+\acrlongpl{cnn} enable networks to detect features in images, with a lower computational complexity than standard nets.
 At the most basic levels of the network, such features may be simple horizontal and vertical lines while later layers may learn more abstract features.
 This is illustrated in \cref{fig:abstract-features} and \cref{fig:cnn-classification}.
-Compared to fully connected networks, such as the one illustrated in \cref{fig:mnist-net}, \acrshort{cnn}s have fewer connections and parameters and are therefore easier to train.
-
-\begin{wrapfigure}{R}{0.4\columnwidth}
-    \iimage[0.39]{Figures/activation}
-    \caption{Illustration of Sigmoid and \acrshort{relu} activation functions.\label{fig:activation-functions}}
-\end{wrapfigure}
+Compared to fully connected networks, such as the one illustrated in \cref{fig:mnist-net}, \acrshortpl{cnn} have fewer connections and parameters and are therefore easier to train.
 
 Until 2012, the top performing algorithms in the yearly \acrfull{ilsvrc} was dominated by algorithms requiring a large amount of manual hand coding of features, and that still had an error rate of over 26\%.
 In 2012, researchers from the University of Toronto presented a deep \acrshort{cnn}, made possible by using a new activation function termed the \emph{\acrfull{relu}}, see \cref{fig:activation-functions}.
 While the Sigmoid function quickly saturates which slows down training in deeper layers, the \acrshort{relu} function does not.
-This makes networks using \acrshort{relu} less susceptible to disappearing gradients, which has allowed for training of a deeper network than previously possible\cite{Krizhevsky2012}.
-
-The current revolution in deep learning started when researchers from the University of Toronto proposed a deep convolutional neural network using \acrshort{relu}, at the 2012 \acrshort{ilsvrc}.
-Their network was able to classify images with an error rate of 15.3\%, outcompeting previous winners by over 10 percentage points, as shown in \cref{fig:ilsvrc}.
-While the concept of \acrlong{cnn}s and deep learning had been known for many years, this was the first significant use of such networks in computer vision.
+This makes networks using \acrshort{relu} less susceptible to disappearing gradients, which has allowed for training of a deeper network than previously possible~\cite{Krizhevsky2012}.
+Their network was entered in the 2012 \acrshort{ilsvrc} competition, and was able to classify images with an error rate of 15.3\%.
+This outcompeted previous winners by over 10 percentage points, as shown in \cref{fig:ilsvrc}.
+While the concept of \acrshortpl{cnn} and deep learning had been known for many years, this was the first significant use of such networks in computer vision.
 
 Later advances have improved the applicability of deep neural networks further.
-In 2015, the authors of \cite{He2016} proposed a novel technique of feed-forward from the input signal, leading to great improvement of the trainability of extremely deep networks.
+In 2015, the authors of~\cite{He2016} proposed a novel technique of feed-forward from the input signal, leading to great improvement of the trainability of extremely deep networks.
 As explained, a neural network can approximate any mathematical function.
 The key insight of the authors is that if a network of a given depth can approximate such a function, and a functionally identical deeper network can be created by inserting unity layers, then a deeper network should not yield poorer performance than the original network.
 However, the result found in practice was that as network depth increases, network performance flattens out and eventually degrades.
@@ -412,12 +428,7 @@ To overcome this, the authors note that the desired mapping is likely to be clos
 If the original desired mapping is the function $\mathcal{H}(\vec{x})$, the network is instead trained to approximate $\mathcal{F}(\vec{x}) = \mathcal{H}(\vec{x}) - \vec{x}$.
 This greatly improves the trainability of the network and allows for the increase in network depth shown in \cref{fig:ilsvrc}.
 Unlike previous approaches, the network achieves high accuracy through a deep but simple and repeating architecture composed of residual blocks as shown in \cref{fig:residual-block}.
-This approach gives the network a computational complexity much lower than the number of layers might seem to imply \cite{He2016}.
-
-\begin{wrapfigure}{R}{0.4\columnwidth}
-    \pimage[0.39]{Figures/resnet}
-    \caption[Residual block]{Residual block \cite{He2016}.\label{fig:residual-block}}
-\end{wrapfigure}
+This approach gives the network a computational complexity much lower than the number of layers might seem to imply~\cite{He2016}.
 
 As deeper networks are able to capture more abstract features in images, machine vision becomes more robust and consequently applicable to a larger range of tasks.
 The organizers of \acrshort{ilsvrc} have announced that the 2018 competition will involve classifying 3D objects as well as 2D images.
@@ -429,15 +440,15 @@ The organizers of \acrshort{ilsvrc} have announced that the 2018 competition wil
 \subsection{Object Detection}
 
 In image classification tasks, the algorithm is trained to classify an image of a single object, or alternatively the principal object in the image for images with more than one object.
-In \emph{object detection} tasks, the goal is to locate and classify all objects in the image, including identifying the boundary between objects and how they relate to one another.
+In \emph{object detection} tasks, the goal is to locate and classify all objects in the image, including identifying the boundary between objects and how they relate to one another~\cite{Girshick2013}.
 Just as deep learning has revolutionized object classification, great strides have been made in object detection in recent years.
 As these developments are highly relevant to the field of robotics and the Cyborg project, this section gives an overview of these developments.
 
 The same networks that are used for classifying images with a single object can also be applied to classify individual objects within a more complex image.
-The challenge in object detection is to identify these individual objects, so that they can be classified in the manner described in the previous section.
+The challenge in object detection is to identify these individual objects, so that they can be classified in the manner described in the previous section~\cite{Girshick2013}.
 
-Similar to the progress seen in object classification, previous to the deep learning revolution the best-effort approaches used other techniques than neural networks \cite{Girshick2013}.
-The very earliest attempts at object detection using \acrshort{cnn}s employ a naive technique of moving a \emph{sliding window} across the image.
+Similar to the progress seen in object classification, previous to the deep learning revolution the best-effort approaches used other techniques than neural networks~\cite{Girshick2013}.
+The very earliest attempts at object detection using \acrshortpl{cnn} employ a naive technique of moving a \emph{sliding window} across the image.
 Using windows of various sizes and classifying these sub-images one by one, it is possible to detect objects within an image composed of multiple objects.
 However, this is a brute force approach and for fine-grained detection requires classifying thousands of windows per image.
 
@@ -445,10 +456,11 @@ However, this is a brute force approach and for fine-grained detection requires 
 
 \begin{figure}
     \pimage{Figures/rcnn}
-    \caption[Object detection and classification using \acrshort{rcnn}]{Object detection and classification using \acrshort{rcnn} \cite{Girshick2013}.\label{fig:r-cnn}}
+    \caption[Object detection and classification using \acrshort{rcnn}.]{Object detection and classification using \acrshort{rcnn}~\cite{Girshick2013}.}
+    \label{fig:r-cnn}
 \end{figure}
 
-The approach taken by \cite{Girshick2013}, called \emph{\acrfull{rcnn}} extracts region proposals from the image by a process called \emph{selective search}.
+The approach taken by~\cite{Girshick2013}, called \emph{\acrfull{rcnn}} extracts region proposals from the image by a process called \emph{selective search}.
 The selective search algorithm looks at the image through windows of different sizes, and identifies relevant regions by grouping adjacent pixels by color, texture or intensity.
 The resulting groups are reshaped into bounding boxes, and the contents of each bounding box are fed to an image classifier.
 If the contents of a box are successfully classified, the algorithm attempts to tighten the bounding box using a linear regression model.
@@ -462,19 +474,19 @@ In a follow-up paper, Gerschick proposes an approach that is improved in two sig
 Firstly, rather than running individual regions of the image through the feature classifier one by one, features are computed on the entire image in a single pass to create a feature map, in a process called Region of Interest Pooling.
 Subsequently, the features for each region can be obtained by selecting the appropriate area from the pre-computed feature map.
 Secondly, the three models used previously (region proposer, image classifier and bounding box regression model), are combined into a single model.
-This allows for end-to-end training, which greatly improves trainability \cite{Girshick2015}.
+This allows for end-to-end training, which greatly improves trainability~\cite{Girshick2015}.
 
 \subsubsection{Faster \acrshort{rcnn}}
 
 \begin{wrapfigure}{r}{0.4\columnwidth}
     \pimage[0.39]{Figures/faster-rcnn}
-    \caption[Object detection using Faster \acrshort{rcnn}.]{Object detection using \acrshort{rcnn} \cite{Ren2017}.}
+    \caption[Object detection using Faster \acrshort{rcnn}.]{Object detection using \acrshort{rcnn}~\cite{Ren2017}.}
     \label{fig:faster-rcnn}
 \end{wrapfigure}
 
-While the advances outlined above greatly improve on the efficiency of object detection algorithms, they expose the region proposer as a significant bottleneck \cite{Ren2017}.
+While the advances outlined above greatly improve on the efficiency of object detection algorithms, they expose the region proposer as a significant bottleneck~\cite{Ren2017}.
 Selective search is used to generate region proposals, while a \acrshort{cnn} is used to extract features, classify the image and compute a bounding box.
-The work done by \cite{Ren2017} uses the features computed by the \acrshort{cnn} discussed previously, and combines this with a separate \acrshort{cnn}, called the \emph{Region Proposal Network}.
+The work done by~\cite{Ren2017} uses the features computed by the \acrshort{cnn} discussed previously, and combines this with a separate \acrshort{cnn}, called the \emph{Region Proposal Network}.
 They name this approach \emph{Faster \arcshort{rcnn}}.
 By making use of the same feature map that is used to classify images, the authors enable essentially cost-free region proposals.
 The network passes a sliding window over the feature map, and computes region proposals along with an objectness-score.
@@ -484,10 +496,11 @@ The objectness-score measures the probability that the region contains an object
 
 \begin{figure}[H]
     \pimage{Figures/mask-rcnn}
-    \caption[Pixel-level object detection using Mask \acrshort{rcnn}.]{Pixel-level object detection using Mask \acrshort{rcnn} \cite{He2017}.\label{fig:mask-rcnn}}
+    \caption[Pixel-level object detection using Mask \acrshort{rcnn}.]{Pixel-level object detection using Mask \acrshort{rcnn}~\cite{He2017}.}
+    \label{fig:mask-rcnn}
 \end{figure}
 
-Later work extends this approach by detecting which pixels belong to each of the detected objects, as shown in \cref{fig:mask-rcnn} \cite{He2017}, a method named \emph{Mask \acrshort{rcnn}}.
+Later work extends this approach by detecting which pixels belong to each of the detected objects, as shown in \cref{fig:mask-rcnn}~\cite{He2017}, a method named \emph{Mask \acrshort{rcnn}}.
 Here, in parallel to the region proposal network, a network is branched off which simultaneously computes a binary mask for each object.
 The binary map identifies which pixels belong to the object, as shown in \cref{fig:mask-rcnn}.
 
@@ -495,7 +508,8 @@ The binary map identifies which pixels belong to the object, as shown in \cref{f
 
 \begin{figure}[H]
     \pimage{Figures/yolo}
-    \caption[Object detection using \acrshort{yolo}.]{Object detection using \acrshort{yolo} \cite{JosephRedmon}.\label{fig:yolo}}
+    \caption[Object detection using \acrshort{yolo}.]{Object detection using \acrshort{yolo}~\cite{JosephRedmon}.}
+    \label{fig:yolo}
 \end{figure}
 
 The network used by this project, named \acrfull{yolo}, takes a novel approach.
@@ -503,7 +517,7 @@ Rather than making a first pass to detect shapes, and a second pass to classify 
 The image is divided into a grid, and the probability that each cell in the grid forms part of a bounding box, as well as the probability that the contents of the box belongs to an image class, is computed simultaneously.
 These values are then combined to obtain a class-specific confidence score which encodes both the probability of the particular class appearing in the box, and how well the box fits the object.
 This allows the network to reason globally about the contents of the image, where the \acrshort{rcnn} approach treats each selected shape separately from the others.
-Furthermore, performing detection in a single pass provides greater speed \cite{Redmon2015}.
+Furthermore, performing detection in a single pass provides greater speed~\cite{Redmon2015}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: TRANSFER LEARNING
@@ -513,12 +527,13 @@ Furthermore, performing detection in a single pass provides greater speed \cite{
 
 \begin{figure}
     \pimage{Figures/nvidia}
-    \caption[Free-space detection and 3D object detection for autonomous driving.]{Free-space detection and 3D object detection for autonomous driving \cite{NVIDIA}.\label{fig:nvidia-cnn}}
+    \caption[Free-space detection and 3D object detection for autonomous driving.]{Free-space detection and 3D object detection for autonomous driving~\cite{NVIDIA}.}
+    \label{fig:nvidia-cnn}
 \end{figure}
 
 The level of performance discussed in the previous section requires the training of very large convolutional neural networks.
 Due to problems of overfitting in such large networks, it is necessary to train the network on very large datasets.
-In \cite{NVIDIA}, researchers from NVIDIA describe a process by training such a network on the ImageNet dataset, consisting of approximately 1.2 million images.
+In~\cite{NVIDIA}, researchers from NVIDIA describe a process by training such a network on the ImageNet dataset, consisting of approximately 1.2 million images.
 These are in turn augmented by various transformations to a total dataset of 22 million images.
 By training on such a large dataset, it is possible to create a very robust feature detector.
 However, the amount of training required can take weeks or months, as in the example described by the researchers.
@@ -530,7 +545,7 @@ This can be done by replacing erasing the weights of the classification part of 
 By keeping the weights of the feature learning layers of the network fixed, the network can be retrained to a new purpose.
 In the case of the work done at NVIDIA, a general image classifier trained on the ImageNet dataset was repurposed to identify objects in the autonomous vehicle domain.
 This can then be done much faster, and with a much smaller dataset, than what is required to train a new network.
-Using this technique resulted in a network able to detect pedestrians and vehicles, and identify which sections of the road are safe for driving, as shown in \cref{fig:nvidia-cnn}.
+Using this technique resulted in a network able to detect pedestrians and vehicles, and identify which sections of the road are safe for driving, as shown in \cref{fig:nvidia-cnn}\cite{NVIDIA}.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: FINITE STATE MACHINES
@@ -538,23 +553,22 @@ Using this technique resulted in a network able to detect pedestrians and vehicl
 
 \section{Finite State Machines}
 
-At the outset of the work on this thesis, the cyborg was running the decision making software outlined in \cite{Andersen2017}.
+At the outset of the work on this thesis, the cyborg was running the decision making software outlined in~\cite{Andersen2017}.
 
 While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
 This and the following section will provide some background on these two approaches.
-The information in this section is largely based on \cite{Millington2009}.
 
-\begin{wrapfigure}{R}{0.4\columnwidth}
-    \pimage[0.39]{Figures/statemachine}
+\begin{figure}
+    \iimage[0.39]{Figures/statemachine}
     \caption{An example of a simple state machine.}
     \label{fig:fsm}
-\end{wrapfigure}
+\end{figure}
 
 A \emph{finite state machine} is an abstract model of computation, that allows for actions to be encoded into a finite number of states.
 Changes from one state to another are referred to as \emph{transitions}.
 The transition from an initial state to a new state is governed only by the starting \emph{state}, and the \emph{event}, as shown in \cref{fig:fsm}.
 Whenever the conditions for a transition are met, the system will perform that transition and execute the \emph{action} associated with the new state.
-State machines typically have actions associated with entering and exiting a state.
+State machines typically have actions associated with entering and exiting a state~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: EVENTS
@@ -564,7 +578,7 @@ State machines typically have actions associated with entering and exiting a sta
 
 The type of state machines described here is termed an event-driven state machine.
 As the \acrshort{ros} system needs to perform many different actions, it is necessary that we do not block the system by polling for new events.
-Instead, events arrive asynchronously and are consumed by the state machine before it goes back to sleep.
+Instead, events arrive asynchronously and are consumed by the state machine before it goes back to sleep~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: ACTIONS
@@ -575,7 +589,7 @@ Instead, events arrive asynchronously and are consumed by the state machine befo
 Actions in finite state machines are associated with transitions.
 In actual use, actions are typically modularized by splitting into an entry action and an exit action for each state as well as component executed repeatedly while the state is active.
 Often, it is desirable to specify behavior that should trigger when the state machine enters or leaves a state.
-This granularity achieved by splitting each actions simplifies behavior reuse, for example if every transition into a states share behavior that can be placed in an entry action.
+This granularity achieved by splitting each actions simplifies behavior reuse, for example if every transition into a states share behavior that can be placed in an entry action~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: STRENGTHS AND WEAKNESSES
@@ -584,11 +598,11 @@ This granularity achieved by splitting each actions simplifies behavior reuse, f
 \subsection{Strengths and weaknesses}
 \label{sec:state_machine_strength_weaknesses}
 
-An overview of the use of state machines for AI in computer games is given in \cite{Millington2009}.
+An overview of the use of state machines for AI in computer games is given in~\cite{Millington2009}.
 In general, the concerns outlined here overlap with the concerns relevant in the sort of high-level decision making that is necessary in the Cyborg project.
 
 State machines have work well for structured behavior, as they make it simple to implement a sequence of behaviors and the conditions for transitioning between them.
-They work particularily well for behavior where it is necessary to interrupt the current behavior due to external events.
+They work particularly well for behavior where it is necessary to interrupt the current behavior due to external events.
 
 One major weakness of state machines is that as the control system grows, the number of states and transitions between states quickly balloons and can be come unmanageable.
 Take as an example a control system for the Cyborg, where it should act in different ways depending on the charge level of its battery.
@@ -602,7 +616,7 @@ In both cases, the number of states would be three times the number of states in
 Furthermore, the number of transitions that must be added when including a new state grow with the size of the state machine, and the process can quickly become cumbersome.
 
 Another weakness, which has been an important consideration for this project, is that state machines fall short when implementing unstructured behavior.
-While they are well suited for structured behavior of the type that a robot may do in an industrial setting, they are less suited for a robot which is intended to roam freely and react in a life-like way to its surroundings.
+While they are well suited for structured behavior of the type that a robot may do in an industrial setting, they are less suited for a robot which is intended to roam freely and react in a life-like way to its surroundings~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: IMPLEMENTATION IN ROS
@@ -614,7 +628,7 @@ The existing control system at the outset of this project was implemented using 
 \acrshort{smach} allows for fast prototyping and implementing complex state machines.
 Since it is a task-level architecture, it is not suitable for low-level control but rather for high-level decision making.
 As mentioned in \cref{sec:state_machine_strength_weaknesses}, state machines are not well suited to handle unstructured tasks.
-This is also stated by the \acrshort{smach} developers \cite{Bohren}.
+This is also stated by the \acrshort{smach} developers~\cite{Bohren}.
 
 States in \acrshort{smach} are implemented as individual classes, which allows for reuse.
 This also includes reuse of behavior between states, by using object composition.
@@ -632,20 +646,15 @@ Actions to be performed by the robot are associated with states in the state mac
 \section{Behavior trees}
 
 \begin{wrapfigure}{L}{0.5\columnwidth}
-    \pimage[0.49]{Figures/behaviortree}
+    \iimage[0.49]{Figures/behaviortree}
     \caption{An example of a simple behavior tree.}
-    \label{fig:bt}
+    \label{fig:behaviortree}
 \end{wrapfigure}
 
-\begin{listing}
-    \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/priority.py}
-    \caption{An example implementation of the Priority node in Python.\label{lst:priority}}
-\end{listing}
-
-A \emph{behavior tree} is a model for task execution commonly used for artificial intelligence in video games, but that is also applicable to robotics and other types of control systems \cite{Millington2009}.
+A \emph{behavior tree} is a model for task execution commonly used for artificial intelligence in video games, but that is also applicable to robotics and other types of control systems.
 Much of the strength of the behavior tree approach lies in the ability to compose complex behavior from simple building blocks, without needing to consider the implementation of each building block.
 In this sense they are similar to finite state machines.
-However, while the fundamental building block in a state machine is the state, the fundamental building block in behavior trees is the task.
+However, while the fundamental building block in a state machine is the state, the fundamental building block in behavior trees is the task~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: TYPES OF TASKS
@@ -656,39 +665,48 @@ However, while the fundamental building block in a state machine is the state, t
 All nodes in a behavior tree share certain similarities.
 At their core, tasks are small execution units which are run for a certain length of time by the program which executes the behavior tree.
 At the end of execution, the task returns a status code, typically success, failure, or running.
-There are three types of tasks commonly used in behavior trees, \emph{actions}, \emph{conditions}, and \emph{composites} \cite{Millington2009}.
+There are three types of tasks commonly used in behavior trees, \emph{actions}, \emph{conditions}, and \emph{composites}~\cite{Millington2009}.
 
 \subsubsection{Actions}
 
 Actions are behaviors that change the state of the system.
 For example, an action may cause the Cyborg to move to a given location or check the status of its battery.
+Actions can be long running, and will return a running status code to the calling function while they are performing their task~\cite{Millington2009}.
 
 \subsubsection{Conditions}
 
 Conditions are checks made to test a property of the system.
+These can be used to do checks before executing an action, for example to check if the action is wanted or possible.
 To continue the example given above, the battery status that was updated may be compared to a critical value.
-In this way, an action can be executed if and only if it is found that the battery state permits it, or the system may execute behavior to recharge the battery if not.
+In this way, an action can be executed if and only if it is found that the battery state permits it, or the system may execute behavior to recharge the battery if not~\cite{Millington2009}.
 
 \subsubsection{Composites}
+
+\begin{listing}
+    \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/priority.py}
+    \caption{An example implementation of the Priority node in Python.}
+    \label{lst:priority}
+\end{listing}
 
 Composites are nodes which tie the actions and conditions together.
 While actions and conditions are implemented by the programmer, there are a fixed and very small set of typical composite nodes.
 Generally there are two composite nodes that are used, the \emph{Priority} node and the \emph{Sequence} node.
 
-In the simple example shown in \cref{fig:bt} the the first control node, with the \emph{?} symbol, is a Priority node.
+In the simple example shown in \cref{fig:behaviortree} the first control node, with the \emph{?} symbol, is a Priority node.
 This node will execute, or tick, its children from left to right until one of the children returns successfully, as shown in \cref{lst:priority}.
 
 \begin{listing}
     \inputminted{python}{\rootfolder/Chapters/Chapter2/Listings/sequence.py}
-    \caption{An example implementation of the Sequence node in Python.\label{lst:sequence}}
+    \caption{An example implementation of the Sequence node in Python.}
+    \label{lst:sequence}
 \end{listing}
 
 The first child of this node, with the \emph{\rightarrow} symbol, is a Sequence node.
 This node will execute its children from left to right until one of the children returns failure, as shown in \cref{lst:sequence}.
-By combining these, the tree shown in \cref{fig:bt} will first attempt to tick nodes \emph{t1} and \emph{t2}, and only if either of those fail will it tick node \emph{t3}.
+By combining these, the tree shown in \cref{fig:behaviortree} will first attempt to tick nodes \emph{t1} and \emph{t2}, and only if either of those fail will it tick node \emph{t3}.
 
 This approach can be repeated to create increasingly complex behavior, without consideration of the actual behavior performed by the tasks \emph{t1}, \emph{t2}, and so on.
-If behavior reuse is required, it is possible to compose the behavior in a sub-tree which can be included as a task in a parent tree.
+If behavior reuse is required, it is possible to compose the behavior in a sub-tree which can be included as a task in a parent tree~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: THE BLACKBOARD
@@ -701,7 +719,7 @@ For example, the action which queries for the Cyborg's battery charge level woul
 The \emph{blackboard}, as it is commonly called, is a data store used for this purpose.
 Generally, a blackboard is a key-value store for data exchange between tasks.
 The blackboard allows for storage of data that is available to any node in the tree.
-Depending on the implementation, it may also allow for data to be available only to other nodes in a sub-tree or data that is only available to the node which stored the data.
+Depending on the implementation, it may also allow for data to be available only to other nodes in a sub-tree or data that is only available to the node which stored the data~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: STRENGTHS AND WEAKNESSES
@@ -717,7 +735,7 @@ One commonly encountered limitation of behavior trees is that they make it diffi
 For example, while it is simple to encode behavior that causes the Cyborg to dock with its charging station if the battery runs low, it is more difficult to make the Cyborg generally act in a way that conserves energy if it is in a state of having a somewhat low battery.
 Doing so would require either that two similar behavior trees are implemented, one for a normal state and one for an energy-depleted state, or that each task in the tree is a state machine with these two states.
 In this way, behavior trees share some of the weaknesses found in state machines.
-While this is possible to implement this functionality, it adds significant design complexity and is therefore generally avoided \cite{Millington2009}.
+While this is possible to implement this functionality, it adds significant design complexity and is therefore generally avoided~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: IMPLEMENTATION IN ROS

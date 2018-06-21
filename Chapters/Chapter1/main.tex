@@ -8,13 +8,22 @@
 
 \emph{\acrshort{ntnu} Cyborg} is a project to develop a cybernetic organism.
 The main goal of the project is to enable communication between live nerve tissue and a robot.
-The robot acts as a research platform for the study of neural signals, robotics and cybernetic machines.  It is the stated intention of the project is to bring \acrshort{ntnu} to the forefront of international research in these areas.
+The robot acts as a research platform for the study of neural signals, robotics and cybernetic machines.
+It is the stated intention of the project is to bring \acrshort{ntnu} to the forefront of international research in these areas.
+
+This thesis contributes to this goal by implementing the following functionality:
+
+\begin{itemize}
+    \item A robust and extensible control system, based on behavior trees
+    \item An application for visualizing the control system during execution
+    \item An object detection and classification system using stereoscopic imagery and neural networks
+\end{itemize}
 
 \subsection{Neuroscience}
 
 The Cyborg has a biological \say{brain} which consists of a collection of nerve cells grown over a \acrfull{mea}.
 These spontaneously organize into neural networks, and communicate with each other using electronic impulses.
-The impulses are captured by the \acrshort{mea}, and allows for streaming of nerve activity data to the robot.
+The impulses are captured by the \acrshort{mea}, and allows for streaming of nerve activity data to the Cyborg.
 The long-term intent of the neuroscientific part of the Cyborg project is to analyze the electrical input and stimulate the network, in order to form a closed-loop system which allows the network to be trained.
 
 \subsection{Robotics}
@@ -25,29 +34,29 @@ The robot base is also intended to display a representation of the measured nerv
 
 \section{Previous work on the Cyborg project}
 
-Previously, student groups have added a rudimentary body for the robot, upon which the existing \acrshort{led} box is mounted.
+Previously, student groups have added a rudimentary body for the Cyborg, upon which the existing \acrshort{led} box is mounted.
 This also acts as a mounting frame for existing equipment, including the power supply, Jetson computer, Raspberry Pi computer and so on.
-There is also a stereo camera mounted on the robot, although it is currently not in use.
+There is also a stereo camera mounted on the Cyborg, although it is currently not in use.
 Work has also been done to pass information from the \acrlong{mea} to the existing \acrshort{led} box, but this is also not in use at the outset of this project.
 
 \section{Contributions of the author}
 
-This project aims to complete Cyborg's control system, based on the \emph{\acrfull{ros}}, by implementing a variation on traditional state machines called a behavior tree.
+This project aims to complete the Cyborg's control system, based on the \emph{\acrfull{ros}}, by implementing a variation on traditional state machines called a behavior tree.
 This will involve integrating a behavior tree implementation, ideally one that already exists and is well tested, with the \acrshort{ros} architecture.
-Furthermore, it will involve developing computer program for visualization of the behavior tree so that the state of the behavior tree can be inspected during robot operation.
-The mounting frame that is already on the robot will be improved by mounting industry-standard 10 inch rack-mounting rails to the frame.
-This will allow for secure, modular mounting of hardware within the robot body.
-Finally, imagery from the stereo camera will be analyzed to detect objects in the robot's view field, such as humans and other everyday objects.
-These will be classified by a neural network, and the distance to each object will be calculated so their location relative to the robot can be determined.
+Furthermore, it will involve developing computer program for visualization of the behavior tree so that the state of the behavior tree can be inspected during Cyborg operation.
+The mounting frame that is already on the Cyborg will be improved by mounting industry-standard 10 inch rack-mounting rails to the frame.
+This will allow for secure, modular mounting of hardware within the Cyborg body.
+Finally, imagery from the stereo camera will be analyzed to detect objects in the Cyborg's view field, such as humans and other everyday objects.
+These will be classified by a neural network, and the distance to each object will be calculated so their location relative to the Cyborg can be determined.
 
-The goal of these tasks is to take the robot a few steps closer to a state where it is able to autonomously roam the hallways of the university and act as a mascot for the university and the Cyborg project.
+The goal of these tasks is to take the Cyborg a few steps closer to a state where it is able to autonomously roam the hallways of the university and act as a mascot for the university and the Cyborg project.
 
 Several existing software applications are used to achieve these goals, and will be described in more detail in the following chapter.
 The software used by the author is primarily the \acrlong{ros}.
 \acrshort{ros} is a middleware system, composed by a number of modules, for the sake of this thesis primarily those delivered by \emph{MobileRobots}, manufacturers of the \emph{Pioneer LX}.
 The \acrshort{ros} modules, or nodes, developed by the Cyborg project and by the author interface with these existing modules.
 A library called b3, for implementing behavior trees, has been used to add a control system to our \acrshort{ros} environment.
-Visualization of our behavior tree was developed as a module, or plugin, which extends the rqt software, a graphical interface for \acrshort{ros}.
-Object detection was implemented using the OpenCV library.
+Visualization of our behavior tree is developed as a module, or plugin, which extends the rqt software, a graphical interface for \acrshort{ros}.
+Object detection is implemented using the OpenCV library.
 
 \end{document}

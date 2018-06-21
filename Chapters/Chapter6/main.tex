@@ -19,7 +19,8 @@ These tasks are described in this chapter.
     \centering
     \subcaptionbox{Before.\label{fig:before-rack}}[0.38\columnwidth][l]{\pimage[0.38]{Figures/before}}
     \subcaptionbox{After.\label{fig:after-rack}}[0.38\columnwidth][r]{\pimage[0.38]{Figures/after}}
-    \caption{The Cyborg, showing equipment mounting before and after installation of the 10 inch rack.\label{fig:before-after-rack}}
+    \caption{The Cyborg, showing equipment mounting before and after installation of the 10 inch rack.}
+    \label{fig:before-after-rack}
 \end{figure}
 
 At the outset of the project, the Cyborg was equipped with a mounting frame, as shown in \cref{fig:before-rack}.
@@ -95,7 +96,8 @@ This list will be cached, so that it can be returned in the future without needi
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{python}{\rootfolder/Chapters/Chapter6/Listings/available_goals.py}
-    \caption{Implementation of the AvailableGoals service \label{lst:availablegoals}}
+    \caption{Implementation of the AvailableGoals service.}
+    \label{lst:availablegoals}
 \end{listing}
 
 \subsubsection{DistanceToGoal service}
@@ -112,7 +114,8 @@ The length is found by calculating the Euclidean distance between each pair of c
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{python}{\rootfolder/Chapters/Chapter6/Listings/distance_to_goal.py}
-    \caption{Implementation of the DistanceToGoal service \label{lst:distancetogoal}}
+    \caption{Implementation of the DistanceToGoal service.}
+    \label{lst:distancetogoal}
 \end{listing}
 
 \subsubsection{ClosestGoal service}
@@ -125,7 +128,8 @@ The ClosestGoal service iterates through this list, calling the DistanceToGoal s
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{python}{\rootfolder/Chapters/Chapter6/Listings/closest_goal.py}
-    \caption{Implementation of the ClosestGoal service \label{lst:closestgoal}}
+    \caption{Implementation of the ClosestGoal service.}
+    \label{lst:closestgoal}
 \end{listing}
 
 \subsubsection{LoadMap service}
@@ -138,7 +142,8 @@ The service implementation is shown in \cref{lst:loadmap}.
 
 \begin{listing}
     \inputminted[fontsize=\scriptsize]{python}{\rootfolder/Chapters/Chapter6/Listings/load_map.py}
-    \caption{Implementation of the LoadMap service \label{lst:loadmap}}
+    \caption{Implementation of the LoadMap service.}
+    \label{lst:loadmap}
 \end{listing}
 
 \end{document}

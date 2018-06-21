@@ -8,7 +8,7 @@
 
 To provide the Cyborg's control system with information about objects in the Cyborg's surroundings, an object detection and classification system was implemented.
 This system uses data from the Cyborg's depth-sensing stereo camera to both identify and locate objects in the Cyborg's surroundings.
-It continues the work done by EiT students working for the Cyborg project, who evaluated various object detection approaches and produced a demonstration using the \acrfull{yolo} algorithm \cite{Opheim2018}.
+It continues the work done by \acrfull{eit} students working for the Cyborg project, who evaluated various object detection approaches and produced a demonstration using the \acrfull{yolo} algorithm \cite{Opheim2018}.
 Throughout the time spent on this thesis, the author has collaborated with and guided this group in their work.
 This has allowed the author to focus on proven ideas, unlike previous parts of this thesis where much effort was spent identifying promising solutions.
 While partially based on these ideas, the following work is done by the author.
@@ -31,7 +31,8 @@ Each detected object will be represented by a structure containing its classific
 \begin{listing}
     \inputminted{python}{\rootfolder/Chapters/Chapter5/Listings/Prediction.msg}
     \inputminted{python}{\rootfolder/Chapters/Chapter5/Listings/Predictions.msg}
-    \caption{Prediction and Predictions message formats\label{lst:prediction-msg}}
+    \caption{Prediction and Predictions message formats.}
+    \label{lst:prediction-msg}
 \end{listing}
 
 %----------------------------------------------------------------------------------------
@@ -82,12 +83,14 @@ The only caveat the developer must keep in mind is that messages cannot be modif
 
 \begin{listing}
     \inputminted{cpp}{\rootfolder/Chapters/Chapter5/Listings/object_detector_node.cpp}
-    \caption{Nodelet instantiation using a C++ node.\label{lst:detection-node-cpp}}
+    \caption{Nodelet instantiation using a C++ node.}
+    \label{lst:detection-node-cpp}
 \end{listing}
 
 \begin{listing}
     \inputminted{xml}{\rootfolder/Chapters/Chapter5/Listings/ros_dnn.launch}
-    \caption{Nodelet instantiation using a launch file.\label{lst:detection-node-launch}}
+    \caption{Nodelet instantiation using a launch file.}
+    \label{lst:detection-node-launch}
 \end{listing}
 
 In order to make up the object detection node, there are two approaches to launching the component nodelets that make up the node.
@@ -103,17 +106,20 @@ This provides a level of flexibility, and also allows for the Cyborg project to 
 
 \begin{listing}
     \inputminted{cpp}{\rootfolder/Chapters/Chapter5/Listings/ObjectDetectorNodelet}
-    \caption{ObjectDetectorNodelet class definition\label{lst:objectdetectornodelet}}
+    \caption{ObjectDetectorNodelet class definition.}
+    \label{lst:objectdetectornodelet}
 \end{listing}
 
 The full implementation can be found in the attachments, but we will give a run-through of the steps taken.
 After the nodelet manager creates an instance of the class, the OnInit() function is run, which performs the steps normally found in the class constructor.
 In the case of the ObjectDetectorNodelet, shown in \cref{lst:objectdetectornodelet}, this function fetches parameters from the \acrshort{ros} parameter server, such as the names for the input and output topics as well as parameters required to load the neural network.
-This includes a config file describing layers of the network, a file with weights for the network as described in \cref{ch:background}, and so forth.
+This includes a configuration file describing layers of the network, a file with weights for the network as described in \cref{ch:background}, and so forth.
 
 \begin{figure}[ht]
     \pimage{Figures/yolo}
-    \caption[Screenshot of OpenCV object detection.]{Screenshot of OpenCV object detection, courtesy of opencv.org.\label{fig:opencv}}
+    \caption[Screenshot of OpenCV object detection.]%
+            {Screenshot of OpenCV object detection, courtesy of opencv.org.}
+    \label{fig:opencv}
 \end{figure}
 
 Once all the required parameters are retrieved, the class loads the neural network and subscribes to the image and depth map topics published by zed\_ros\_wrapper.
@@ -125,7 +131,8 @@ We also set up dynamic reconfigure, so the user can change the classification th
 
 \begin{listing}
     \inputminted{cpp}{\rootfolder/Chapters/Chapter5/Listings/Prediction}
-    \caption{Prediction class definition\label{lst:prediction}}
+    \caption{Prediction class definition.}
+    \label{lst:prediction}
 \end{listing}
 
 On reception of an image, and optionally a depth map, the callback function \emph{camera\_cb()} is called.
@@ -163,9 +170,9 @@ The program flow in the Python version of the object detection node is generally
 \subsubsection{OpenCV version}
 
 With the ability to use a custom compiled version of OpenCV with \acrshort{ros}, it became possible to use a version with support for cutting edge features, including the \acrfull{dnn} module.
-While OpenCV has CUDA support for much of its functionality, the \acrshort{dnn} module is limited to GPU acceleration through OpenCL which currently only supports Intel GPUs.
+While OpenCV has CUDA support for much of its functionality, the \acrshort{dnn} module is limited to \acrshort{gpu} acceleration through OpenCL which currently only supports Intel \acrshortpl{gpu}.
 As the Cyborg project uses an Nvidia Jetson TX2 for graphics processing, this is a limitation.
-As GPU acceleration is key to achieving usable performance when running neural networks, backend support for this platform is key to making an OpenCV solution practical.
+As \acrshort{gpu} acceleration is key to achieving usable performance when running neural networks, backend support for this platform is key to making an OpenCV solution practical.
 Even so, this makes it possible to perform an apples to apples performance comparison between a C++ and a Python implementation using OpenCV, which is interesting in itself.
 Though this was only made possible shortly before the deadline for this report, it was interesting enough for the Cyborg project that this second Python implementation was created.
 
