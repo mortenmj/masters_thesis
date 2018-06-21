@@ -7,7 +7,7 @@
 \label{ch:background}
 
 The Cyborg is composed of a number of major and minor hardware and software components.
-Here, these will be described in order to provide the necessary background for the rest of this thesis.
+In the following sections, these will be described in order to provide the necessary background for the subsequent steps undertaken in this thesis to implement the previously described functionalities.
 
 %----------------------------------------------------------------------------------------
 %	SECTION: HARDWARE
@@ -37,8 +37,8 @@ The NTNU Cyborg uses the Pioneer LX robot, from MobileRobots~(\cref{fig:robot-or
 Omron Adept MobileRobots, previously MobileRobots, is a manufacturer of intelligent mobile robots for commercial and industrial use.
 
 The Pioneer LX comes equipped with the required sensors for safe, autonomous operation.
-The robot is equipped with a \emph{SICK S300} \ang{270} laser rangefinder for navigation and object detection, in addition to a \emph{SICK TiM 510} laser for frontal sensing near floor level.
-Additionally, it is equipped with rear facing ultrasonic sonar sensors and front bumpers for collision detection.
+The robot has a \emph{SICK S300} \ang{270} laser rangefinder for navigation and object detection, in addition to a \emph{SICK TiM 510} laser for frontal sensing near floor level.
+Additionally, the robot has rear facing ultrasonic sonar sensors and front bumpers for collision detection.
 These sensors allow for \acrfull{slam}, which enables the robot to navigate without pre-mapping the environment.
 It is designed for continuous operation for 13 hours before recharging, which can be performed autonomously.
 
@@ -105,8 +105,7 @@ These can all be implemented separately and can communicate with each other usin
 This approach simplifies development, by allowing components developed by separate individuals, teams or organizations to communicate using a standardized interface.
 This promotes collaboration and code reuse, enabling different research teams to focus on a subset of robot control rather than building a complete solution from the ground up.
 
-The following gives a run-down of the various concepts employed by \acrshort{ros} to reach the objective described above.
-
+The following gives a run-down of the core concepts in \acrshort{ros}.
 The components of \acrshort{ros} are \emph{nodes}, \emph{messages}, \emph{topics} and \emph{services}~\cite{Quigley2009}.
 
 \subsubsection{Nodes}
@@ -218,14 +217,14 @@ Since the beginning of \acrshort{ros} in 2007, several of these assumptions have
 Among the new use cases outlined, are
 
 \begin{itemize}
-    \litem{Control of multiple robots:}
+    \litem{Control of multiple robots}
         Currently, there is no standard way to control more than a single robot using \acrshort{ros}.
         \acrshort{ros} has a single-master architecture, and multi-robot support does not elegantly integrate into this design.
-    \litem{Limited computational resources:}
+    \litem{Limited computational resources}
         \acrshort{ros} is not designed to run on micro controllers. Therefore, nodes must interact with these through a device driver.
         \acrshort{ros} 2 is designed so that these controllers can be implemented as nodes, and thereby participate directly in the control system as first-class citizens.
     \item{Built-in real-time support.}
-    \litem{Non-ideal networks:}
+    \litem{Non-ideal networks}
         As seen in earlier work on this project by~\cite{Waløen2017}, \acrshort{ros} does not degrade gracefully when run on unreliable networks.
         \acrshort{ros} 2 aims to alleviate this.
     \litem{Academic and industrial applications:}
@@ -233,10 +232,10 @@ Among the new use cases outlined, are
 \end{itemize}
 
 The central feature of \acrshort{ros} is the publish-subscribe middleware which allows for loose coupling of individual nodes.
-As \acrshort{ros} was begun in 2007, there was no sufficiently mature off-the-shelf technology that provided this, and this system was built essentially from scratch~\cite{Gerkey2017}.
+As \acrshort{ros} was begun in 2007, there was no sufficiently mature off-the-shelf technology that provided this, and this system was built essentially from scratch.
 The \acrshort{ros} project implemented the necessary framework for node discovery, message definition, serialization and transport.
-Since 2007, a number of technologies have mature which provide this capability, and it would not have been necessary to build a custom solution today.
-Several advantages to this are listed by~\cite{Gerkey2017}:
+Since 2007, a number of technologies have matured that provide this capability, and it would not have been necessary to build a custom solution today.
+Several advantages to using one of these off-the-shelf technologies are listed by~\cite{Gerkey2017}:
 
 \begin{itemize}
     \item Less code to be maintained by the project developers
@@ -260,7 +259,7 @@ Several advantages to this are listed by~\cite{Gerkey2017}:
 
 As a long-term goal, the Cyborg project hopes to use biological neurons in a robot control loop.
 Here, we will give some background on relevant biological concepts.
-This information is from~\cite{Knudsen2016}, where these concepts are explained in further detail.
+Further detail on these concepts can be found in~\cite{Knudsen2016}.
 
 \emph{Neurons} are electrically excitable cells, which process and transmit information using electrical and chemical signals.
 The signals travel via synapses, which are specialized connections between neurons.
@@ -382,7 +381,8 @@ Later layers learn increasingly high-level features, such as the shape of an eye
     \caption[The influence of deep learning on image classification error rates.]%
             {Progress of image classification, and the growth of deep networks. %
             The graph shows the top-5 classification errors of each year's \acrshort{ilsvrc} winner, and the depth of the network used. %
-            The 2011 winner did not employ a neural network solution~\cite{Krizhevsky2012}\cite{Zeiler2013}\cite{Szegedy2014}\cite{He2016}.}
+            The 2011 winner did not employ a neural network solution.
+            The data for this figure is from~\cite{Krizhevsky2012},~\cite{Zeiler2013},~\cite{Szegedy2014} and~\cite{He2016}.}
     \label{fig:ilsvrc}
 \end{figure}
 
@@ -396,12 +396,6 @@ Later layers learn increasingly high-level features, such as the shape of an eye
 Several competitions are hosted yearly, where research teams compare progress in detecting a wide variety of objects.
 While neural networks have been known since they were first described in literature in 1943~\cite{Mitchell1997}\cite{Mcculloch1943}, their utility in complex tasks such as this has only begun to be developed in the past few years.
 This development has largely been attributed to advances in available computing power, the size of available data sets and algorithmic advances which allow for training larger neural networks.
-
-\begin{wrapfigure}{R}{0.5\columnwidth}
-    \pimage[0.49]{Figures/resnet}
-    \caption[Illustration of a residual block.]{Illustration of a residual block~\cite{He2016}.}
-    \label{fig:residual-block}
-\end{wrapfigure}
 
 As explained in~\cite{Krizhevsky2012}, the ability to correctly classify complex images into one of several thousand possible categories requires a model with a large learning capacity.
 However, even with the millions of images in a dataset such as ImageNet it is infeasible to train an fully connected neural network to perform this task.
@@ -417,6 +411,12 @@ This makes networks using \acrshort{relu} less susceptible to disappearing gradi
 Their network was entered in the 2012 \acrshort{ilsvrc} competition, and was able to classify images with an error rate of 15.3\%.
 This outcompeted previous winners by over 10 percentage points, as shown in~\cref{fig:ilsvrc}.
 While the concept of \acrshortpl{cnn} and deep learning had been known for many years, this was the first significant use of such networks in computer vision.
+
+\begin{figure}
+    \pimage[0.49]{Figures/resnet}
+    \caption[Illustration of a residual block.]{Illustration of a residual block~\cite{He2016}.}
+    \label{fig:residual-block}
+\end{figure}
 
 Later advances have improved the applicability of deep neural networks further.
 In 2015, the authors of~\cite{He2016} proposed a novel technique of feed-forward from the input signal, leading to great improvement of the trainability of extremely deep networks.
@@ -557,6 +557,7 @@ At the outset of the work on this thesis, the cyborg was running the decision ma
 
 While state machines are a well-proven approach to flow control in many applications, there was a desire to investigate alternative approaches.
 This and the following section will provide some background on these two approaches.
+These concepts are explained in detail in~\cite{Millington2009}.
 
 \begin{figure}
     \iimage[0.39]{Figures/statemachine}
@@ -568,7 +569,7 @@ A \emph{finite state machine} is an abstract model of computation, that allows f
 Changes from one state to another are referred to as \emph{transitions}.
 The transition from an initial state to a new state is governed only by the starting \emph{state}, and the \emph{event}, as shown in~\cref{fig:fsm}.
 Whenever the conditions for a transition are met, the system will perform that transition and execute the \emph{action} associated with the new state.
-State machines typically have actions associated with entering and exiting a state~\cite{Millington2009}.
+State machines typically have actions associated with entering and exiting a state.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: EVENTS
@@ -578,7 +579,7 @@ State machines typically have actions associated with entering and exiting a sta
 
 The type of state machines described here is termed an event-driven state machine.
 As the \acrshort{ros} system needs to perform many different actions, it is necessary that we do not block the system by polling for new events.
-Instead, events arrive asynchronously and are consumed by the state machine before it goes back to sleep~\cite{Millington2009}.
+Instead, events arrive asynchronously and are consumed by the state machine before it goes back to sleep.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: ACTIONS
@@ -589,7 +590,7 @@ Instead, events arrive asynchronously and are consumed by the state machine befo
 Actions in finite state machines are associated with transitions.
 In actual use, actions are typically modularized by splitting into an entry action and an exit action for each state as well as component executed repeatedly while the state is active.
 Often, it is desirable to specify behavior that should trigger when the state machine enters or leaves a state.
-This granularity achieved by splitting each actions simplifies behavior reuse, for example if every transition into a states share behavior that can be placed in an entry action~\cite{Millington2009}.
+This granularity achieved by splitting each actions simplifies behavior reuse, for example if every transition into a states share behavior that can be placed in an entry action.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: STRENGTHS AND WEAKNESSES
@@ -598,7 +599,7 @@ This granularity achieved by splitting each actions simplifies behavior reuse, f
 \subsection{Strengths and weaknesses}
 \label{sec:state_machine_strength_weaknesses}
 
-An overview of the use of state machines for AI in computer games is given in~\cite{Millington2009}.
+An overview of the use of state machines for AI in computer games is given in.
 In general, the concerns outlined here overlap with the concerns relevant in the sort of high-level decision making that is necessary in the Cyborg project.
 
 State machines have work well for structured behavior, as they make it simple to implement a sequence of behaviors and the conditions for transitioning between them.
@@ -654,7 +655,8 @@ Actions to be performed by the robot are associated with states in the state mac
 A behavior tree is a model for task execution commonly used for artificial intelligence in video games, but that is also applicable to robotics and other types of control systems.
 Much of the strength of the behavior tree approach lies in the ability to compose complex behavior from simple building blocks, without needing to consider the implementation of each building block.
 In this sense they are similar to finite state machines.
-However, while the fundamental building block in a state machine is the state, the fundamental building block in behavior trees is the task~\cite{Millington2009}.
+However, while the fundamental building block in a state machine is the state, the fundamental building block in behavior trees is the task.
+These concepts are explained extensively in~\cite{Millington2009}.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: TYPES OF TASKS
@@ -665,20 +667,20 @@ However, while the fundamental building block in a state machine is the state, t
 All nodes in a behavior tree share certain similarities.
 At their core, tasks are small execution units which are run for a certain length of time by the program which executes the behavior tree.
 At the end of execution, the task returns a status code, typically success, failure, or running.
-There are three types of tasks commonly used in behavior trees, \emph{actions}, \emph{conditions}, and \emph{composites}~\cite{Millington2009}.
+There are three types of tasks commonly used in behavior trees, \emph{actions}, \emph{conditions}, and \emph{composites}.
 
 \subsubsection{Actions}
 
 Actions are behaviors that change the state of the system.
 For example, an action may cause the Cyborg to move to a given location or check the status of its battery.
-Actions can be long running, and will return a running status code to the calling function while they are performing their task~\cite{Millington2009}.
+Actions can be long running, and will return a running status code to the calling function while they are performing their task.
 
 \subsubsection{Conditions}
 
 Conditions are checks made to test a property of the system.
 These can be used to do checks before executing an action, for example to check if the action is wanted or possible.
 To continue the example given above, the battery status that was updated may be compared to a critical value.
-In this way, an action can be executed if and only if it is found that the battery state permits it, or the system may execute behavior to recharge the battery if not~\cite{Millington2009}.
+In this way, an action can be executed if and only if it is found that the battery state permits it, or the system may execute behavior to recharge the battery if not.
 
 \subsubsection{Composites}
 
@@ -706,7 +708,7 @@ This node will execute its children from left to right until one of the children
 By combining these, the tree shown in~\cref{fig:behaviortree} will first attempt to tick nodes \emph{t1} and \emph{t2}, and only if either of those fail will it tick node \emph{t3}.
 
 This approach can be repeated to create increasingly complex behavior, without consideration of the actual behavior performed by the tasks \emph{t1}, \emph{t2}, and so on.
-If behavior reuse is required, it is possible to compose the behavior in a sub-tree which can be included as a task in a parent tree~\cite{Millington2009}.
+If behavior reuse is required, it is possible to compose the behavior in a sub-tree which can be included as a task in a parent tree.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: THE BLACKBOARD
@@ -719,7 +721,7 @@ For example, the action which queries for the Cyborg's battery charge level woul
 The \emph{blackboard}, as it is commonly called, is a data store used for this purpose.
 Generally, a blackboard is a key-value store for data exchange between tasks.
 The blackboard allows for storage of data that is available to any node in the tree.
-Depending on the implementation, it may also allow for data to be available only to other nodes in a sub-tree or data that is only available to the node which stored the data~\cite{Millington2009}.
+Depending on the implementation, it may also allow for data to be available only to other nodes in a sub-tree or data that is only available to the node which stored the data.
 
 %----------------------------------------------------------------------------------------
 %	SUBSECTION: STRENGTHS AND WEAKNESSES
